@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>UNO Game</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      background: #f0f0f0;
+    }
+    #game {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+    }
+    .hand {
+      display: flex;
+      margin: 10px;
+      min-height: 100px;
+    }
+    .card {
+      width: 60px;
+      height: 90px;
+      border-radius: 8px;
+      margin: 0 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      user-select: none;
+    }
+    .back {
+      background: gray;
+      cursor: pointer;
+    }
+    .red { background: #e74c3c; }
+    .yellow { background: #f1c40f; color: #333; }
+    .green { background: #27ae60; }
+    .blue { background: #2980b9; }
+    #center {
+      display: flex;
+      align-items: center;
+      margin: 10px;
+    }
+    #message {
+      margin-top: 10px;
+      font-size: 1.2em;
+      height: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <h1>UNO-Style Game</h1>
+  <div id="game">
+    <div id="computer-hand" class="hand"></div>
+    <div id="center">
+      <div id="deck" class="card back">Deck</div>
+      <div id="discard" class="card"></div>
+    </div>
+    <div id="player-hand" class="hand"></div>
+  </div>
+  <div id="message"></div>
+
+  <script>
+    const colors = ['red', 'yellow', 'green', 'blue'];
+    const values =
+      ['0','1','2','3','4','5','6','7','8','9'];
+
+    let deck, discardPile, playerHand, computerHand;
+
+    function createDeck() {
+      const d = [];
+      colors.forEach(c =>
+        values.forEach(v => d.push({ color: c, value: v }))
+      );
+      return d;
+    }
+
+    function shuffle(a) {
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+    }
+
+    function drawCard(hand) {
+      if (!deck.length) reshuffleDiscard();
+      hand.push(deck.pop());
+    }
+
+    function reshuffleDiscard() {
+      const top = discardPile.pop();
+      deck = shuffle(discardPile);
+      discardPile = [top];
+    }
+
+    function startGame() {
+      deck = createDeck();
+      shuffle(deck);
+      playerHand = deck.splice(0, 7);
+      computerHand = deck.splice(0, 7);
+      discardPile = [deck.pop()];
+      updateUI();
+      setMessage("Your turn");
+    }
+
+    function updateUI() {
+      const ch = document.getElementById('computer-hand');
+      const ph = document.getElementById('player-hand');
+      const dc = discardPile[discardPile.length - 1];
+      ch.innerHTML = '';
+      for (let i = 0; i < computerHand.length; i++) {
+        const cardEl = document.createElement('div');
+        cardEl.className = 'card back';
+        cardEl.textContent = 'UNO';
+        ch.appendChild(cardEl);
+      }
+      const disc = document.getElementById('discard');
+      disc.className = `card ${dc.color}`;
+      disc.textContent = dc.value;
+      ph.innerHTML = '';
+      playerHand.forEach((card, idx) => {
+        const cardEl = document.createElement('div');
+        cardEl.className = `card ${card.color}`;
+        cardEl.textContent = card.value;
+        cardEl.onclick = () => playCard(idx);
+        ph.appendChild(cardEl);
+      });
+    }
+
+    function isValid(card) {
+      const top = discardPile[discardPile.length - 1];
+      return card.color === top.color || card.value === top.value;
+    }
+
+    function playCard(idx) {
+      const card = playerHand[idx];
+      if (!isValid(card)) return;
+      discardPile.push(card);
+      playerHand.splice(idx, 1);
+      updateUI();
+      if (!playerHand.length) return endGame('You win!');
+      setMessage("Computer's turn");
+      setTimeout(computerTurn, 800);
+    }
+
+    function computerTurn() {
+      let played = false;
+      for (let i = 0; i < computerHand.length; i++) {
+        if (isValid(computerHand[i])) {
+          discardPile.push(computerHand[i]);
+          computerHand.splice(i, 1);
+          played = true;
+          break;
+        }
+      }
+      if (!played) {
+        drawCard(computerHand);
+        const c = computerHand[computerHand.length - 1];
+        if (isValid(c)) {
+          discardPile.push(c);
+          computerHand.pop();
+        }
+      }
+      updateUI();
+      if (!computerHand.length) return endGame('Computer wins!');
+      setMessage("Your turn");
+    }
+
+    function setMessage(msg) {
+      document.getElementById('message').textContent = msg;
+    }
+
+    function endGame(msg) {
+      setMessage(msg);
+      document.getElementById('deck').onclick = null;
+      document.querySelectorAll('#player-hand .card')
+        .forEach(c => (c.onclick = null));
+    }
+
+    document.getElementById('deck').onclick = () => {
+      drawCard(playerHand);
+      updateUI();
+    };
+
+    startGame();
+  </script>
+</body>
+</html>
