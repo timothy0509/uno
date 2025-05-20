@@ -3,192 +3,782 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>UNO Game</title>
+  <title>UNO - Full No Mercy (2-Player)</title>
   <style>
     body {
-      font-family: sans-serif;
+      font-family: 'Arial', sans-serif;
       text-align: center;
       margin: 0;
-      padding: 0;
-      background: #f0f0f0;
-    }
-    #game {
+      padding: 10px;
+      background: #2c3e50;
+      color: #ecf0f1;
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-top: 20px;
+      min-height: 100vh;
+    }
+    #game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      max-width: 900px; /* Max width for larger screens */
     }
     .hand {
       display: flex;
-      margin: 10px;
-      min-height: 100px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 5px 0;
+      min-height: 110px; /* Adjusted min-height */
+      padding: 8px;
+      background-color: rgba(236, 240, 241, 0.1);
+      border-radius: 10px;
+      width: 95%;
+      border: 1px solid rgba(236, 240, 241, 0.2);
     }
     .card {
-      width: 60px;
-      height: 90px;
-      border-radius: 8px;
-      margin: 0 4px;
+      width: 65px; /* Slightly smaller for more cards */
+      height: 95px; /* Slightly smaller */
+      border-radius: 6px;
+      margin: 4px;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       font-weight: bold;
       color: white;
       cursor: pointer;
       user-select: none;
+      border: 2px solid #fff;
+      box-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+      font-size: 0.8em;
+      padding: 3px;
+      box-sizing: border-box;
+      text-align: center;
+      position: relative; /* For potential overlays or badges */
     }
-    .back {
-      background: gray;
-      cursor: pointer;
+    .card.back {
+      background: linear-gradient(135deg, #7f8c8d, #95a5a6);
+      color: #34495e;
+      font-size: 1.1em;
     }
-    .red { background: #e74c3c; }
-    .yellow { background: #f1c40f; color: #333; }
-    .green { background: #27ae60; }
-    .blue { background: #2980b9; }
-    #center {
+    .card.red { background: #c0392b; }
+    .card.yellow { background: #f1c40f; color: #2c3e50; border-color: #2c3e50;}
+    .card.green { background: #27ae60; }
+    .card.blue { background: #2980b9; }
+    .card.wild {
+      background: linear-gradient(45deg, #c0392b, #f1c40f, #27ae60, #2980b9, #8e44ad);
+      color: #000;
+      border-color: #000;
+    }
+    .card.discard-all { border: 3px dashed #fff !important; } /* Special border for discard all */
+
+    #center-area {
       display: flex;
       align-items: center;
-      margin: 10px;
+      justify-content: center;
+      margin: 10px 0;
+      gap: 15px;
     }
-    #message {
+    #deck-pile .card, #discard-pile .card { cursor: default; }
+    #deck-pile .card { cursor: pointer; }
+
+    #game-info { margin: 10px 0; font-size: 1em; }
+    #game-info p { margin: 3px 0; }
+    #message, #action-prompt {
       margin-top: 10px;
-      font-size: 1.2em;
-      height: 1.2em;
+      font-size: 1.1em;
+      color: #f1c40f;
+      min-height: 1.3em;
+      font-weight: bold;
     }
+    .player-label { font-size: 1.1em; margin-bottom: 3px; }
+    button {
+        padding: 8px 12px;
+        font-size: 0.9em;
+        background-color: #27ae60;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+    }
+    button:disabled { background-color: #7f8c8d; cursor: not-allowed; }
+    .modal-overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-color: rgba(0,0,0,0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+    .modal-content {
+        background-color: #34495e;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+    }
+    .modal-content p { margin-bottom: 15px; }
+    .modal-content button { margin: 0 5px; }
+    .computer-card-count { font-size: 0.9em; color: #bdc3c7; }
   </style>
 </head>
 <body>
-  <h1>UNO-Style Game</h1>
-  <div id="game">
+  <h1>UNO - Full No Mercy (2-Player)</h1>
+
+  <div id="game-container">
+    <div class="player-label">Computer's Hand <span id="computer-card-count" class="computer-card-count">(0)</span></div>
     <div id="computer-hand" class="hand"></div>
-    <div id="center">
-      <div id="deck" class="card back">Deck</div>
-      <div id="discard" class="card"></div>
+
+    <div id="center-area">
+      <div id="deck-pile">
+        <div id="deck" class="card back">DECK (0)</div>
+      </div>
+      <div id="discard-pile">
+        <div id="discard-top" class="card"></div>
+      </div>
     </div>
+
+    <div id="game-info">
+        <p id="current-player-turn">Current Turn: </p>
+        <p id="draw-stack-info">Draw Stack: 0</p>
+        <p id="active-color-info">Active Color: </p>
+    </div>
+     <div id="action-prompt"></div> <!-- For specific prompts like "Choose color for Wild" -->
+
+    <div class="player-label">Your Hand <span id="player-card-count" class="computer-card-count">(0)</span></div>
     <div id="player-hand" class="hand"></div>
+
+    <button id="draw-card-button">Draw Card</button>
+    <button id="pass-discard-all-button" style="display:none;">Done Discarding</button>
+
+    <div id="modal-overlay" class="modal-overlay" style="display: none;">
+        <div id="modal-content" class="modal-content">
+            <p id="modal-text">Choose an action.</p>
+            <div id="modal-buttons">
+                {/* Buttons will be added here by JS */}
+            </div>
+        </div>
+    </div>
   </div>
-  <div id="message"></div>
+
+  <div id="message">Game Starting...</div>
 
   <script>
-    const colors = ['red', 'yellow', 'green', 'blue'];
-    const values =
-      ['0','1','2','3','4','5','6','7','8','9'];
+    const COLORS = ['red', 'yellow', 'green', 'blue'];
+    const MERCY_RULE_LIMIT = 25;
 
-    let deck, discardPile, playerHand, computerHand;
+    // Card Definitions
+    const CARD_TYPES = {
+        NUMBER: 'number',
+        ACTION: 'action',
+        WILD: 'wild'
+    };
+    const ACTIONS = {
+        DRAW_TWO: 'D2', SKIP: 'S', REVERSE: 'R',
+        WILD_REGULAR: 'W', WILD_DRAW_FOUR: 'WD4',
+        WILD_DRAW_SIX: 'WD6', WILD_DRAW_TEN: 'WD10',
+        WILD_REVERSE_DRAW_FOUR: 'WRD4',
+        SKIP_ALL: 'SA', DISCARD_ALL: 'DA', WILD_COLOR_ROULETTE: 'WCR'
+    };
 
-    function createDeck() {
-      const d = [];
-      colors.forEach(c =>
-        values.forEach(v => d.push({ color: c, value: v }))
-      );
-      return d;
+    let deck = [];
+    let playerHand = [];
+    let computerHand = [];
+    let discardPile = [];
+
+    let currentPlayer = 0; // 0 for player, 1 for computer
+    let activeColor = null;
+    let drawStackTotal = 0;
+    let isDrawChallengeActive = false;
+    let gamePhase = 'playing'; // 'playing', 'choosingColor', 'discardingAll', 'colorRoulettePick'
+
+    let postActionCallback = null; // General callback for multi-step actions
+
+    // DOM Elements
+    const playerHandDiv = document.getElementById('player-hand');
+    const computerHandDiv = document.getElementById('computer-hand');
+    const discardTopDiv = document.getElementById('discard-top');
+    const deckDiv = document.getElementById('deck');
+    const messageDiv = document.getElementById('message');
+    const actionPromptDiv = document.getElementById('action-prompt');
+    const drawButton = document.getElementById('draw-card-button');
+    const passDiscardAllButton = document.getElementById('pass-discard-all-button');
+
+    const currentPlayerTurnInfo = document.getElementById('current-player-turn');
+    const drawStackInfo = document.getElementById('draw-stack-info');
+    const activeColorInfo = document.getElementById('active-color-info');
+    const playerCardCountSpan = document.getElementById('player-card-count');
+    const computerCardCountSpan = document.getElementById('computer-card-count');
+
+    const modalOverlay = document.getElementById('modal-overlay');
+    const modalText = document.getElementById('modal-text');
+    const modalButtonsDiv = document.getElementById('modal-buttons');
+
+
+    function createCard(value, color, type, actionDetails = {}) {
+        // actionDetails: { actionType: ACTIONS.DRAW_TWO, draw: 2, etc. }
+        return { value, color, type, ...actionDetails, id: Math.random().toString(36).substr(2, 9) };
     }
 
-    function shuffle(a) {
-      for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-      }
+    function createFullNoMercyDeck() {
+        const newDeck = [];
+        COLORS.forEach(color => {
+            newDeck.push(createCard('0', color, CARD_TYPES.NUMBER, { effect: 'rotateHands' })); // 0 rule
+            for (let i = 1; i <= 9; i++) {
+                newDeck.push(createCard(i.toString(), color, CARD_TYPES.NUMBER, i === 7 ? { effect: 'swapHands' } : {})); // 7 rule
+                newDeck.push(createCard(i.toString(), color, CARD_TYPES.NUMBER, i === 7 ? { effect: 'swapHands' } : {}));
+            }
+            // Standard Action Cards (2 of each color)
+            for (let i=0; i<2; i++) {
+                newDeck.push(createCard(ACTIONS.DRAW_TWO, color, CARD_TYPES.ACTION, { effect: 'draw', amount: 2 }));
+                newDeck.push(createCard(ACTIONS.SKIP, color, CARD_TYPES.ACTION, { effect: 'skip' }));
+                newDeck.push(createCard(ACTIONS.REVERSE, color, CARD_TYPES.ACTION, { effect: 'reverse' }));
+                // No Mercy Action Cards (1 of each color)
+                newDeck.push(createCard(ACTIONS.DISCARD_ALL, color, CARD_TYPES.ACTION, { effect: 'discardAllColor', colorToDiscard: color }));
+            }
+        });
+
+        // Wild Cards
+        for (let i = 0; i < 4; i++) newDeck.push(createCard(ACTIONS.WILD_REGULAR, 'wild', CARD_TYPES.WILD, { effect: 'wildRegular' }));
+        for (let i = 0; i < 2; i++) newDeck.push(createCard(ACTIONS.WILD_DRAW_FOUR, 'wild', CARD_TYPES.WILD, { effect: 'draw', amount: 4, isWild: true })); // WD4
+        // No Mercy Wilds
+        newDeck.push(createCard(ACTIONS.WILD_DRAW_SIX, 'wild', CARD_TYPES.WILD, { effect: 'draw', amount: 6, isWild: true }));
+        newDeck.push(createCard(ACTIONS.WILD_DRAW_SIX, 'wild', CARD_TYPES.WILD, { effect: 'draw', amount: 6, isWild: true }));
+        newDeck.push(createCard(ACTIONS.WILD_DRAW_TEN, 'wild', CARD_TYPES.WILD, { effect: 'draw', amount: 10, isWild: true }));
+        newDeck.push(createCard(ACTIONS.WILD_REVERSE_DRAW_FOUR, 'wild', CARD_TYPES.WILD, { effect: 'draw', amount: 4, isWild: true, alsoReverse: true }));
+        newDeck.push(createCard(ACTIONS.WILD_REVERSE_DRAW_FOUR, 'wild', CARD_TYPES.WILD, { effect: 'draw', amount: 4, isWild: true, alsoReverse: true }));
+        newDeck.push(createCard(ACTIONS.SKIP_ALL, 'wild', CARD_TYPES.WILD, { effect: 'skipAll', isWild: true })); // Skip All is wild
+        newDeck.push(createCard(ACTIONS.WILD_COLOR_ROULETTE, 'wild', CARD_TYPES.WILD, { effect: 'colorRoulette', isWild: true }));
+
+        return newDeck;
     }
 
-    function drawCard(hand) {
-      if (!deck.length) reshuffleDiscard();
-      hand.push(deck.pop());
+    function shuffleDeck(deckToShuffle) {
+        for (let i = deckToShuffle.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [deckToShuffle[i], deckToShuffle[j]] = [deckToShuffle[j], deckToShuffle[i]];
+        }
     }
 
-    function reshuffleDiscard() {
-      const top = discardPile.pop();
-      deck = shuffle(discardPile);
-      discardPile = [top];
+    function dealCardToHand(hand) {
+        if (deck.length === 0) {
+            if (!reshuffleDiscardPile()) {
+                setMessage("No cards left to draw!");
+                return false;
+            }
+        }
+        hand.push(deck.pop());
+        return true;
+    }
+
+    function reshuffleDiscardPile() {
+        if (discardPile.length <= 1) return false;
+        const topCard = discardPile.pop();
+        deck.push(...discardPile.filter(card => card)); // Ensure no undefined cards
+        discardPile = [topCard];
+        shuffleDeck(deck);
+        setMessage("Deck reshuffled from discard pile.");
+        return true;
     }
 
     function startGame() {
-      deck = createDeck();
-      shuffle(deck);
-      playerHand = deck.splice(0, 7);
-      computerHand = deck.splice(0, 7);
-      discardPile = [deck.pop()];
-      updateUI();
-      setMessage("Your turn");
+        deck = createFullNoMercyDeck();
+        shuffleDeck(deck);
+        playerHand = [];
+        computerHand = [];
+        discardPile = [];
+        drawStackTotal = 0;
+        isDrawChallengeActive = false;
+        activeColor = null;
+        currentPlayer = 0;
+        gamePhase = 'playing';
+
+        for (let i = 0; i < 7; i++) {
+            dealCardToHand(playerHand);
+            dealCardToHand(computerHand);
+        }
+
+        let firstCard = deck.pop();
+        while (firstCard.type === CARD_TYPES.WILD || (firstCard.type === CARD_TYPES.ACTION && firstCard.effect !== 'draw')) { // Avoid complex start
+            deck.unshift(firstCard);
+            shuffleDeck(deck);
+            firstCard = deck.pop();
+        }
+        discardPile.push(firstCard);
+        activeColor = firstCard.color;
+        if (firstCard.effect === 'draw') { // If first card is a draw card (e.g. colored D2)
+            drawStackTotal = firstCard.amount;
+            isDrawChallengeActive = true;
+            setMessage(`Game starts with a draw ${drawStackTotal}!`);
+        }
+
+
+        updateUI();
+        setTurnMessage();
+    }
+
+    function renderCardDiv(card, isPlayerCard = false) {
+        const cardDiv = document.createElement('div');
+        cardDiv.className = `card ${card.color || 'wild'}`;
+        let text = card.value;
+        if (card.effect === 'draw') text += `+${card.amount}`;
+        else if (card.effect === 'discardAllColor') text = `DA ${card.colorToDiscard.substring(0,1).toUpperCase()}`;
+        else if (card.effect === 'skipAll') text = ACTIONS.SKIP_ALL;
+        else if (card.effect === 'colorRoulette') text = ACTIONS.WILD_COLOR_ROULETTE;
+        else if (card.effect === 'swapHands') text = `7 (Swap)`;
+        else if (card.effect === 'rotateHands') text = `0 (Swap)`;
+
+
+        cardDiv.textContent = text;
+        if (card.chosenColor && card.color === 'wild') { // For wild on discard
+             cardDiv.style.borderColor = card.chosenColor;
+             cardDiv.style.boxShadow = `0 0 8px ${card.chosenColor}`;
+        }
+        if (isPlayerCard && gamePhase === 'discardingAll' && card.color === discardPile[discardPile.length-1].colorToDiscard) {
+            cardDiv.classList.add('discard-all-eligible'); // Could style this
+        }
+        return cardDiv;
     }
 
     function updateUI() {
-      const ch = document.getElementById('computer-hand');
-      const ph = document.getElementById('player-hand');
-      const dc = discardPile[discardPile.length - 1];
-      ch.innerHTML = '';
-      for (let i = 0; i < computerHand.length; i++) {
-        const cardEl = document.createElement('div');
-        cardEl.className = 'card back';
-        cardEl.textContent = 'UNO';
-        ch.appendChild(cardEl);
-      }
-      const disc = document.getElementById('discard');
-      disc.className = `card ${dc.color}`;
-      disc.textContent = dc.value;
-      ph.innerHTML = '';
-      playerHand.forEach((card, idx) => {
-        const cardEl = document.createElement('div');
-        cardEl.className = `card ${card.color}`;
-        cardEl.textContent = card.value;
-        cardEl.onclick = () => playCard(idx);
-        ph.appendChild(cardEl);
-      });
+        // Player Hand
+        playerHandDiv.innerHTML = '';
+        playerHand.forEach((card, index) => {
+            const cardDiv = renderCardDiv(card, true);
+            cardDiv.onclick = () => {
+                if (currentPlayer === 0 && (gamePhase === 'playing' || gamePhase === 'discardingAll')) {
+                    handlePlayerCardClick(index);
+                }
+            };
+            playerHandDiv.appendChild(cardDiv);
+        });
+        playerCardCountSpan.textContent = `(${playerHand.length})`;
+
+        // Computer Hand
+        computerHandDiv.innerHTML = '';
+        computerHand.forEach(() => {
+            const cardDiv = document.createElement('div');
+            cardDiv.className = 'card back';
+            cardDiv.textContent = 'UNO';
+            computerHandDiv.appendChild(cardDiv);
+        });
+        computerCardCountSpan.textContent = `(${computerHand.length})`;
+
+        // Discard Pile Top
+        const topDiscard = discardPile[discardPile.length - 1];
+        discardTopDiv.innerHTML = '';
+        if (topDiscard) {
+            const renderedTop = renderCardDiv(topDiscard);
+            if (topDiscard.color === 'wild' && activeColor) {
+                renderedTop.className = `card ${activeColor}`;
+                renderedTop.style.background = activeColor;
+                if (activeColor === 'yellow') renderedTop.style.color = '#2c3e50'; else renderedTop.style.color = 'white';
+                renderedTop.textContent = topDiscard.value; // Keep original value text
+                 if (topDiscard.effect === 'draw') renderedTop.textContent += `+${topDiscard.amount}`;
+            }
+            discardTopDiv.appendChild(renderedTop);
+        }
+
+        deckDiv.textContent = `DECK (${deck.length})`;
+        currentPlayerTurnInfo.textContent = `Turn: ${currentPlayer === 0 ? "You" : "Computer"}`;
+        drawStackInfo.textContent = `Draw Stack: ${drawStackTotal} ${isDrawChallengeActive ? "(ACTIVE!)" : ""}`;
+        activeColorInfo.textContent = `Active Color: ${activeColor ? activeColor.toUpperCase() : 'None'}`;
+
+        drawButton.disabled = !(currentPlayer === 0 && gamePhase === 'playing');
+        passDiscardAllButton.style.display = (currentPlayer === 0 && gamePhase === 'discardingAll') ? 'inline-block' : 'none';
+
+        actionPromptDiv.textContent = ''; // Clear old prompts
+        if (gamePhase === 'choosingColor' && currentPlayer === 0) {
+            actionPromptDiv.textContent = "Choose a color for the Wild card.";
+        } else if (gamePhase === 'colorRoulettePick' && currentPlayer === 0) {
+            actionPromptDiv.textContent = "Name a color for Color Roulette.";
+        } else if (gamePhase === 'discardingAll' && currentPlayer === 0) {
+            actionPromptDiv.textContent = `Discard All: Click cards of color ${discardPile[discardPile.length-1].colorToDiscard.toUpperCase()} to discard, then 'Done Discarding'.`;
+        }
     }
 
-    function isValid(card) {
-      const top = discardPile[discardPile.length - 1];
-      return card.color === top.color || card.value === top.value;
+    function setTurnMessage() {
+        if (gamePhase !== 'playing' && gamePhase !== 'discardingAll') return; // Don't override special phase messages
+        messageDiv.textContent = currentPlayer === 0 ? "Your turn." : "Computer's turn...";
     }
 
-    function playCard(idx) {
-      const card = playerHand[idx];
-      if (!isValid(card)) return;
-      discardPile.push(card);
-      playerHand.splice(idx, 1);
-      updateUI();
-      if (!playerHand.length) return endGame('You win!');
-      setMessage("Computer's turn");
-      setTimeout(computerTurn, 800);
+    function showModal(text, buttonsConfig) { // buttonsConfig = [{text: "Red", color: "red", callback: () => {}}]
+        modalText.textContent = text;
+        modalButtonsDiv.innerHTML = '';
+        buttonsConfig.forEach(btnConfig => {
+            const button = document.createElement('button');
+            button.textContent = btnConfig.text;
+            if (btnConfig.color) {
+                button.style.backgroundColor = btnConfig.color;
+                if (btnConfig.color === 'yellow') button.style.color = '#2c3e50';
+            }
+            button.onclick = () => {
+                modalOverlay.style.display = 'none';
+                btnConfig.callback();
+            };
+            modalButtonsDiv.appendChild(button);
+        });
+        modalOverlay.style.display = 'flex';
+    }
+
+    function isValidPlay(cardToPlay) {
+        const topDiscard = discardPile[discardPile.length - 1];
+        if (!topDiscard) return true; // First card
+
+        if (isDrawChallengeActive) {
+            return cardToPlay.effect === 'draw'; // Must play a draw card to stack
+        }
+        if (gamePhase === 'discardingAll') { // During Discard All phase
+            const mainPlayedCard = discardPile[discardPile.length-1];
+            return cardToPlay.color === mainPlayedCard.colorToDiscard;
+        }
+
+        if (cardToPlay.color === 'wild') return true;
+        if (cardToPlay.color === activeColor) return true;
+        if (cardToPlay.value === topDiscard.value && topDiscard.type !== CARD_TYPES.WILD) return true; // Cannot match value of a wild
+
+        return false;
+    }
+
+    function handlePlayerCardClick(cardIndex) {
+        const card = playerHand[cardIndex];
+
+        if (gamePhase === 'discardingAll') {
+            const mainPlayedCard = discardPile[discardPile.length-1];
+            if (card.color === mainPlayedCard.colorToDiscard) {
+                playerHand.splice(cardIndex, 1);
+                discardPile.push(card); // Temporarily add to discard to show it's gone
+                // It's better to move to a "discarded this turn" pile visually if complex
+                updateUI(); // Re-render hand
+            } else {
+                actionPromptDiv.textContent = "Invalid: Only discard cards of the chosen color.";
+            }
+            return;
+        }
+
+        if (isValidPlay(card)) {
+            playerHand.splice(cardIndex, 1);
+            discardPile.push(card);
+            card.chosenColor = card.color === 'wild' ? null : activeColor; // Store chosen color for wilds
+            processCardPlay(card, 0);
+        } else {
+            messageDiv.textContent = "Invalid move. Card does not match or cannot stack.";
+        }
+    }
+    passDiscardAllButton.onclick = () => {
+        if (currentPlayer === 0 && gamePhase === 'discardingAll') {
+            gamePhase = 'playing'; // Return to normal
+            actionPromptDiv.textContent = '';
+            passDiscardAllButton.style.display = 'none';
+            // The cards are already removed from hand and added to discard pile.
+            // If we wanted them to go to a *separate* discard area during this phase, more logic needed.
+            // For now, they just go to the main discard pile.
+            updateUI();
+            if (checkWinCondition(0)) return;
+            endTurnSequence(false); // false = next player is not skipped by this action itself
+        }
+    };
+
+
+    function processCardPlay(card, playerIdx) { // playerIdx: 0 for human, 1 for computer
+        let nextPlayerSkipped = false;
+        activeColor = card.color === 'wild' ? card.chosenColor : card.color; // Use chosenColor if wild already has one (e.g. computer played)
+
+        // 1. Handle Draw Stacking
+        if (card.effect === 'draw') {
+            drawStackTotal += card.amount;
+            isDrawChallengeActive = true;
+            messageDiv.textContent = `Draw stack is now ${drawStackTotal}!`;
+        } else if (isDrawChallengeActive) {
+            // This means a non-draw card was played while draw challenge was active.
+            // This should be prevented by isValidPlay. If it happens, current player draws.
+            // For now, assume isValidPlay handles this.
+        }
+
+        // 2. Handle Wild Card Color Choice (if needed)
+        if (card.isWild && !card.chosenColor) { // Needs color choice
+            gamePhase = 'choosingColor';
+            if (playerIdx === 0) { // Human player
+                updateUI(); // To show prompt
+                const buttons = COLORS.map(c => ({
+                    text: c.charAt(0).toUpperCase() + c.slice(1),
+                    color: c,
+                    callback: () => {
+                        activeColor = c;
+                        card.chosenColor = c; // Store on card in discard
+                        gamePhase = 'playing';
+                        executeCardEffect(card, playerIdx, nextPlayerSkipped);
+                    }
+                }));
+                showModal("Choose a color for the Wild card:", buttons);
+                return; // Pause turn until color is chosen
+            } else { // Computer player
+                activeColor = COLORS[Math.floor(Math.random() * COLORS.length)];
+                card.chosenColor = activeColor;
+                messageDiv.textContent = `Computer chose ${activeColor}.`;
+                // Fall through to executeCardEffect
+            }
+        }
+        executeCardEffect(card, playerIdx, nextPlayerSkipped);
+    }
+
+    function executeCardEffect(card, playerIdx, initialSkipState) {
+        let nextPlayerSkipped = initialSkipState;
+        updateUI(); // Update UI with card on discard and potential activeColor change
+
+        switch (card.effect) {
+            case 'skip':
+            case 'reverse': // In 2P, Reverse is a Skip
+            case 'skipAll': // In 2P, SkipAll is a Skip
+                nextPlayerSkipped = true;
+                messageDiv.textContent = `${card.value || card.effect} played. ${playerIdx === 0 ? "You play" : "Computer plays"} again.`;
+                break;
+            case 'draw': // Draw effect is handled by stacking. If it's WRD4, reverse is also handled.
+                if (card.alsoReverse) { // Wild Reverse Draw 4
+                    nextPlayerSkipped = true;
+                    messageDiv.textContent = `WRD4! ${playerIdx === 0 ? "You play" : "Computer plays"} again (after opponent handles draw).`;
+                }
+                break;
+            case 'swapHands': // 7 card
+            case 'rotateHands': // 0 card (same as 7 in 2P)
+                [playerHand, computerHand] = [computerHand, playerHand];
+                messageDiv.textContent = `Card ${card.value} played! Hands swapped.`;
+                updateUI(); // Show swapped hands immediately
+                break;
+            case 'discardAllColor':
+                gamePhase = 'discardingAll';
+                if (playerIdx === 0) {
+                    actionPromptDiv.textContent = `Discard All: Click cards of color ${card.colorToDiscard.toUpperCase()} to discard, then 'Done Discarding'.`;
+                    passDiscardAllButton.style.display = 'inline-block';
+                    // Turn doesn't end until player clicks "Done Discarding"
+                    updateUI();
+                    return; // Pause turn
+                } else { // Computer's Discard All
+                    const colorToDiscard = card.colorToDiscard;
+                    let cardsToDiscardIndices = [];
+                    computerHand.forEach((c, i) => {
+                        if (c.color === colorToDiscard) cardsToDiscardIndices.push(i);
+                    });
+                    // Discard from highest index to lowest to avoid messing up indices
+                    for (let i = cardsToDiscardIndices.length - 1; i >= 0; i--) {
+                        const discarded = computerHand.splice(cardsToDiscardIndices[i], 1)[0];
+                        discardPile.push(discarded);
+                    }
+                    messageDiv.textContent = `Computer used Discard All for ${colorToDiscard}.`;
+                    updateUI();
+                }
+                break;
+            case 'colorRoulette':
+                gamePhase = 'colorRoulettePick';
+                const nextPlayerIdx = 1 - playerIdx;
+                if (nextPlayerIdx === 0) { // Human needs to pick color for roulette
+                     updateUI();
+                    const buttons = COLORS.map(c => ({
+                        text: c.charAt(0).toUpperCase() + c.slice(1),
+                        color: c,
+                        callback: () => {
+                            gamePhase = 'playing';
+                            handleColorRouletteDraw(0, c); // Player 0 (human) is drawing
+                        }
+                    }));
+                    showModal("Color Roulette! You must pick a color, then draw until you find it:", buttons);
+                    return; // Pause until color picked
+                } else { // Computer picks color for roulette (for player to draw)
+                    const chosenColor = COLORS[Math.floor(Math.random() * COLORS.length)];
+                    messageDiv.textContent = `Computer chose ${chosenColor} for Color Roulette. You draw until you get it.`;
+                    gamePhase = 'playing';
+                    handleColorRouletteDraw(0, chosenColor); // Player 0 (human) is drawing
+                }
+                // The player who played WCR's turn ends after this. The *next* player does the drawing.
+                // So, the endTurnSequence will apply to the player who played WCR.
+                break;
+        }
+
+        if (checkWinCondition(playerIdx)) return;
+        endTurnSequence(nextPlayerSkipped);
+    }
+
+    function handleColorRouletteDraw(playerIdxToDraw, targetColor) {
+        actionPromptDiv.textContent = `${playerIdxToDraw === 0 ? "You are" : "Computer is"} drawing for ${targetColor.toUpperCase()} (Color Roulette)...`;
+        let drawnCard;
+        let cardsDrawnThisTurn = 0;
+        const handToDrawTo = playerIdxToDraw === 0 ? playerHand : computerHand;
+
+        function drawOneRouletteStep() {
+            if (!dealCardToHand(handToDrawTo)) { // No cards left in deck
+                messageDiv.textContent = `No cards left to draw for Color Roulette!`;
+                actionPromptDiv.textContent = '';
+                updateUI();
+                if (checkMercyRule(playerIdxToDraw)) return;
+                // If WCR was played by player 0, and player 1 (computer) was drawing, then it's player 0's turn again.
+                // If WCR was played by player 1, and player 0 (human) was drawing, then it's player 1's turn again.
+                // The original player of WCR effectively gets another turn because the opponent's turn was consumed by drawing.
+                // This is complex. For now, let's assume the turn just passes to the *other* player than who drew.
+                switchTurn(); // This might need refinement based on who played WCR.
+                return;
+            }
+            cardsDrawnThisTurn++;
+            drawnCard = handToDrawTo[handToDrawTo.length - 1];
+            updateUI(); // Show card being added
+
+            if (drawnCard.color === targetColor || drawnCard.color === 'wild') { // Wild also counts
+                messageDiv.textContent = `${playerIdxToDraw === 0 ? "You" : "Computer"} found ${targetColor.toUpperCase()} after drawing ${cardsDrawnThisTurn} cards!`;
+                actionPromptDiv.textContent = '';
+                if (checkMercyRule(playerIdxToDraw)) return;
+                // After roulette drawing, the turn proceeds to the *other* player (not the one who just drew).
+                // The player who *played* the WCR has their turn end. The player who *drew* for roulette has their turn effectively skipped.
+                // So, if player 0 played WCR, player 1 draws. After player 1 draws, it becomes player 0's turn again.
+                // This means `currentPlayer` should NOT change from who played the WCR.
+                // However, our `switchTurn` logic is simpler.
+                // Let's simplify: after drawing, the turn passes to the other player.
+                switchTurn();
+            } else {
+                if (checkMercyRule(playerIdxToDraw)) return;
+                setTimeout(drawOneRouletteStep, 300); // Continue drawing
+            }
+        }
+        drawOneRouletteStep();
+    }
+
+
+    function endTurnSequence(playerPlaysAgain) {
+        updateUI(); // Final UI update for the turn just ended.
+        if (playerPlaysAgain) {
+            // Current player remains the same
+            setTurnMessage();
+            if (currentPlayer === 1) { // If computer plays again
+                setTimeout(computerTurn, 1200);
+            }
+        } else {
+            switchTurn();
+        }
+    }
+
+    drawButton.onclick = () => {
+        if (currentPlayer !== 0 || gamePhase !== 'playing') return;
+
+        if (isDrawChallengeActive) {
+            messageDiv.textContent = `You must draw ${drawStackTotal} cards!`;
+            for (let i = 0; i < drawStackTotal; i++) {
+                if (!dealCardToHand(playerHand)) break;
+            }
+            if (checkMercyRule(0)) return;
+            drawStackTotal = 0;
+            isDrawChallengeActive = false;
+        } else {
+            if (!dealCardToHand(playerHand)) return;
+            if (checkMercyRule(0)) return;
+        }
+        updateUI();
+        // Drawing a card (not to satisfy a challenge) ends your turn.
+        if (!isDrawChallengeActive) { // if it was a challenge, it's now reset.
+             endTurnSequence(false); // Pass turn
+        } else {
+            // If it *was* a challenge, and player drew, turn still passes.
+            endTurnSequence(false);
+        }
+    };
+
+
+    function switchTurn() {
+        currentPlayer = 1 - currentPlayer;
+        updateUI();
+        setTurnMessage();
+
+        if (currentPlayer === 1 && gamePhase === 'playing') {
+            setTimeout(computerTurn, 1500);
+        }
     }
 
     function computerTurn() {
-      let played = false;
-      for (let i = 0; i < computerHand.length; i++) {
-        if (isValid(computerHand[i])) {
-          discardPile.push(computerHand[i]);
-          computerHand.splice(i, 1);
-          played = true;
-          break;
+        if (currentPlayer !== 1 || gamePhase !== 'playing') return;
+
+        // 1. Handle Active Draw Challenge
+        if (isDrawChallengeActive) {
+            const playableDrawCardIndex = computerHand.findIndex(card => card.effect === 'draw');
+            if (playableDrawCardIndex !== -1) {
+                const cardToPlay = computerHand.splice(playableDrawCardIndex, 1)[0];
+                discardPile.push(cardToPlay);
+                cardToPlay.chosenColor = cardToPlay.color === 'wild' ? null : activeColor; // Will be set if wild
+                processCardPlay(cardToPlay, 1);
+                return;
+            } else {
+                messageDiv.textContent = `Computer must draw ${drawStackTotal} cards.`;
+                for (let i = 0; i < drawStackTotal; i++) {
+                    if (!dealCardToHand(computerHand)) break;
+                }
+                if (checkMercyRule(1)) return;
+                drawStackTotal = 0;
+                isDrawChallengeActive = false;
+                updateUI();
+                endTurnSequence(false); // Pass turn
+                return;
+            }
         }
-      }
-      if (!played) {
-        drawCard(computerHand);
-        const c = computerHand[computerHand.length - 1];
-        if (isValid(c)) {
-          discardPile.push(c);
-          computerHand.pop();
+
+        // 2. Normal Play: Find a valid card
+        // Simple AI: play first valid card. Could be improved (e.g. prioritize non-wilds, use DiscardAll strategically)
+        let cardToPlayIndex = -1;
+        // Try to play a Discard All if beneficial
+        const discardAllCandidate = computerHand.find(c => c.effect === 'discardAllColor' && isValidPlay(c) && computerHand.filter(hCard => hCard.color === c.colorToDiscard).length > 1);
+        if (discardAllCandidate) {
+            cardToPlayIndex = computerHand.indexOf(discardAllCandidate);
+        } else {
+             cardToPlayIndex = computerHand.findIndex(card => isValidPlay(card));
         }
-      }
-      updateUI();
-      if (!computerHand.length) return endGame('Computer wins!');
-      setMessage("Your turn");
+
+
+        if (cardToPlayIndex !== -1) {
+            const card = computerHand.splice(cardToPlayIndex, 1)[0];
+            discardPile.push(card);
+            if (card.isWild && !card.chosenColor) { // If computer plays a wild that needs a color
+                card.chosenColor = COLORS[Math.floor(Math.random() * COLORS.length)];
+                activeColor = card.chosenColor; // Set active color immediately
+                messageDiv.textContent = `Computer chose ${activeColor} for its Wild.`;
+            } else if (!card.isWild) {
+                activeColor = card.color;
+            }
+            // processCardPlay will call executeCardEffect which handles the rest
+            processCardPlay(card, 1);
+        } else {
+            messageDiv.textContent = "Computer draws a card.";
+            if (!dealCardToHand(computerHand)) return; // No cards to draw
+            if (checkMercyRule(1)) return;
+            updateUI();
+            endTurnSequence(false); // Pass turn
+        }
     }
 
-    function setMessage(msg) {
-      document.getElementById('message').textContent = msg;
+    function checkWinCondition(playerIdx) {
+        const hand = playerIdx === 0 ? playerHand : computerHand;
+        if (hand.length === 0) {
+            endGame(`${playerIdx === 0 ? "You" : "Computer"} win(s) by emptying their hand!`);
+            return true;
+        }
+        return false;
+    }
+
+    function checkMercyRule(playerIdx) {
+        const hand = playerIdx === 0 ? playerHand : computerHand;
+        if (hand.length > MERCY_RULE_LIMIT) {
+            endGame(`${playerIdx === 0 ? "You" : "Computer"} busted the Mercy Rule (>${MERCY_RULE_LIMIT} cards)! ${playerIdx === 0 ? "Computer" : "You"} win!`);
+            return true;
+        }
+        return false;
     }
 
     function endGame(msg) {
-      setMessage(msg);
-      document.getElementById('deck').onclick = null;
-      document.querySelectorAll('#player-hand .card')
-        .forEach(c => (c.onclick = null));
+        messageDiv.textContent = msg;
+        actionPromptDiv.textContent = "GAME OVER";
+        gamePhase = 'gameOver';
+        drawButton.disabled = true;
+        passDiscardAllButton.style.display = 'none';
+        modalOverlay.style.display = 'none';
+        // Could add a restart button
     }
-
-    document.getElementById('deck').onclick = () => {
-      drawCard(playerHand);
-      updateUI();
-    };
 
     startGame();
   </script>
