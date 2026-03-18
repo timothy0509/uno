@@ -1,29 +1,75 @@
-# Create T3 App
+# UNO No Mercy
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+A brutal UNO variant with online multiplayer gameplay. Try the original: [UNO No Mercy](https://www.mattel.com/products/uno-no-mercy)
 
-## What's next? How do I make an app with this?
+## Features
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- **Full UNO No Mercy ruleset**: Stacking, Mercy rule (25+ cards = knockout), 7 and 0 rules
+- **Online multiplayer**: Real-time gameplay for 2-6 players
+- **Glassmorphic UI**: Modern, sleek design
+- **Guest support**: Play without an account
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## Game Rules
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+See [rules.md](./rules.md) for the complete ruleset.
 
-## Learn More
+### Key Rules
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+- **Draw Until Playable**: Draw cards until you get one you can play
+- **Stacking**: Stack +2 and +4 cards on other players
+- **Mercy Rule**: 25+ cards = instant knockout
+- **7 Rule**: Play a 7 to swap hands with another player
+- **0 Rule**: Play a 0 to pass your hand to the next player
+- **Wild Draw 6**: The most brutal card - draw 6 or stack!
+- **Wild Draw 10**: Maximum devastation - draw 10 or stack!
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+## Tech Stack
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+- **Framework**: Next.js 15
+- **Styling**: Tailwind CSS 4
+- **Database**: SQLite (Prisma)
+- **Language**: TypeScript
 
-## How do I deploy this?
+## Getting Started
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+```bash
+# Install dependencies
+npm install
+
+# Generate Prisma client
+npm run postinstall
+
+# Run development server
+npm run dev
+
+# Build for production
+npm run build
+```
+
+## Project Structure
+
+```
+src/
+├── app/                 # Next.js App Router pages
+│   ├── page.tsx        # Landing page
+│   ├── lobby/         # Game lobby
+│   └── game/[id]/     # Game interface
+├── hooks/
+│   └── useGame.ts     # Game state hook
+├── lib/game/
+│   ├── deck.ts        # Card deck utilities
+│   ├── engine.ts      # Game logic
+│   └── store.ts       # In-memory game store
+├── styles/
+│   └── globals.css    # Glassmorphic styles
+└── types/
+    └── game.ts        # TypeScript types
+```
+
+## Deployment
+
+Deploy to Vercel with one click. No DATABASE_URL required for basic deployment (uses in-memory store).
+
+## License
+
+MIT
