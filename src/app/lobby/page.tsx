@@ -65,13 +65,18 @@ export default function LobbyPage() {
     <main className="gradient-bg flex min-h-screen flex-col items-center justify-center p-8">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
-          <h1 className="text-glow text-4xl font-extrabold text-white">
+          <h1 className="animate-fade-in-up font-display text-glow text-4xl font-extrabold text-white">
             UNO <span className="text-red-500">No Mercy</span>
           </h1>
-          <p className="mt-2 text-white/70">Join or create a game</p>
+          <p
+            className="animate-fade-in-up mt-2 text-white/70"
+            style={{ animationDelay: "80ms" }}
+          >
+            Join or create a game
+          </p>
         </div>
 
-        <div className="glass card-shadow space-y-6 p-8">
+        <div className="animate-fade-in-scale glass-shimmer glass card-shadow space-y-6 p-8">
           <div>
             <label
               htmlFor="playerName"
@@ -84,7 +89,7 @@ export default function LobbyPage() {
               id="playerName"
               value={playerName}
               onChange={(e) => setPlayerName(e.target.value)}
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none"
+              className="input-glow w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none"
               placeholder="Enter your name"
               maxLength={20}
             />
@@ -94,7 +99,7 @@ export default function LobbyPage() {
             <button
               onClick={handleCreateGame}
               disabled={isLoading}
-              className="button-primary w-full py-3 text-lg font-bold disabled:opacity-50"
+              className="button-y2k w-full py-3 text-lg font-bold disabled:opacity-50"
             >
               {isLoading ? "Creating..." : "Create New Game"}
             </button>
@@ -121,7 +126,7 @@ export default function LobbyPage() {
               id="gameCode"
               value={gameCode}
               onChange={(e) => setGameCode(e.target.value.toUpperCase())}
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+              className="input-glow w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-mono text-white placeholder-white/40 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
               placeholder="Enter 6-character code"
               maxLength={6}
             />
@@ -136,7 +141,7 @@ export default function LobbyPage() {
           </button>
 
           {error && (
-            <div className="rounded-lg border border-red-500/50 bg-red-500/20 px-4 py-3 text-sm text-red-200">
+            <div className="animate-fade-in-scale rounded-lg border border-red-500/50 bg-red-500/20 px-4 py-3 text-sm text-red-200">
               {error}
             </div>
           )}

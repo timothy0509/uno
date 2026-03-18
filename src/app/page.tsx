@@ -5,10 +5,13 @@ export default function HomePage() {
     <main className="gradient-bg flex min-h-screen flex-col items-center justify-center p-8">
       <div className="container flex flex-col items-center justify-center gap-12">
         <div className="text-center">
-          <h1 className="text-glow text-6xl font-extrabold tracking-tight text-white sm:text-[5rem]">
+          <h1 className="animate-fade-in-up text-glow font-display text-6xl font-extrabold tracking-tight text-white sm:text-[5rem]">
             UNO <span className="text-red-500">No Mercy</span>
           </h1>
-          <p className="mt-4 text-xl text-white/70">
+          <p
+            className="animate-fade-in-up mt-4 text-xl text-white/70"
+            style={{ animationDelay: "80ms" }}
+          >
             The brutal variant of UNO - Stack penalties, swap hands, or get
             knocked out!
           </p>
@@ -17,15 +20,19 @@ export default function HomePage() {
         <div className="flex flex-col gap-4 sm:flex-row">
           <Link
             href="/lobby"
-            className="glass glass-hover button-primary px-8 py-4 text-xl font-bold"
+            className="animate-fade-in-scale glass glass-hover button-primary animate-glow-pulse px-8 py-4 text-xl font-bold"
+            style={{ animationDelay: "160ms" }}
           >
             Play Now
           </Link>
         </div>
 
-        <div className="grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-2">
-          <div className="glass card-shadow p-6">
-            <h2 className="mb-3 text-xl font-bold text-white">
+        <div className="stagger grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-2">
+          <div
+            className="animate-fade-in-up glass card-shadow p-6"
+            style={{ animationDelay: "0ms" }}
+          >
+            <h2 className="font-display mb-3 text-xl font-bold text-white">
               😈 No Mercy Rules
             </h2>
             <ul className="space-y-2 text-white/70">
@@ -37,14 +44,17 @@ export default function HomePage() {
             </ul>
           </div>
 
-          <div className="glass card-shadow p-6">
-            <h2 className="mb-3 text-xl font-bold text-white">
+          <div
+            className="animate-fade-in-up glass card-shadow p-6"
+            style={{ animationDelay: "80ms" }}
+          >
+            <h2 className="font-display mb-3 text-xl font-bold text-white">
               🃏 Special Cards
             </h2>
             <ul className="space-y-2 text-white/70">
               <li>
-                • <span className="text-red-400">Wild Draw 6</span> -Next player
-                draws 6
+                • <span className="text-red-400">Wild Draw 6</span> - Next
+                player draws 6
               </li>
               <li>
                 • <span className="text-yellow-400">Wild Draw 10</span> - Next
