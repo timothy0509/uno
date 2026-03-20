@@ -774,10 +774,6 @@ export namespace Prisma {
             args: Prisma.UserCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
-          createManyAndReturn: {
-            args: Prisma.UserCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPayload>[]
-          }
           delete: {
             args: Prisma.UserDeleteArgs<ExtArgs>
             result: $Utils.PayloadToResult<Prisma.$UserPayload>
@@ -793,10 +789,6 @@ export namespace Prisma {
           updateMany: {
             args: Prisma.UserUpdateManyArgs<ExtArgs>
             result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.UserUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPayload>[]
           }
           upsert: {
             args: Prisma.UserUpsertArgs<ExtArgs>
@@ -848,10 +840,6 @@ export namespace Prisma {
             args: Prisma.UserStatCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
-          createManyAndReturn: {
-            args: Prisma.UserStatCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserStatPayload>[]
-          }
           delete: {
             args: Prisma.UserStatDeleteArgs<ExtArgs>
             result: $Utils.PayloadToResult<Prisma.$UserStatPayload>
@@ -867,10 +855,6 @@ export namespace Prisma {
           updateMany: {
             args: Prisma.UserStatUpdateManyArgs<ExtArgs>
             result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.UserStatUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserStatPayload>[]
           }
           upsert: {
             args: Prisma.UserStatUpsertArgs<ExtArgs>
@@ -922,10 +906,6 @@ export namespace Prisma {
             args: Prisma.GameCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
-          createManyAndReturn: {
-            args: Prisma.GameCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GamePayload>[]
-          }
           delete: {
             args: Prisma.GameDeleteArgs<ExtArgs>
             result: $Utils.PayloadToResult<Prisma.$GamePayload>
@@ -941,10 +921,6 @@ export namespace Prisma {
           updateMany: {
             args: Prisma.GameUpdateManyArgs<ExtArgs>
             result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.GameUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GamePayload>[]
           }
           upsert: {
             args: Prisma.GameUpsertArgs<ExtArgs>
@@ -996,10 +972,6 @@ export namespace Prisma {
             args: Prisma.GamePlayerCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
-          createManyAndReturn: {
-            args: Prisma.GamePlayerCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GamePlayerPayload>[]
-          }
           delete: {
             args: Prisma.GamePlayerDeleteArgs<ExtArgs>
             result: $Utils.PayloadToResult<Prisma.$GamePlayerPayload>
@@ -1015,10 +987,6 @@ export namespace Prisma {
           updateMany: {
             args: Prisma.GamePlayerUpdateManyArgs<ExtArgs>
             result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.GamePlayerUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GamePlayerPayload>[]
           }
           upsert: {
             args: Prisma.GamePlayerUpsertArgs<ExtArgs>
@@ -1070,10 +1038,6 @@ export namespace Prisma {
             args: Prisma.GameActionCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
-          createManyAndReturn: {
-            args: Prisma.GameActionCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameActionPayload>[]
-          }
           delete: {
             args: Prisma.GameActionDeleteArgs<ExtArgs>
             result: $Utils.PayloadToResult<Prisma.$GameActionPayload>
@@ -1089,10 +1053,6 @@ export namespace Prisma {
           updateMany: {
             args: Prisma.GameActionUpdateManyArgs<ExtArgs>
             result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.GameActionUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameActionPayload>[]
           }
           upsert: {
             args: Prisma.GameActionUpsertArgs<ExtArgs>
@@ -1144,10 +1104,6 @@ export namespace Prisma {
             args: Prisma.LobbyCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
-          createManyAndReturn: {
-            args: Prisma.LobbyCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LobbyPayload>[]
-          }
           delete: {
             args: Prisma.LobbyDeleteArgs<ExtArgs>
             result: $Utils.PayloadToResult<Prisma.$LobbyPayload>
@@ -1163,10 +1119,6 @@ export namespace Prisma {
           updateMany: {
             args: Prisma.LobbyUpdateManyArgs<ExtArgs>
             result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.LobbyUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LobbyPayload>[]
           }
           upsert: {
             args: Prisma.LobbyUpsertArgs<ExtArgs>
@@ -1218,10 +1170,6 @@ export namespace Prisma {
             args: Prisma.LobbyPlayerCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
-          createManyAndReturn: {
-            args: Prisma.LobbyPlayerCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LobbyPlayerPayload>[]
-          }
           delete: {
             args: Prisma.LobbyPlayerDeleteArgs<ExtArgs>
             result: $Utils.PayloadToResult<Prisma.$LobbyPlayerPayload>
@@ -1237,10 +1185,6 @@ export namespace Prisma {
           updateMany: {
             args: Prisma.LobbyPlayerUpdateManyArgs<ExtArgs>
             result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.LobbyPlayerUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LobbyPlayerPayload>[]
           }
           upsert: {
             args: Prisma.LobbyPlayerUpsertArgs<ExtArgs>
@@ -1729,25 +1673,7 @@ export namespace Prisma {
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
-  export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    email?: boolean
-    password?: boolean
-    isGuest?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["user"]>
 
-  export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    email?: boolean
-    password?: boolean
-    isGuest?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
     id?: boolean
@@ -1765,8 +1691,6 @@ export namespace Prisma {
     stats?: boolean | User$statsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
@@ -1900,30 +1824,6 @@ export namespace Prisma {
     createMany<T extends UserCreateManyArgs>(args?: SelectSubset<T, UserCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many Users and returns the data saved in the database.
-     * @param {UserCreateManyAndReturnArgs} args - Arguments to create many Users.
-     * @example
-     * // Create many Users
-     * const user = await prisma.user.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Users and only return the `id`
-     * const userWithIdOnly = await prisma.user.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends UserCreateManyAndReturnArgs>(args?: SelectSubset<T, UserCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
      * Delete a User.
      * @param {UserDeleteArgs} args - Arguments to delete one User.
      * @example
@@ -1986,36 +1886,6 @@ export namespace Prisma {
      * 
      */
     updateMany<T extends UserUpdateManyArgs>(args: SelectSubset<T, UserUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Users and returns the data updated in the database.
-     * @param {UserUpdateManyAndReturnArgs} args - Arguments to update many Users.
-     * @example
-     * // Update many Users
-     * const user = await prisma.user.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Users and only return the `id`
-     * const userWithIdOnly = await prisma.user.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends UserUpdateManyAndReturnArgs>(args: SelectSubset<T, UserUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
      * Create or update one User.
@@ -2443,24 +2313,7 @@ export namespace Prisma {
      * The data used to create many Users.
      */
     data: UserCreateManyInput | UserCreateManyInput[]
-  }
-
-  /**
-   * User createManyAndReturn
-   */
-  export type UserCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * The data used to create many Users.
-     */
-    data: UserCreateManyInput | UserCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -2493,32 +2346,6 @@ export namespace Prisma {
    * User updateMany
    */
   export type UserUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Users.
-     */
-    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyInput>
-    /**
-     * Filter which Users to update
-     */
-    where?: UserWhereInput
-    /**
-     * Limit how many Users to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * User updateManyAndReturn
-   */
-  export type UserUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
     /**
      * The data used to update Users.
      */
@@ -2890,27 +2717,7 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["userStat"]>
 
-  export type UserStatSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    gamesPlayed?: boolean
-    gamesWon?: boolean
-    totalKnockouts?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["userStat"]>
 
-  export type UserStatSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    gamesPlayed?: boolean
-    gamesWon?: boolean
-    totalKnockouts?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["userStat"]>
 
   export type UserStatSelectScalar = {
     id?: boolean
@@ -2924,12 +2731,6 @@ export namespace Prisma {
 
   export type UserStatOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "gamesPlayed" | "gamesWon" | "totalKnockouts" | "createdAt" | "updatedAt", ExtArgs["result"]["userStat"]>
   export type UserStatInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type UserStatIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type UserStatIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
@@ -3064,30 +2865,6 @@ export namespace Prisma {
     createMany<T extends UserStatCreateManyArgs>(args?: SelectSubset<T, UserStatCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many UserStats and returns the data saved in the database.
-     * @param {UserStatCreateManyAndReturnArgs} args - Arguments to create many UserStats.
-     * @example
-     * // Create many UserStats
-     * const userStat = await prisma.userStat.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many UserStats and only return the `id`
-     * const userStatWithIdOnly = await prisma.userStat.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends UserStatCreateManyAndReturnArgs>(args?: SelectSubset<T, UserStatCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserStatPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
      * Delete a UserStat.
      * @param {UserStatDeleteArgs} args - Arguments to delete one UserStat.
      * @example
@@ -3150,36 +2927,6 @@ export namespace Prisma {
      * 
      */
     updateMany<T extends UserStatUpdateManyArgs>(args: SelectSubset<T, UserStatUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more UserStats and returns the data updated in the database.
-     * @param {UserStatUpdateManyAndReturnArgs} args - Arguments to update many UserStats.
-     * @example
-     * // Update many UserStats
-     * const userStat = await prisma.userStat.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more UserStats and only return the `id`
-     * const userStatWithIdOnly = await prisma.userStat.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends UserStatUpdateManyAndReturnArgs>(args: SelectSubset<T, UserStatUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserStatPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
      * Create or update one UserStat.
@@ -3606,28 +3353,7 @@ export namespace Prisma {
      * The data used to create many UserStats.
      */
     data: UserStatCreateManyInput | UserStatCreateManyInput[]
-  }
-
-  /**
-   * UserStat createManyAndReturn
-   */
-  export type UserStatCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserStat
-     */
-    select?: UserStatSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserStat
-     */
-    omit?: UserStatOmit<ExtArgs> | null
-    /**
-     * The data used to create many UserStats.
-     */
-    data: UserStatCreateManyInput | UserStatCreateManyInput[]
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserStatIncludeCreateManyAndReturn<ExtArgs> | null
+    skipDuplicates?: boolean
   }
 
   /**
@@ -3672,36 +3398,6 @@ export namespace Prisma {
      * Limit how many UserStats to update.
      */
     limit?: number
-  }
-
-  /**
-   * UserStat updateManyAndReturn
-   */
-  export type UserStatUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserStat
-     */
-    select?: UserStatSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserStat
-     */
-    omit?: UserStatOmit<ExtArgs> | null
-    /**
-     * The data used to update UserStats.
-     */
-    data: XOR<UserStatUpdateManyMutationInput, UserStatUncheckedUpdateManyInput>
-    /**
-     * Filter which UserStats to update
-     */
-    where?: UserStatWhereInput
-    /**
-     * Limit how many UserStats to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserStatIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -3803,80 +3499,146 @@ export namespace Prisma {
 
   export type GameAvgAggregateOutputType = {
     maxPlayers: number | null
+    currentPlayerIndex: number | null
+    direction: number | null
+    drawPenalty: number | null
   }
 
   export type GameSumAggregateOutputType = {
     maxPlayers: number | null
+    currentPlayerIndex: number | null
+    direction: number | null
+    drawPenalty: number | null
   }
 
   export type GameMinAggregateOutputType = {
     id: string | null
+    code: string | null
     status: $Enums.GameStatus | null
     maxPlayers: number | null
     createdAt: Date | null
     updatedAt: Date | null
     startedAt: Date | null
     endedAt: Date | null
+    deck: string | null
+    discardPile: string | null
+    currentPlayerIndex: number | null
+    direction: number | null
+    drawPenalty: number | null
+    currentColor: string | null
+    lastPlayedCard: string | null
+    winner: string | null
   }
 
   export type GameMaxAggregateOutputType = {
     id: string | null
+    code: string | null
     status: $Enums.GameStatus | null
     maxPlayers: number | null
     createdAt: Date | null
     updatedAt: Date | null
     startedAt: Date | null
     endedAt: Date | null
+    deck: string | null
+    discardPile: string | null
+    currentPlayerIndex: number | null
+    direction: number | null
+    drawPenalty: number | null
+    currentColor: string | null
+    lastPlayedCard: string | null
+    winner: string | null
   }
 
   export type GameCountAggregateOutputType = {
     id: number
+    code: number
     status: number
     maxPlayers: number
     createdAt: number
     updatedAt: number
     startedAt: number
     endedAt: number
+    deck: number
+    discardPile: number
+    currentPlayerIndex: number
+    direction: number
+    drawPenalty: number
+    currentColor: number
+    lastPlayedCard: number
+    winner: number
     _all: number
   }
 
 
   export type GameAvgAggregateInputType = {
     maxPlayers?: true
+    currentPlayerIndex?: true
+    direction?: true
+    drawPenalty?: true
   }
 
   export type GameSumAggregateInputType = {
     maxPlayers?: true
+    currentPlayerIndex?: true
+    direction?: true
+    drawPenalty?: true
   }
 
   export type GameMinAggregateInputType = {
     id?: true
+    code?: true
     status?: true
     maxPlayers?: true
     createdAt?: true
     updatedAt?: true
     startedAt?: true
     endedAt?: true
+    deck?: true
+    discardPile?: true
+    currentPlayerIndex?: true
+    direction?: true
+    drawPenalty?: true
+    currentColor?: true
+    lastPlayedCard?: true
+    winner?: true
   }
 
   export type GameMaxAggregateInputType = {
     id?: true
+    code?: true
     status?: true
     maxPlayers?: true
     createdAt?: true
     updatedAt?: true
     startedAt?: true
     endedAt?: true
+    deck?: true
+    discardPile?: true
+    currentPlayerIndex?: true
+    direction?: true
+    drawPenalty?: true
+    currentColor?: true
+    lastPlayedCard?: true
+    winner?: true
   }
 
   export type GameCountAggregateInputType = {
     id?: true
+    code?: true
     status?: true
     maxPlayers?: true
     createdAt?: true
     updatedAt?: true
     startedAt?: true
     endedAt?: true
+    deck?: true
+    discardPile?: true
+    currentPlayerIndex?: true
+    direction?: true
+    drawPenalty?: true
+    currentColor?: true
+    lastPlayedCard?: true
+    winner?: true
     _all?: true
   }
 
@@ -3968,12 +3730,21 @@ export namespace Prisma {
 
   export type GameGroupByOutputType = {
     id: string
+    code: string | null
     status: $Enums.GameStatus
     maxPlayers: number
     createdAt: Date
     updatedAt: Date
     startedAt: Date | null
     endedAt: Date | null
+    deck: string
+    discardPile: string
+    currentPlayerIndex: number
+    direction: number
+    drawPenalty: number
+    currentColor: string | null
+    lastPlayedCard: string | null
+    winner: string | null
     _count: GameCountAggregateOutputType | null
     _avg: GameAvgAggregateOutputType | null
     _sum: GameSumAggregateOutputType | null
@@ -3997,55 +3768,53 @@ export namespace Prisma {
 
   export type GameSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    code?: boolean
     status?: boolean
     maxPlayers?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     startedAt?: boolean
     endedAt?: boolean
+    deck?: boolean
+    discardPile?: boolean
+    currentPlayerIndex?: boolean
+    direction?: boolean
+    drawPenalty?: boolean
+    currentColor?: boolean
+    lastPlayedCard?: boolean
+    winner?: boolean
     players?: boolean | Game$playersArgs<ExtArgs>
     actions?: boolean | Game$actionsArgs<ExtArgs>
     _count?: boolean | GameCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["game"]>
 
-  export type GameSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    status?: boolean
-    maxPlayers?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    startedAt?: boolean
-    endedAt?: boolean
-  }, ExtArgs["result"]["game"]>
 
-  export type GameSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    status?: boolean
-    maxPlayers?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    startedAt?: boolean
-    endedAt?: boolean
-  }, ExtArgs["result"]["game"]>
 
   export type GameSelectScalar = {
     id?: boolean
+    code?: boolean
     status?: boolean
     maxPlayers?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     startedAt?: boolean
     endedAt?: boolean
+    deck?: boolean
+    discardPile?: boolean
+    currentPlayerIndex?: boolean
+    direction?: boolean
+    drawPenalty?: boolean
+    currentColor?: boolean
+    lastPlayedCard?: boolean
+    winner?: boolean
   }
 
-  export type GameOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "status" | "maxPlayers" | "createdAt" | "updatedAt" | "startedAt" | "endedAt", ExtArgs["result"]["game"]>
+  export type GameOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "code" | "status" | "maxPlayers" | "createdAt" | "updatedAt" | "startedAt" | "endedAt" | "deck" | "discardPile" | "currentPlayerIndex" | "direction" | "drawPenalty" | "currentColor" | "lastPlayedCard" | "winner", ExtArgs["result"]["game"]>
   export type GameInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     players?: boolean | Game$playersArgs<ExtArgs>
     actions?: boolean | Game$actionsArgs<ExtArgs>
     _count?: boolean | GameCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type GameIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type GameIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $GamePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Game"
@@ -4055,12 +3824,21 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
+      code: string | null
       status: $Enums.GameStatus
       maxPlayers: number
       createdAt: Date
       updatedAt: Date
       startedAt: Date | null
       endedAt: Date | null
+      deck: string
+      discardPile: string
+      currentPlayerIndex: number
+      direction: number
+      drawPenalty: number
+      currentColor: string | null
+      lastPlayedCard: string | null
+      winner: string | null
     }, ExtArgs["result"]["game"]>
     composites: {}
   }
@@ -4179,30 +3957,6 @@ export namespace Prisma {
     createMany<T extends GameCreateManyArgs>(args?: SelectSubset<T, GameCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many Games and returns the data saved in the database.
-     * @param {GameCreateManyAndReturnArgs} args - Arguments to create many Games.
-     * @example
-     * // Create many Games
-     * const game = await prisma.game.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Games and only return the `id`
-     * const gameWithIdOnly = await prisma.game.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends GameCreateManyAndReturnArgs>(args?: SelectSubset<T, GameCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
      * Delete a Game.
      * @param {GameDeleteArgs} args - Arguments to delete one Game.
      * @example
@@ -4265,36 +4019,6 @@ export namespace Prisma {
      * 
      */
     updateMany<T extends GameUpdateManyArgs>(args: SelectSubset<T, GameUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Games and returns the data updated in the database.
-     * @param {GameUpdateManyAndReturnArgs} args - Arguments to update many Games.
-     * @example
-     * // Update many Games
-     * const game = await prisma.game.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Games and only return the `id`
-     * const gameWithIdOnly = await prisma.game.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends GameUpdateManyAndReturnArgs>(args: SelectSubset<T, GameUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
      * Create or update one Game.
@@ -4487,12 +4211,21 @@ export namespace Prisma {
    */
   interface GameFieldRefs {
     readonly id: FieldRef<"Game", 'String'>
+    readonly code: FieldRef<"Game", 'String'>
     readonly status: FieldRef<"Game", 'GameStatus'>
     readonly maxPlayers: FieldRef<"Game", 'Int'>
     readonly createdAt: FieldRef<"Game", 'DateTime'>
     readonly updatedAt: FieldRef<"Game", 'DateTime'>
     readonly startedAt: FieldRef<"Game", 'DateTime'>
     readonly endedAt: FieldRef<"Game", 'DateTime'>
+    readonly deck: FieldRef<"Game", 'String'>
+    readonly discardPile: FieldRef<"Game", 'String'>
+    readonly currentPlayerIndex: FieldRef<"Game", 'Int'>
+    readonly direction: FieldRef<"Game", 'Int'>
+    readonly drawPenalty: FieldRef<"Game", 'Int'>
+    readonly currentColor: FieldRef<"Game", 'String'>
+    readonly lastPlayedCard: FieldRef<"Game", 'String'>
+    readonly winner: FieldRef<"Game", 'String'>
   }
     
 
@@ -4722,24 +4455,7 @@ export namespace Prisma {
      * The data used to create many Games.
      */
     data: GameCreateManyInput | GameCreateManyInput[]
-  }
-
-  /**
-   * Game createManyAndReturn
-   */
-  export type GameCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Game
-     */
-    select?: GameSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Game
-     */
-    omit?: GameOmit<ExtArgs> | null
-    /**
-     * The data used to create many Games.
-     */
-    data: GameCreateManyInput | GameCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -4772,32 +4488,6 @@ export namespace Prisma {
    * Game updateMany
    */
   export type GameUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Games.
-     */
-    data: XOR<GameUpdateManyMutationInput, GameUncheckedUpdateManyInput>
-    /**
-     * Filter which Games to update
-     */
-    where?: GameWhereInput
-    /**
-     * Limit how many Games to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Game updateManyAndReturn
-   */
-  export type GameUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Game
-     */
-    select?: GameSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Game
-     */
-    omit?: GameOmit<ExtArgs> | null
     /**
      * The data used to update Games.
      */
@@ -4969,6 +4659,7 @@ export namespace Prisma {
     id: string | null
     gameId: string | null
     userId: string | null
+    name: string | null
     position: number | null
     cards: string | null
     isKnockedOut: boolean | null
@@ -4980,6 +4671,7 @@ export namespace Prisma {
     id: string | null
     gameId: string | null
     userId: string | null
+    name: string | null
     position: number | null
     cards: string | null
     isKnockedOut: boolean | null
@@ -4991,6 +4683,7 @@ export namespace Prisma {
     id: number
     gameId: number
     userId: number
+    name: number
     position: number
     cards: number
     isKnockedOut: number
@@ -5012,6 +4705,7 @@ export namespace Prisma {
     id?: true
     gameId?: true
     userId?: true
+    name?: true
     position?: true
     cards?: true
     isKnockedOut?: true
@@ -5023,6 +4717,7 @@ export namespace Prisma {
     id?: true
     gameId?: true
     userId?: true
+    name?: true
     position?: true
     cards?: true
     isKnockedOut?: true
@@ -5034,6 +4729,7 @@ export namespace Prisma {
     id?: true
     gameId?: true
     userId?: true
+    name?: true
     position?: true
     cards?: true
     isKnockedOut?: true
@@ -5132,6 +4828,7 @@ export namespace Prisma {
     id: string
     gameId: string
     userId: string
+    name: string
     position: number
     cards: string
     isKnockedOut: boolean
@@ -5162,6 +4859,7 @@ export namespace Prisma {
     id?: boolean
     gameId?: boolean
     userId?: boolean
+    name?: boolean
     position?: boolean
     cards?: boolean
     isKnockedOut?: boolean
@@ -5171,36 +4869,13 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["gamePlayer"]>
 
-  export type GamePlayerSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    gameId?: boolean
-    userId?: boolean
-    position?: boolean
-    cards?: boolean
-    isKnockedOut?: boolean
-    calledUno?: boolean
-    createdAt?: boolean
-    game?: boolean | GameDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["gamePlayer"]>
 
-  export type GamePlayerSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    gameId?: boolean
-    userId?: boolean
-    position?: boolean
-    cards?: boolean
-    isKnockedOut?: boolean
-    calledUno?: boolean
-    createdAt?: boolean
-    game?: boolean | GameDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["gamePlayer"]>
 
   export type GamePlayerSelectScalar = {
     id?: boolean
     gameId?: boolean
     userId?: boolean
+    name?: boolean
     position?: boolean
     cards?: boolean
     isKnockedOut?: boolean
@@ -5208,16 +4883,8 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type GamePlayerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "gameId" | "userId" | "position" | "cards" | "isKnockedOut" | "calledUno" | "createdAt", ExtArgs["result"]["gamePlayer"]>
+  export type GamePlayerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "gameId" | "userId" | "name" | "position" | "cards" | "isKnockedOut" | "calledUno" | "createdAt", ExtArgs["result"]["gamePlayer"]>
   export type GamePlayerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    game?: boolean | GameDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type GamePlayerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    game?: boolean | GameDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type GamePlayerIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     game?: boolean | GameDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -5232,6 +4899,7 @@ export namespace Prisma {
       id: string
       gameId: string
       userId: string
+      name: string
       position: number
       cards: string
       isKnockedOut: boolean
@@ -5355,30 +5023,6 @@ export namespace Prisma {
     createMany<T extends GamePlayerCreateManyArgs>(args?: SelectSubset<T, GamePlayerCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many GamePlayers and returns the data saved in the database.
-     * @param {GamePlayerCreateManyAndReturnArgs} args - Arguments to create many GamePlayers.
-     * @example
-     * // Create many GamePlayers
-     * const gamePlayer = await prisma.gamePlayer.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many GamePlayers and only return the `id`
-     * const gamePlayerWithIdOnly = await prisma.gamePlayer.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends GamePlayerCreateManyAndReturnArgs>(args?: SelectSubset<T, GamePlayerCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamePlayerPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
      * Delete a GamePlayer.
      * @param {GamePlayerDeleteArgs} args - Arguments to delete one GamePlayer.
      * @example
@@ -5441,36 +5085,6 @@ export namespace Prisma {
      * 
      */
     updateMany<T extends GamePlayerUpdateManyArgs>(args: SelectSubset<T, GamePlayerUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more GamePlayers and returns the data updated in the database.
-     * @param {GamePlayerUpdateManyAndReturnArgs} args - Arguments to update many GamePlayers.
-     * @example
-     * // Update many GamePlayers
-     * const gamePlayer = await prisma.gamePlayer.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more GamePlayers and only return the `id`
-     * const gamePlayerWithIdOnly = await prisma.gamePlayer.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends GamePlayerUpdateManyAndReturnArgs>(args: SelectSubset<T, GamePlayerUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamePlayerPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
      * Create or update one GamePlayer.
@@ -5665,6 +5279,7 @@ export namespace Prisma {
     readonly id: FieldRef<"GamePlayer", 'String'>
     readonly gameId: FieldRef<"GamePlayer", 'String'>
     readonly userId: FieldRef<"GamePlayer", 'String'>
+    readonly name: FieldRef<"GamePlayer", 'String'>
     readonly position: FieldRef<"GamePlayer", 'Int'>
     readonly cards: FieldRef<"GamePlayer", 'String'>
     readonly isKnockedOut: FieldRef<"GamePlayer", 'Boolean'>
@@ -5899,28 +5514,7 @@ export namespace Prisma {
      * The data used to create many GamePlayers.
      */
     data: GamePlayerCreateManyInput | GamePlayerCreateManyInput[]
-  }
-
-  /**
-   * GamePlayer createManyAndReturn
-   */
-  export type GamePlayerCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GamePlayer
-     */
-    select?: GamePlayerSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the GamePlayer
-     */
-    omit?: GamePlayerOmit<ExtArgs> | null
-    /**
-     * The data used to create many GamePlayers.
-     */
-    data: GamePlayerCreateManyInput | GamePlayerCreateManyInput[]
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GamePlayerIncludeCreateManyAndReturn<ExtArgs> | null
+    skipDuplicates?: boolean
   }
 
   /**
@@ -5965,36 +5559,6 @@ export namespace Prisma {
      * Limit how many GamePlayers to update.
      */
     limit?: number
-  }
-
-  /**
-   * GamePlayer updateManyAndReturn
-   */
-  export type GamePlayerUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GamePlayer
-     */
-    select?: GamePlayerSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the GamePlayer
-     */
-    omit?: GamePlayerOmit<ExtArgs> | null
-    /**
-     * The data used to update GamePlayers.
-     */
-    data: XOR<GamePlayerUpdateManyMutationInput, GamePlayerUncheckedUpdateManyInput>
-    /**
-     * Filter which GamePlayers to update
-     */
-    where?: GamePlayerWhereInput
-    /**
-     * Limit how many GamePlayers to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GamePlayerIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -6315,31 +5879,7 @@ export namespace Prisma {
     game?: boolean | GameDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["gameAction"]>
 
-  export type GameActionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    gameId?: boolean
-    playerId?: boolean
-    type?: boolean
-    cardPlayed?: boolean
-    cardsDrawn?: boolean
-    targetId?: boolean
-    color?: boolean
-    createdAt?: boolean
-    game?: boolean | GameDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["gameAction"]>
 
-  export type GameActionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    gameId?: boolean
-    playerId?: boolean
-    type?: boolean
-    cardPlayed?: boolean
-    cardsDrawn?: boolean
-    targetId?: boolean
-    color?: boolean
-    createdAt?: boolean
-    game?: boolean | GameDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["gameAction"]>
 
   export type GameActionSelectScalar = {
     id?: boolean
@@ -6355,12 +5895,6 @@ export namespace Prisma {
 
   export type GameActionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "gameId" | "playerId" | "type" | "cardPlayed" | "cardsDrawn" | "targetId" | "color" | "createdAt", ExtArgs["result"]["gameAction"]>
   export type GameActionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    game?: boolean | GameDefaultArgs<ExtArgs>
-  }
-  export type GameActionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    game?: boolean | GameDefaultArgs<ExtArgs>
-  }
-  export type GameActionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     game?: boolean | GameDefaultArgs<ExtArgs>
   }
 
@@ -6497,30 +6031,6 @@ export namespace Prisma {
     createMany<T extends GameActionCreateManyArgs>(args?: SelectSubset<T, GameActionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many GameActions and returns the data saved in the database.
-     * @param {GameActionCreateManyAndReturnArgs} args - Arguments to create many GameActions.
-     * @example
-     * // Create many GameActions
-     * const gameAction = await prisma.gameAction.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many GameActions and only return the `id`
-     * const gameActionWithIdOnly = await prisma.gameAction.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends GameActionCreateManyAndReturnArgs>(args?: SelectSubset<T, GameActionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameActionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
      * Delete a GameAction.
      * @param {GameActionDeleteArgs} args - Arguments to delete one GameAction.
      * @example
@@ -6583,36 +6093,6 @@ export namespace Prisma {
      * 
      */
     updateMany<T extends GameActionUpdateManyArgs>(args: SelectSubset<T, GameActionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more GameActions and returns the data updated in the database.
-     * @param {GameActionUpdateManyAndReturnArgs} args - Arguments to update many GameActions.
-     * @example
-     * // Update many GameActions
-     * const gameAction = await prisma.gameAction.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more GameActions and only return the `id`
-     * const gameActionWithIdOnly = await prisma.gameAction.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends GameActionUpdateManyAndReturnArgs>(args: SelectSubset<T, GameActionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameActionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
      * Create or update one GameAction.
@@ -7041,28 +6521,7 @@ export namespace Prisma {
      * The data used to create many GameActions.
      */
     data: GameActionCreateManyInput | GameActionCreateManyInput[]
-  }
-
-  /**
-   * GameAction createManyAndReturn
-   */
-  export type GameActionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameAction
-     */
-    select?: GameActionSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameAction
-     */
-    omit?: GameActionOmit<ExtArgs> | null
-    /**
-     * The data used to create many GameActions.
-     */
-    data: GameActionCreateManyInput | GameActionCreateManyInput[]
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameActionIncludeCreateManyAndReturn<ExtArgs> | null
+    skipDuplicates?: boolean
   }
 
   /**
@@ -7107,36 +6566,6 @@ export namespace Prisma {
      * Limit how many GameActions to update.
      */
     limit?: number
-  }
-
-  /**
-   * GameAction updateManyAndReturn
-   */
-  export type GameActionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameAction
-     */
-    select?: GameActionSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameAction
-     */
-    omit?: GameActionOmit<ExtArgs> | null
-    /**
-     * The data used to update GameActions.
-     */
-    data: XOR<GameActionUpdateManyMutationInput, GameActionUncheckedUpdateManyInput>
-    /**
-     * Filter which GameActions to update
-     */
-    where?: GameActionWhereInput
-    /**
-     * Limit how many GameActions to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameActionIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -7392,21 +6821,7 @@ export namespace Prisma {
     _count?: boolean | LobbyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["lobby"]>
 
-  export type LobbySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    code?: boolean
-    createdBy?: boolean
-    status?: boolean
-    createdAt?: boolean
-  }, ExtArgs["result"]["lobby"]>
 
-  export type LobbySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    code?: boolean
-    createdBy?: boolean
-    status?: boolean
-    createdAt?: boolean
-  }, ExtArgs["result"]["lobby"]>
 
   export type LobbySelectScalar = {
     id?: boolean
@@ -7421,8 +6836,6 @@ export namespace Prisma {
     players?: boolean | Lobby$playersArgs<ExtArgs>
     _count?: boolean | LobbyCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type LobbyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type LobbyIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $LobbyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Lobby"
@@ -7553,30 +6966,6 @@ export namespace Prisma {
     createMany<T extends LobbyCreateManyArgs>(args?: SelectSubset<T, LobbyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many Lobbies and returns the data saved in the database.
-     * @param {LobbyCreateManyAndReturnArgs} args - Arguments to create many Lobbies.
-     * @example
-     * // Create many Lobbies
-     * const lobby = await prisma.lobby.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Lobbies and only return the `id`
-     * const lobbyWithIdOnly = await prisma.lobby.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends LobbyCreateManyAndReturnArgs>(args?: SelectSubset<T, LobbyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LobbyPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
      * Delete a Lobby.
      * @param {LobbyDeleteArgs} args - Arguments to delete one Lobby.
      * @example
@@ -7639,36 +7028,6 @@ export namespace Prisma {
      * 
      */
     updateMany<T extends LobbyUpdateManyArgs>(args: SelectSubset<T, LobbyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Lobbies and returns the data updated in the database.
-     * @param {LobbyUpdateManyAndReturnArgs} args - Arguments to update many Lobbies.
-     * @example
-     * // Update many Lobbies
-     * const lobby = await prisma.lobby.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Lobbies and only return the `id`
-     * const lobbyWithIdOnly = await prisma.lobby.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends LobbyUpdateManyAndReturnArgs>(args: SelectSubset<T, LobbyUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LobbyPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
      * Create or update one Lobby.
@@ -8093,24 +7452,7 @@ export namespace Prisma {
      * The data used to create many Lobbies.
      */
     data: LobbyCreateManyInput | LobbyCreateManyInput[]
-  }
-
-  /**
-   * Lobby createManyAndReturn
-   */
-  export type LobbyCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Lobby
-     */
-    select?: LobbySelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Lobby
-     */
-    omit?: LobbyOmit<ExtArgs> | null
-    /**
-     * The data used to create many Lobbies.
-     */
-    data: LobbyCreateManyInput | LobbyCreateManyInput[]
+    skipDuplicates?: boolean
   }
 
   /**
@@ -8143,32 +7485,6 @@ export namespace Prisma {
    * Lobby updateMany
    */
   export type LobbyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Lobbies.
-     */
-    data: XOR<LobbyUpdateManyMutationInput, LobbyUncheckedUpdateManyInput>
-    /**
-     * Filter which Lobbies to update
-     */
-    where?: LobbyWhereInput
-    /**
-     * Limit how many Lobbies to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Lobby updateManyAndReturn
-   */
-  export type LobbyUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Lobby
-     */
-    select?: LobbySelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Lobby
-     */
-    omit?: LobbyOmit<ExtArgs> | null
     /**
      * The data used to update Lobbies.
      */
@@ -8493,23 +7809,7 @@ export namespace Prisma {
     lobby?: boolean | LobbyDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["lobbyPlayer"]>
 
-  export type LobbyPlayerSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    lobbyId?: boolean
-    userId?: boolean
-    position?: boolean
-    createdAt?: boolean
-    lobby?: boolean | LobbyDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["lobbyPlayer"]>
 
-  export type LobbyPlayerSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    lobbyId?: boolean
-    userId?: boolean
-    position?: boolean
-    createdAt?: boolean
-    lobby?: boolean | LobbyDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["lobbyPlayer"]>
 
   export type LobbyPlayerSelectScalar = {
     id?: boolean
@@ -8521,12 +7821,6 @@ export namespace Prisma {
 
   export type LobbyPlayerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "lobbyId" | "userId" | "position" | "createdAt", ExtArgs["result"]["lobbyPlayer"]>
   export type LobbyPlayerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    lobby?: boolean | LobbyDefaultArgs<ExtArgs>
-  }
-  export type LobbyPlayerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    lobby?: boolean | LobbyDefaultArgs<ExtArgs>
-  }
-  export type LobbyPlayerIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lobby?: boolean | LobbyDefaultArgs<ExtArgs>
   }
 
@@ -8659,30 +7953,6 @@ export namespace Prisma {
     createMany<T extends LobbyPlayerCreateManyArgs>(args?: SelectSubset<T, LobbyPlayerCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many LobbyPlayers and returns the data saved in the database.
-     * @param {LobbyPlayerCreateManyAndReturnArgs} args - Arguments to create many LobbyPlayers.
-     * @example
-     * // Create many LobbyPlayers
-     * const lobbyPlayer = await prisma.lobbyPlayer.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many LobbyPlayers and only return the `id`
-     * const lobbyPlayerWithIdOnly = await prisma.lobbyPlayer.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends LobbyPlayerCreateManyAndReturnArgs>(args?: SelectSubset<T, LobbyPlayerCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LobbyPlayerPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
      * Delete a LobbyPlayer.
      * @param {LobbyPlayerDeleteArgs} args - Arguments to delete one LobbyPlayer.
      * @example
@@ -8745,36 +8015,6 @@ export namespace Prisma {
      * 
      */
     updateMany<T extends LobbyPlayerUpdateManyArgs>(args: SelectSubset<T, LobbyPlayerUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more LobbyPlayers and returns the data updated in the database.
-     * @param {LobbyPlayerUpdateManyAndReturnArgs} args - Arguments to update many LobbyPlayers.
-     * @example
-     * // Update many LobbyPlayers
-     * const lobbyPlayer = await prisma.lobbyPlayer.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more LobbyPlayers and only return the `id`
-     * const lobbyPlayerWithIdOnly = await prisma.lobbyPlayer.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends LobbyPlayerUpdateManyAndReturnArgs>(args: SelectSubset<T, LobbyPlayerUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LobbyPlayerPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
      * Create or update one LobbyPlayer.
@@ -9199,28 +8439,7 @@ export namespace Prisma {
      * The data used to create many LobbyPlayers.
      */
     data: LobbyPlayerCreateManyInput | LobbyPlayerCreateManyInput[]
-  }
-
-  /**
-   * LobbyPlayer createManyAndReturn
-   */
-  export type LobbyPlayerCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LobbyPlayer
-     */
-    select?: LobbyPlayerSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the LobbyPlayer
-     */
-    omit?: LobbyPlayerOmit<ExtArgs> | null
-    /**
-     * The data used to create many LobbyPlayers.
-     */
-    data: LobbyPlayerCreateManyInput | LobbyPlayerCreateManyInput[]
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LobbyPlayerIncludeCreateManyAndReturn<ExtArgs> | null
+    skipDuplicates?: boolean
   }
 
   /**
@@ -9265,36 +8484,6 @@ export namespace Prisma {
      * Limit how many LobbyPlayers to update.
      */
     limit?: number
-  }
-
-  /**
-   * LobbyPlayer updateManyAndReturn
-   */
-  export type LobbyPlayerUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LobbyPlayer
-     */
-    select?: LobbyPlayerSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the LobbyPlayer
-     */
-    omit?: LobbyPlayerOmit<ExtArgs> | null
-    /**
-     * The data used to update LobbyPlayers.
-     */
-    data: XOR<LobbyPlayerUpdateManyMutationInput, LobbyPlayerUncheckedUpdateManyInput>
-    /**
-     * Filter which LobbyPlayers to update
-     */
-    where?: LobbyPlayerWhereInput
-    /**
-     * Limit how many LobbyPlayers to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LobbyPlayerIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -9387,6 +8576,9 @@ export namespace Prisma {
    */
 
   export const TransactionIsolationLevel: {
+    ReadUncommitted: 'ReadUncommitted',
+    ReadCommitted: 'ReadCommitted',
+    RepeatableRead: 'RepeatableRead',
     Serializable: 'Serializable'
   };
 
@@ -9421,12 +8613,21 @@ export namespace Prisma {
 
   export const GameScalarFieldEnum: {
     id: 'id',
+    code: 'code',
     status: 'status',
     maxPlayers: 'maxPlayers',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     startedAt: 'startedAt',
-    endedAt: 'endedAt'
+    endedAt: 'endedAt',
+    deck: 'deck',
+    discardPile: 'discardPile',
+    currentPlayerIndex: 'currentPlayerIndex',
+    direction: 'direction',
+    drawPenalty: 'drawPenalty',
+    currentColor: 'currentColor',
+    lastPlayedCard: 'lastPlayedCard',
+    winner: 'winner'
   };
 
   export type GameScalarFieldEnum = (typeof GameScalarFieldEnum)[keyof typeof GameScalarFieldEnum]
@@ -9436,6 +8637,7 @@ export namespace Prisma {
     id: 'id',
     gameId: 'gameId',
     userId: 'userId',
+    name: 'name',
     position: 'position',
     cards: 'cards',
     isKnockedOut: 'isKnockedOut',
@@ -9497,6 +8699,77 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const UserOrderByRelevanceFieldEnum: {
+    id: 'id',
+    name: 'name',
+    email: 'email',
+    password: 'password'
+  };
+
+  export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
+
+
+  export const UserStatOrderByRelevanceFieldEnum: {
+    userId: 'userId'
+  };
+
+  export type UserStatOrderByRelevanceFieldEnum = (typeof UserStatOrderByRelevanceFieldEnum)[keyof typeof UserStatOrderByRelevanceFieldEnum]
+
+
+  export const GameOrderByRelevanceFieldEnum: {
+    id: 'id',
+    code: 'code',
+    deck: 'deck',
+    discardPile: 'discardPile',
+    currentColor: 'currentColor',
+    lastPlayedCard: 'lastPlayedCard',
+    winner: 'winner'
+  };
+
+  export type GameOrderByRelevanceFieldEnum = (typeof GameOrderByRelevanceFieldEnum)[keyof typeof GameOrderByRelevanceFieldEnum]
+
+
+  export const GamePlayerOrderByRelevanceFieldEnum: {
+    id: 'id',
+    gameId: 'gameId',
+    userId: 'userId',
+    name: 'name',
+    cards: 'cards'
+  };
+
+  export type GamePlayerOrderByRelevanceFieldEnum = (typeof GamePlayerOrderByRelevanceFieldEnum)[keyof typeof GamePlayerOrderByRelevanceFieldEnum]
+
+
+  export const GameActionOrderByRelevanceFieldEnum: {
+    id: 'id',
+    gameId: 'gameId',
+    playerId: 'playerId',
+    cardPlayed: 'cardPlayed',
+    targetId: 'targetId',
+    color: 'color'
+  };
+
+  export type GameActionOrderByRelevanceFieldEnum = (typeof GameActionOrderByRelevanceFieldEnum)[keyof typeof GameActionOrderByRelevanceFieldEnum]
+
+
+  export const LobbyOrderByRelevanceFieldEnum: {
+    id: 'id',
+    code: 'code',
+    createdBy: 'createdBy'
+  };
+
+  export type LobbyOrderByRelevanceFieldEnum = (typeof LobbyOrderByRelevanceFieldEnum)[keyof typeof LobbyOrderByRelevanceFieldEnum]
+
+
+  export const LobbyPlayerOrderByRelevanceFieldEnum: {
+    id: 'id',
+    lobbyId: 'lobbyId',
+    userId: 'userId'
+  };
+
+  export type LobbyPlayerOrderByRelevanceFieldEnum = (typeof LobbyPlayerOrderByRelevanceFieldEnum)[keyof typeof LobbyPlayerOrderByRelevanceFieldEnum]
 
 
   /**
@@ -9581,6 +8854,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     games?: GamePlayerOrderByRelationAggregateInput
     stats?: UserStatOrderByWithRelationInput
+    _relevance?: UserOrderByRelevanceInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -9647,6 +8921,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
+    _relevance?: UserStatOrderByRelevanceInput
   }
 
   export type UserStatWhereUniqueInput = Prisma.AtLeast<{
@@ -9696,30 +8971,50 @@ export namespace Prisma {
     OR?: GameWhereInput[]
     NOT?: GameWhereInput | GameWhereInput[]
     id?: StringFilter<"Game"> | string
+    code?: StringNullableFilter<"Game"> | string | null
     status?: EnumGameStatusFilter<"Game"> | $Enums.GameStatus
     maxPlayers?: IntFilter<"Game"> | number
     createdAt?: DateTimeFilter<"Game"> | Date | string
     updatedAt?: DateTimeFilter<"Game"> | Date | string
     startedAt?: DateTimeNullableFilter<"Game"> | Date | string | null
     endedAt?: DateTimeNullableFilter<"Game"> | Date | string | null
+    deck?: StringFilter<"Game"> | string
+    discardPile?: StringFilter<"Game"> | string
+    currentPlayerIndex?: IntFilter<"Game"> | number
+    direction?: IntFilter<"Game"> | number
+    drawPenalty?: IntFilter<"Game"> | number
+    currentColor?: StringNullableFilter<"Game"> | string | null
+    lastPlayedCard?: StringNullableFilter<"Game"> | string | null
+    winner?: StringNullableFilter<"Game"> | string | null
     players?: GamePlayerListRelationFilter
     actions?: GameActionListRelationFilter
   }
 
   export type GameOrderByWithRelationInput = {
     id?: SortOrder
+    code?: SortOrderInput | SortOrder
     status?: SortOrder
     maxPlayers?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     startedAt?: SortOrderInput | SortOrder
     endedAt?: SortOrderInput | SortOrder
+    deck?: SortOrder
+    discardPile?: SortOrder
+    currentPlayerIndex?: SortOrder
+    direction?: SortOrder
+    drawPenalty?: SortOrder
+    currentColor?: SortOrderInput | SortOrder
+    lastPlayedCard?: SortOrderInput | SortOrder
+    winner?: SortOrderInput | SortOrder
     players?: GamePlayerOrderByRelationAggregateInput
     actions?: GameActionOrderByRelationAggregateInput
+    _relevance?: GameOrderByRelevanceInput
   }
 
   export type GameWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    code?: string
     AND?: GameWhereInput | GameWhereInput[]
     OR?: GameWhereInput[]
     NOT?: GameWhereInput | GameWhereInput[]
@@ -9729,18 +9024,35 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Game"> | Date | string
     startedAt?: DateTimeNullableFilter<"Game"> | Date | string | null
     endedAt?: DateTimeNullableFilter<"Game"> | Date | string | null
+    deck?: StringFilter<"Game"> | string
+    discardPile?: StringFilter<"Game"> | string
+    currentPlayerIndex?: IntFilter<"Game"> | number
+    direction?: IntFilter<"Game"> | number
+    drawPenalty?: IntFilter<"Game"> | number
+    currentColor?: StringNullableFilter<"Game"> | string | null
+    lastPlayedCard?: StringNullableFilter<"Game"> | string | null
+    winner?: StringNullableFilter<"Game"> | string | null
     players?: GamePlayerListRelationFilter
     actions?: GameActionListRelationFilter
-  }, "id">
+  }, "id" | "code">
 
   export type GameOrderByWithAggregationInput = {
     id?: SortOrder
+    code?: SortOrderInput | SortOrder
     status?: SortOrder
     maxPlayers?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     startedAt?: SortOrderInput | SortOrder
     endedAt?: SortOrderInput | SortOrder
+    deck?: SortOrder
+    discardPile?: SortOrder
+    currentPlayerIndex?: SortOrder
+    direction?: SortOrder
+    drawPenalty?: SortOrder
+    currentColor?: SortOrderInput | SortOrder
+    lastPlayedCard?: SortOrderInput | SortOrder
+    winner?: SortOrderInput | SortOrder
     _count?: GameCountOrderByAggregateInput
     _avg?: GameAvgOrderByAggregateInput
     _max?: GameMaxOrderByAggregateInput
@@ -9753,12 +9065,21 @@ export namespace Prisma {
     OR?: GameScalarWhereWithAggregatesInput[]
     NOT?: GameScalarWhereWithAggregatesInput | GameScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Game"> | string
+    code?: StringNullableWithAggregatesFilter<"Game"> | string | null
     status?: EnumGameStatusWithAggregatesFilter<"Game"> | $Enums.GameStatus
     maxPlayers?: IntWithAggregatesFilter<"Game"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Game"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Game"> | Date | string
     startedAt?: DateTimeNullableWithAggregatesFilter<"Game"> | Date | string | null
     endedAt?: DateTimeNullableWithAggregatesFilter<"Game"> | Date | string | null
+    deck?: StringWithAggregatesFilter<"Game"> | string
+    discardPile?: StringWithAggregatesFilter<"Game"> | string
+    currentPlayerIndex?: IntWithAggregatesFilter<"Game"> | number
+    direction?: IntWithAggregatesFilter<"Game"> | number
+    drawPenalty?: IntWithAggregatesFilter<"Game"> | number
+    currentColor?: StringNullableWithAggregatesFilter<"Game"> | string | null
+    lastPlayedCard?: StringNullableWithAggregatesFilter<"Game"> | string | null
+    winner?: StringNullableWithAggregatesFilter<"Game"> | string | null
   }
 
   export type GamePlayerWhereInput = {
@@ -9768,6 +9089,7 @@ export namespace Prisma {
     id?: StringFilter<"GamePlayer"> | string
     gameId?: StringFilter<"GamePlayer"> | string
     userId?: StringFilter<"GamePlayer"> | string
+    name?: StringFilter<"GamePlayer"> | string
     position?: IntFilter<"GamePlayer"> | number
     cards?: StringFilter<"GamePlayer"> | string
     isKnockedOut?: BoolFilter<"GamePlayer"> | boolean
@@ -9781,6 +9103,7 @@ export namespace Prisma {
     id?: SortOrder
     gameId?: SortOrder
     userId?: SortOrder
+    name?: SortOrder
     position?: SortOrder
     cards?: SortOrder
     isKnockedOut?: SortOrder
@@ -9788,6 +9111,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     game?: GameOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
+    _relevance?: GamePlayerOrderByRelevanceInput
   }
 
   export type GamePlayerWhereUniqueInput = Prisma.AtLeast<{
@@ -9798,6 +9122,7 @@ export namespace Prisma {
     NOT?: GamePlayerWhereInput | GamePlayerWhereInput[]
     gameId?: StringFilter<"GamePlayer"> | string
     userId?: StringFilter<"GamePlayer"> | string
+    name?: StringFilter<"GamePlayer"> | string
     position?: IntFilter<"GamePlayer"> | number
     cards?: StringFilter<"GamePlayer"> | string
     isKnockedOut?: BoolFilter<"GamePlayer"> | boolean
@@ -9811,6 +9136,7 @@ export namespace Prisma {
     id?: SortOrder
     gameId?: SortOrder
     userId?: SortOrder
+    name?: SortOrder
     position?: SortOrder
     cards?: SortOrder
     isKnockedOut?: SortOrder
@@ -9830,6 +9156,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"GamePlayer"> | string
     gameId?: StringWithAggregatesFilter<"GamePlayer"> | string
     userId?: StringWithAggregatesFilter<"GamePlayer"> | string
+    name?: StringWithAggregatesFilter<"GamePlayer"> | string
     position?: IntWithAggregatesFilter<"GamePlayer"> | number
     cards?: StringWithAggregatesFilter<"GamePlayer"> | string
     isKnockedOut?: BoolWithAggregatesFilter<"GamePlayer"> | boolean
@@ -9864,6 +9191,7 @@ export namespace Prisma {
     color?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     game?: GameOrderByWithRelationInput
+    _relevance?: GameActionOrderByRelevanceInput
   }
 
   export type GameActionWhereUniqueInput = Prisma.AtLeast<{
@@ -9933,6 +9261,7 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     players?: LobbyPlayerOrderByRelationAggregateInput
+    _relevance?: LobbyOrderByRelevanceInput
   }
 
   export type LobbyWhereUniqueInput = Prisma.AtLeast<{
@@ -9988,6 +9317,7 @@ export namespace Prisma {
     position?: SortOrder
     createdAt?: SortOrder
     lobby?: LobbyOrderByWithRelationInput
+    _relevance?: LobbyPlayerOrderByRelevanceInput
   }
 
   export type LobbyPlayerWhereUniqueInput = Prisma.AtLeast<{
@@ -10173,84 +9503,148 @@ export namespace Prisma {
 
   export type GameCreateInput = {
     id?: string
+    code?: string | null
     status?: $Enums.GameStatus
     maxPlayers?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     startedAt?: Date | string | null
     endedAt?: Date | string | null
+    deck?: string
+    discardPile?: string
+    currentPlayerIndex?: number
+    direction?: number
+    drawPenalty?: number
+    currentColor?: string | null
+    lastPlayedCard?: string | null
+    winner?: string | null
     players?: GamePlayerCreateNestedManyWithoutGameInput
     actions?: GameActionCreateNestedManyWithoutGameInput
   }
 
   export type GameUncheckedCreateInput = {
     id?: string
+    code?: string | null
     status?: $Enums.GameStatus
     maxPlayers?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     startedAt?: Date | string | null
     endedAt?: Date | string | null
+    deck?: string
+    discardPile?: string
+    currentPlayerIndex?: number
+    direction?: number
+    drawPenalty?: number
+    currentColor?: string | null
+    lastPlayedCard?: string | null
+    winner?: string | null
     players?: GamePlayerUncheckedCreateNestedManyWithoutGameInput
     actions?: GameActionUncheckedCreateNestedManyWithoutGameInput
   }
 
   export type GameUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
     maxPlayers?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deck?: StringFieldUpdateOperationsInput | string
+    discardPile?: StringFieldUpdateOperationsInput | string
+    currentPlayerIndex?: IntFieldUpdateOperationsInput | number
+    direction?: IntFieldUpdateOperationsInput | number
+    drawPenalty?: IntFieldUpdateOperationsInput | number
+    currentColor?: NullableStringFieldUpdateOperationsInput | string | null
+    lastPlayedCard?: NullableStringFieldUpdateOperationsInput | string | null
+    winner?: NullableStringFieldUpdateOperationsInput | string | null
     players?: GamePlayerUpdateManyWithoutGameNestedInput
     actions?: GameActionUpdateManyWithoutGameNestedInput
   }
 
   export type GameUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
     maxPlayers?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deck?: StringFieldUpdateOperationsInput | string
+    discardPile?: StringFieldUpdateOperationsInput | string
+    currentPlayerIndex?: IntFieldUpdateOperationsInput | number
+    direction?: IntFieldUpdateOperationsInput | number
+    drawPenalty?: IntFieldUpdateOperationsInput | number
+    currentColor?: NullableStringFieldUpdateOperationsInput | string | null
+    lastPlayedCard?: NullableStringFieldUpdateOperationsInput | string | null
+    winner?: NullableStringFieldUpdateOperationsInput | string | null
     players?: GamePlayerUncheckedUpdateManyWithoutGameNestedInput
     actions?: GameActionUncheckedUpdateManyWithoutGameNestedInput
   }
 
   export type GameCreateManyInput = {
     id?: string
+    code?: string | null
     status?: $Enums.GameStatus
     maxPlayers?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     startedAt?: Date | string | null
     endedAt?: Date | string | null
+    deck?: string
+    discardPile?: string
+    currentPlayerIndex?: number
+    direction?: number
+    drawPenalty?: number
+    currentColor?: string | null
+    lastPlayedCard?: string | null
+    winner?: string | null
   }
 
   export type GameUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
     maxPlayers?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deck?: StringFieldUpdateOperationsInput | string
+    discardPile?: StringFieldUpdateOperationsInput | string
+    currentPlayerIndex?: IntFieldUpdateOperationsInput | number
+    direction?: IntFieldUpdateOperationsInput | number
+    drawPenalty?: IntFieldUpdateOperationsInput | number
+    currentColor?: NullableStringFieldUpdateOperationsInput | string | null
+    lastPlayedCard?: NullableStringFieldUpdateOperationsInput | string | null
+    winner?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type GameUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
     maxPlayers?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deck?: StringFieldUpdateOperationsInput | string
+    discardPile?: StringFieldUpdateOperationsInput | string
+    currentPlayerIndex?: IntFieldUpdateOperationsInput | number
+    direction?: IntFieldUpdateOperationsInput | number
+    drawPenalty?: IntFieldUpdateOperationsInput | number
+    currentColor?: NullableStringFieldUpdateOperationsInput | string | null
+    lastPlayedCard?: NullableStringFieldUpdateOperationsInput | string | null
+    winner?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type GamePlayerCreateInput = {
     id?: string
+    name?: string
     position: number
     cards?: string
     isKnockedOut?: boolean
@@ -10264,6 +9658,7 @@ export namespace Prisma {
     id?: string
     gameId: string
     userId: string
+    name?: string
     position: number
     cards?: string
     isKnockedOut?: boolean
@@ -10273,6 +9668,7 @@ export namespace Prisma {
 
   export type GamePlayerUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     position?: IntFieldUpdateOperationsInput | number
     cards?: StringFieldUpdateOperationsInput | string
     isKnockedOut?: BoolFieldUpdateOperationsInput | boolean
@@ -10286,6 +9682,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     gameId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     position?: IntFieldUpdateOperationsInput | number
     cards?: StringFieldUpdateOperationsInput | string
     isKnockedOut?: BoolFieldUpdateOperationsInput | boolean
@@ -10297,6 +9694,7 @@ export namespace Prisma {
     id?: string
     gameId: string
     userId: string
+    name?: string
     position: number
     cards?: string
     isKnockedOut?: boolean
@@ -10306,6 +9704,7 @@ export namespace Prisma {
 
   export type GamePlayerUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     position?: IntFieldUpdateOperationsInput | number
     cards?: StringFieldUpdateOperationsInput | string
     isKnockedOut?: BoolFieldUpdateOperationsInput | boolean
@@ -10317,6 +9716,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     gameId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     position?: IntFieldUpdateOperationsInput | number
     cards?: StringFieldUpdateOperationsInput | string
     isKnockedOut?: BoolFieldUpdateOperationsInput | boolean
@@ -10533,6 +9933,7 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
@@ -10547,6 +9948,7 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
@@ -10584,6 +9986,12 @@ export namespace Prisma {
 
   export type GamePlayerOrderByRelationAggregateInput = {
     _count?: SortOrder
+  }
+
+  export type UserOrderByRelevanceInput = {
+    fields: UserOrderByRelevanceFieldEnum | UserOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
   }
 
   export type UserCountOrderByAggregateInput = {
@@ -10627,6 +10035,7 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
     not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
@@ -10644,6 +10053,7 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
     not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
@@ -10686,6 +10096,12 @@ export namespace Prisma {
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
+  }
+
+  export type UserStatOrderByRelevanceInput = {
+    fields: UserStatOrderByRelevanceFieldEnum | UserStatOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
   }
 
   export type UserStatCountOrderByAggregateInput = {
@@ -10776,42 +10192,81 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type GameOrderByRelevanceInput = {
+    fields: GameOrderByRelevanceFieldEnum | GameOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
   export type GameCountOrderByAggregateInput = {
     id?: SortOrder
+    code?: SortOrder
     status?: SortOrder
     maxPlayers?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     startedAt?: SortOrder
     endedAt?: SortOrder
+    deck?: SortOrder
+    discardPile?: SortOrder
+    currentPlayerIndex?: SortOrder
+    direction?: SortOrder
+    drawPenalty?: SortOrder
+    currentColor?: SortOrder
+    lastPlayedCard?: SortOrder
+    winner?: SortOrder
   }
 
   export type GameAvgOrderByAggregateInput = {
     maxPlayers?: SortOrder
+    currentPlayerIndex?: SortOrder
+    direction?: SortOrder
+    drawPenalty?: SortOrder
   }
 
   export type GameMaxOrderByAggregateInput = {
     id?: SortOrder
+    code?: SortOrder
     status?: SortOrder
     maxPlayers?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     startedAt?: SortOrder
     endedAt?: SortOrder
+    deck?: SortOrder
+    discardPile?: SortOrder
+    currentPlayerIndex?: SortOrder
+    direction?: SortOrder
+    drawPenalty?: SortOrder
+    currentColor?: SortOrder
+    lastPlayedCard?: SortOrder
+    winner?: SortOrder
   }
 
   export type GameMinOrderByAggregateInput = {
     id?: SortOrder
+    code?: SortOrder
     status?: SortOrder
     maxPlayers?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     startedAt?: SortOrder
     endedAt?: SortOrder
+    deck?: SortOrder
+    discardPile?: SortOrder
+    currentPlayerIndex?: SortOrder
+    direction?: SortOrder
+    drawPenalty?: SortOrder
+    currentColor?: SortOrder
+    lastPlayedCard?: SortOrder
+    winner?: SortOrder
   }
 
   export type GameSumOrderByAggregateInput = {
     maxPlayers?: SortOrder
+    currentPlayerIndex?: SortOrder
+    direction?: SortOrder
+    drawPenalty?: SortOrder
   }
 
   export type EnumGameStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -10843,6 +10298,12 @@ export namespace Prisma {
     isNot?: GameWhereInput
   }
 
+  export type GamePlayerOrderByRelevanceInput = {
+    fields: GamePlayerOrderByRelevanceFieldEnum | GamePlayerOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
   export type GamePlayerGameIdUserIdCompoundUniqueInput = {
     gameId: string
     userId: string
@@ -10852,6 +10313,7 @@ export namespace Prisma {
     id?: SortOrder
     gameId?: SortOrder
     userId?: SortOrder
+    name?: SortOrder
     position?: SortOrder
     cards?: SortOrder
     isKnockedOut?: SortOrder
@@ -10867,6 +10329,7 @@ export namespace Prisma {
     id?: SortOrder
     gameId?: SortOrder
     userId?: SortOrder
+    name?: SortOrder
     position?: SortOrder
     cards?: SortOrder
     isKnockedOut?: SortOrder
@@ -10878,6 +10341,7 @@ export namespace Prisma {
     id?: SortOrder
     gameId?: SortOrder
     userId?: SortOrder
+    name?: SortOrder
     position?: SortOrder
     cards?: SortOrder
     isKnockedOut?: SortOrder
@@ -10894,6 +10358,12 @@ export namespace Prisma {
     in?: $Enums.ActionType[]
     notIn?: $Enums.ActionType[]
     not?: NestedEnumActionTypeFilter<$PrismaModel> | $Enums.ActionType
+  }
+
+  export type GameActionOrderByRelevanceInput = {
+    fields: GameActionOrderByRelevanceFieldEnum | GameActionOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
   }
 
   export type GameActionCountOrderByAggregateInput = {
@@ -10960,6 +10430,12 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type LobbyOrderByRelevanceInput = {
+    fields: LobbyOrderByRelevanceFieldEnum | LobbyOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
   export type LobbyCountOrderByAggregateInput = {
     id?: SortOrder
     code?: SortOrder
@@ -10987,6 +10463,12 @@ export namespace Prisma {
   export type LobbyScalarRelationFilter = {
     is?: LobbyWhereInput
     isNot?: LobbyWhereInput
+  }
+
+  export type LobbyPlayerOrderByRelevanceInput = {
+    fields: LobbyPlayerOrderByRelevanceFieldEnum | LobbyPlayerOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
   }
 
   export type LobbyPlayerLobbyIdUserIdCompoundUniqueInput = {
@@ -11343,6 +10825,7 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
@@ -11357,6 +10840,7 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
@@ -11387,6 +10871,7 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
     not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
@@ -11415,6 +10900,7 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
     not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
@@ -11542,6 +11028,7 @@ export namespace Prisma {
 
   export type GamePlayerCreateWithoutUserInput = {
     id?: string
+    name?: string
     position: number
     cards?: string
     isKnockedOut?: boolean
@@ -11553,6 +11040,7 @@ export namespace Prisma {
   export type GamePlayerUncheckedCreateWithoutUserInput = {
     id?: string
     gameId: string
+    name?: string
     position: number
     cards?: string
     isKnockedOut?: boolean
@@ -11567,6 +11055,7 @@ export namespace Prisma {
 
   export type GamePlayerCreateManyUserInputEnvelope = {
     data: GamePlayerCreateManyUserInput | GamePlayerCreateManyUserInput[]
+    skipDuplicates?: boolean
   }
 
   export type UserStatCreateWithoutUserInput = {
@@ -11614,6 +11103,7 @@ export namespace Prisma {
     id?: StringFilter<"GamePlayer"> | string
     gameId?: StringFilter<"GamePlayer"> | string
     userId?: StringFilter<"GamePlayer"> | string
+    name?: StringFilter<"GamePlayer"> | string
     position?: IntFilter<"GamePlayer"> | number
     cards?: StringFilter<"GamePlayer"> | string
     isKnockedOut?: BoolFilter<"GamePlayer"> | boolean
@@ -11711,6 +11201,7 @@ export namespace Prisma {
 
   export type GamePlayerCreateWithoutGameInput = {
     id?: string
+    name?: string
     position: number
     cards?: string
     isKnockedOut?: boolean
@@ -11722,6 +11213,7 @@ export namespace Prisma {
   export type GamePlayerUncheckedCreateWithoutGameInput = {
     id?: string
     userId: string
+    name?: string
     position: number
     cards?: string
     isKnockedOut?: boolean
@@ -11736,6 +11228,7 @@ export namespace Prisma {
 
   export type GamePlayerCreateManyGameInputEnvelope = {
     data: GamePlayerCreateManyGameInput | GamePlayerCreateManyGameInput[]
+    skipDuplicates?: boolean
   }
 
   export type GameActionCreateWithoutGameInput = {
@@ -11767,6 +11260,7 @@ export namespace Prisma {
 
   export type GameActionCreateManyGameInputEnvelope = {
     data: GameActionCreateManyGameInput | GameActionCreateManyGameInput[]
+    skipDuplicates?: boolean
   }
 
   export type GamePlayerUpsertWithWhereUniqueWithoutGameInput = {
@@ -11818,23 +11312,41 @@ export namespace Prisma {
 
   export type GameCreateWithoutPlayersInput = {
     id?: string
+    code?: string | null
     status?: $Enums.GameStatus
     maxPlayers?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     startedAt?: Date | string | null
     endedAt?: Date | string | null
+    deck?: string
+    discardPile?: string
+    currentPlayerIndex?: number
+    direction?: number
+    drawPenalty?: number
+    currentColor?: string | null
+    lastPlayedCard?: string | null
+    winner?: string | null
     actions?: GameActionCreateNestedManyWithoutGameInput
   }
 
   export type GameUncheckedCreateWithoutPlayersInput = {
     id?: string
+    code?: string | null
     status?: $Enums.GameStatus
     maxPlayers?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     startedAt?: Date | string | null
     endedAt?: Date | string | null
+    deck?: string
+    discardPile?: string
+    currentPlayerIndex?: number
+    direction?: number
+    drawPenalty?: number
+    currentColor?: string | null
+    lastPlayedCard?: string | null
+    winner?: string | null
     actions?: GameActionUncheckedCreateNestedManyWithoutGameInput
   }
 
@@ -11883,23 +11395,41 @@ export namespace Prisma {
 
   export type GameUpdateWithoutPlayersInput = {
     id?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
     maxPlayers?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deck?: StringFieldUpdateOperationsInput | string
+    discardPile?: StringFieldUpdateOperationsInput | string
+    currentPlayerIndex?: IntFieldUpdateOperationsInput | number
+    direction?: IntFieldUpdateOperationsInput | number
+    drawPenalty?: IntFieldUpdateOperationsInput | number
+    currentColor?: NullableStringFieldUpdateOperationsInput | string | null
+    lastPlayedCard?: NullableStringFieldUpdateOperationsInput | string | null
+    winner?: NullableStringFieldUpdateOperationsInput | string | null
     actions?: GameActionUpdateManyWithoutGameNestedInput
   }
 
   export type GameUncheckedUpdateWithoutPlayersInput = {
     id?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
     maxPlayers?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deck?: StringFieldUpdateOperationsInput | string
+    discardPile?: StringFieldUpdateOperationsInput | string
+    currentPlayerIndex?: IntFieldUpdateOperationsInput | number
+    direction?: IntFieldUpdateOperationsInput | number
+    drawPenalty?: IntFieldUpdateOperationsInput | number
+    currentColor?: NullableStringFieldUpdateOperationsInput | string | null
+    lastPlayedCard?: NullableStringFieldUpdateOperationsInput | string | null
+    winner?: NullableStringFieldUpdateOperationsInput | string | null
     actions?: GameActionUncheckedUpdateManyWithoutGameNestedInput
   }
 
@@ -11938,23 +11468,41 @@ export namespace Prisma {
 
   export type GameCreateWithoutActionsInput = {
     id?: string
+    code?: string | null
     status?: $Enums.GameStatus
     maxPlayers?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     startedAt?: Date | string | null
     endedAt?: Date | string | null
+    deck?: string
+    discardPile?: string
+    currentPlayerIndex?: number
+    direction?: number
+    drawPenalty?: number
+    currentColor?: string | null
+    lastPlayedCard?: string | null
+    winner?: string | null
     players?: GamePlayerCreateNestedManyWithoutGameInput
   }
 
   export type GameUncheckedCreateWithoutActionsInput = {
     id?: string
+    code?: string | null
     status?: $Enums.GameStatus
     maxPlayers?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     startedAt?: Date | string | null
     endedAt?: Date | string | null
+    deck?: string
+    discardPile?: string
+    currentPlayerIndex?: number
+    direction?: number
+    drawPenalty?: number
+    currentColor?: string | null
+    lastPlayedCard?: string | null
+    winner?: string | null
     players?: GamePlayerUncheckedCreateNestedManyWithoutGameInput
   }
 
@@ -11976,23 +11524,41 @@ export namespace Prisma {
 
   export type GameUpdateWithoutActionsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
     maxPlayers?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deck?: StringFieldUpdateOperationsInput | string
+    discardPile?: StringFieldUpdateOperationsInput | string
+    currentPlayerIndex?: IntFieldUpdateOperationsInput | number
+    direction?: IntFieldUpdateOperationsInput | number
+    drawPenalty?: IntFieldUpdateOperationsInput | number
+    currentColor?: NullableStringFieldUpdateOperationsInput | string | null
+    lastPlayedCard?: NullableStringFieldUpdateOperationsInput | string | null
+    winner?: NullableStringFieldUpdateOperationsInput | string | null
     players?: GamePlayerUpdateManyWithoutGameNestedInput
   }
 
   export type GameUncheckedUpdateWithoutActionsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
     maxPlayers?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deck?: StringFieldUpdateOperationsInput | string
+    discardPile?: StringFieldUpdateOperationsInput | string
+    currentPlayerIndex?: IntFieldUpdateOperationsInput | number
+    direction?: IntFieldUpdateOperationsInput | number
+    drawPenalty?: IntFieldUpdateOperationsInput | number
+    currentColor?: NullableStringFieldUpdateOperationsInput | string | null
+    lastPlayedCard?: NullableStringFieldUpdateOperationsInput | string | null
+    winner?: NullableStringFieldUpdateOperationsInput | string | null
     players?: GamePlayerUncheckedUpdateManyWithoutGameNestedInput
   }
 
@@ -12017,6 +11583,7 @@ export namespace Prisma {
 
   export type LobbyPlayerCreateManyLobbyInputEnvelope = {
     data: LobbyPlayerCreateManyLobbyInput | LobbyPlayerCreateManyLobbyInput[]
+    skipDuplicates?: boolean
   }
 
   export type LobbyPlayerUpsertWithWhereUniqueWithoutLobbyInput = {
@@ -12097,6 +11664,7 @@ export namespace Prisma {
   export type GamePlayerCreateManyUserInput = {
     id?: string
     gameId: string
+    name?: string
     position: number
     cards?: string
     isKnockedOut?: boolean
@@ -12106,6 +11674,7 @@ export namespace Prisma {
 
   export type GamePlayerUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     position?: IntFieldUpdateOperationsInput | number
     cards?: StringFieldUpdateOperationsInput | string
     isKnockedOut?: BoolFieldUpdateOperationsInput | boolean
@@ -12117,6 +11686,7 @@ export namespace Prisma {
   export type GamePlayerUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     gameId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     position?: IntFieldUpdateOperationsInput | number
     cards?: StringFieldUpdateOperationsInput | string
     isKnockedOut?: BoolFieldUpdateOperationsInput | boolean
@@ -12127,6 +11697,7 @@ export namespace Prisma {
   export type GamePlayerUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     gameId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     position?: IntFieldUpdateOperationsInput | number
     cards?: StringFieldUpdateOperationsInput | string
     isKnockedOut?: BoolFieldUpdateOperationsInput | boolean
@@ -12137,6 +11708,7 @@ export namespace Prisma {
   export type GamePlayerCreateManyGameInput = {
     id?: string
     userId: string
+    name?: string
     position: number
     cards?: string
     isKnockedOut?: boolean
@@ -12157,6 +11729,7 @@ export namespace Prisma {
 
   export type GamePlayerUpdateWithoutGameInput = {
     id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     position?: IntFieldUpdateOperationsInput | number
     cards?: StringFieldUpdateOperationsInput | string
     isKnockedOut?: BoolFieldUpdateOperationsInput | boolean
@@ -12168,6 +11741,7 @@ export namespace Prisma {
   export type GamePlayerUncheckedUpdateWithoutGameInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     position?: IntFieldUpdateOperationsInput | number
     cards?: StringFieldUpdateOperationsInput | string
     isKnockedOut?: BoolFieldUpdateOperationsInput | boolean
@@ -12178,6 +11752,7 @@ export namespace Prisma {
   export type GamePlayerUncheckedUpdateManyWithoutGameInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     position?: IntFieldUpdateOperationsInput | number
     cards?: StringFieldUpdateOperationsInput | string
     isKnockedOut?: BoolFieldUpdateOperationsInput | boolean

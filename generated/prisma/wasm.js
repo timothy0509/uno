@@ -87,6 +87,9 @@ Prisma.NullTypes = {
  * Enums
  */
 exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
+  ReadUncommitted: 'ReadUncommitted',
+  ReadCommitted: 'ReadCommitted',
+  RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
 });
 
@@ -112,18 +115,28 @@ exports.Prisma.UserStatScalarFieldEnum = {
 
 exports.Prisma.GameScalarFieldEnum = {
   id: 'id',
+  code: 'code',
   status: 'status',
   maxPlayers: 'maxPlayers',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   startedAt: 'startedAt',
-  endedAt: 'endedAt'
+  endedAt: 'endedAt',
+  deck: 'deck',
+  discardPile: 'discardPile',
+  currentPlayerIndex: 'currentPlayerIndex',
+  direction: 'direction',
+  drawPenalty: 'drawPenalty',
+  currentColor: 'currentColor',
+  lastPlayedCard: 'lastPlayedCard',
+  winner: 'winner'
 };
 
 exports.Prisma.GamePlayerScalarFieldEnum = {
   id: 'id',
   gameId: 'gameId',
   userId: 'userId',
+  name: 'name',
   position: 'position',
   cards: 'cards',
   isKnockedOut: 'isKnockedOut',
@@ -167,6 +180,56 @@ exports.Prisma.SortOrder = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.UserOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  password: 'password'
+};
+
+exports.Prisma.UserStatOrderByRelevanceFieldEnum = {
+  userId: 'userId'
+};
+
+exports.Prisma.GameOrderByRelevanceFieldEnum = {
+  id: 'id',
+  code: 'code',
+  deck: 'deck',
+  discardPile: 'discardPile',
+  currentColor: 'currentColor',
+  lastPlayedCard: 'lastPlayedCard',
+  winner: 'winner'
+};
+
+exports.Prisma.GamePlayerOrderByRelevanceFieldEnum = {
+  id: 'id',
+  gameId: 'gameId',
+  userId: 'userId',
+  name: 'name',
+  cards: 'cards'
+};
+
+exports.Prisma.GameActionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  gameId: 'gameId',
+  playerId: 'playerId',
+  cardPlayed: 'cardPlayed',
+  targetId: 'targetId',
+  color: 'color'
+};
+
+exports.Prisma.LobbyOrderByRelevanceFieldEnum = {
+  id: 'id',
+  code: 'code',
+  createdBy: 'createdBy'
+};
+
+exports.Prisma.LobbyPlayerOrderByRelevanceFieldEnum = {
+  id: 'id',
+  lobbyId: 'lobbyId',
+  userId: 'userId'
 };
 exports.GameStatus = exports.$Enums.GameStatus = {
   WAITING: 'WAITING',
@@ -232,7 +295,7 @@ const config = {
   "datasourceNames": [
     "db"
   ],
-  "activeProvider": "sqlite",
+  "activeProvider": "mysql",
   "postinstall": false,
   "inlineDatasources": {
     "db": {
@@ -242,13 +305,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id        String   @id @default(cuid())\n  name      String\n  email     String?  @unique\n  password  String?\n  isGuest   Boolean  @default(false)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  games GamePlayer[]\n  stats UserStat?\n}\n\nmodel UserStat {\n  id             Int      @id @default(autoincrement())\n  userId         String   @unique\n  user           User     @relation(fields: [userId], references: [id])\n  gamesPlayed    Int      @default(0)\n  gamesWon       Int      @default(0)\n  totalKnockouts Int      @default(0)\n  createdAt      DateTime @default(now())\n  updatedAt      DateTime @updatedAt\n}\n\nmodel Game {\n  id         String     @id @default(cuid())\n  status     GameStatus @default(WAITING)\n  maxPlayers Int        @default(6)\n  createdAt  DateTime   @default(now())\n  updatedAt  DateTime   @updatedAt\n  startedAt  DateTime?\n  endedAt    DateTime?\n\n  players GamePlayer[]\n  actions GameAction[]\n}\n\nmodel GamePlayer {\n  id           String   @id @default(cuid())\n  gameId       String\n  userId       String\n  position     Int\n  cards        String   @default(\"[]\")\n  isKnockedOut Boolean  @default(false)\n  calledUno    Boolean  @default(false)\n  createdAt    DateTime @default(now())\n\n  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)\n  user User @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@unique([gameId, userId])\n  @@index([gameId])\n}\n\nmodel GameAction {\n  id         String     @id @default(cuid())\n  gameId     String\n  playerId   String\n  type       ActionType\n  cardPlayed String?\n  cardsDrawn Int        @default(0)\n  targetId   String?\n  color      String?\n  createdAt  DateTime   @default(now())\n\n  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)\n\n  @@index([gameId])\n}\n\nmodel Lobby {\n  id        String     @id @default(cuid())\n  code      String     @unique\n  createdBy String\n  status    GameStatus @default(WAITING)\n  createdAt DateTime   @default(now())\n\n  players LobbyPlayer[]\n}\n\nmodel LobbyPlayer {\n  id        String   @id @default(cuid())\n  lobbyId   String\n  userId    String\n  position  Int\n  createdAt DateTime @default(now())\n\n  lobby Lobby @relation(fields: [lobbyId], references: [id], onDelete: Cascade)\n\n  @@unique([lobbyId, userId])\n  @@index([lobbyId])\n}\n\nenum GameStatus {\n  WAITING\n  PLAYING\n  FINISHED\n}\n\nenum ActionType {\n  PLAY\n  DRAW\n  STACK\n  SWAP\n  PASS_HANDS\n  KNOCKOUT\n  CALL_UNO\n  WIN\n}\n",
-  "inlineSchemaHash": "c415903c8d652543182d2cea2cca0a54bb2cc4e0d11e13543d35e59b1106c96c",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"mysql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id        String   @id @default(cuid())\n  name      String\n  email     String?  @unique\n  password  String?\n  isGuest   Boolean  @default(false)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  games GamePlayer[]\n  stats UserStat?\n}\n\nmodel UserStat {\n  id             Int      @id @default(autoincrement())\n  userId         String   @unique\n  user           User     @relation(fields: [userId], references: [id])\n  gamesPlayed    Int      @default(0)\n  gamesWon       Int      @default(0)\n  totalKnockouts Int      @default(0)\n  createdAt      DateTime @default(now())\n  updatedAt      DateTime @updatedAt\n}\n\nmodel Game {\n  id         String     @id @default(cuid())\n  code       String?    @unique\n  status     GameStatus @default(WAITING)\n  maxPlayers Int        @default(6)\n  createdAt  DateTime   @default(now())\n  updatedAt  DateTime   @updatedAt\n  startedAt  DateTime?\n  endedAt    DateTime?\n\n  deck               String  @default(\"[]\")\n  discardPile        String  @default(\"[]\")\n  currentPlayerIndex Int     @default(0)\n  direction          Int     @default(1)\n  drawPenalty        Int     @default(0)\n  currentColor       String?\n  lastPlayedCard     String?\n  winner             String?\n\n  players GamePlayer[]\n  actions GameAction[]\n}\n\nmodel GamePlayer {\n  id           String   @id @default(cuid())\n  gameId       String\n  userId       String\n  name         String   @default(\"\")\n  position     Int\n  cards        String   @default(\"[]\")\n  isKnockedOut Boolean  @default(false)\n  calledUno    Boolean  @default(false)\n  createdAt    DateTime @default(now())\n\n  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)\n  user User @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@unique([gameId, userId])\n  @@index([gameId])\n}\n\nmodel GameAction {\n  id         String     @id @default(cuid())\n  gameId     String\n  playerId   String\n  type       ActionType\n  cardPlayed String?\n  cardsDrawn Int        @default(0)\n  targetId   String?\n  color      String?\n  createdAt  DateTime   @default(now())\n\n  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)\n\n  @@index([gameId])\n}\n\nmodel Lobby {\n  id        String     @id @default(cuid())\n  code      String     @unique\n  createdBy String\n  status    GameStatus @default(WAITING)\n  createdAt DateTime   @default(now())\n\n  players LobbyPlayer[]\n}\n\nmodel LobbyPlayer {\n  id        String   @id @default(cuid())\n  lobbyId   String\n  userId    String\n  position  Int\n  createdAt DateTime @default(now())\n\n  lobby Lobby @relation(fields: [lobbyId], references: [id], onDelete: Cascade)\n\n  @@unique([lobbyId, userId])\n  @@index([lobbyId])\n}\n\nenum GameStatus {\n  WAITING\n  PLAYING\n  FINISHED\n}\n\nenum ActionType {\n  PLAY\n  DRAW\n  STACK\n  SWAP\n  PASS_HANDS\n  KNOCKOUT\n  CALL_UNO\n  WIN\n}\n",
+  "inlineSchemaHash": "bf22a4923b46dafc0e782c9308a5414fcd5160c0531c40ff89e65ac8a00ef614",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isGuest\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"games\",\"kind\":\"object\",\"type\":\"GamePlayer\",\"relationName\":\"GamePlayerToUser\"},{\"name\":\"stats\",\"kind\":\"object\",\"type\":\"UserStat\",\"relationName\":\"UserToUserStat\"}],\"dbName\":null},\"UserStat\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"UserToUserStat\"},{\"name\":\"gamesPlayed\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"gamesWon\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"totalKnockouts\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Game\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"GameStatus\"},{\"name\":\"maxPlayers\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"startedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"endedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"players\",\"kind\":\"object\",\"type\":\"GamePlayer\",\"relationName\":\"GameToGamePlayer\"},{\"name\":\"actions\",\"kind\":\"object\",\"type\":\"GameAction\",\"relationName\":\"GameToGameAction\"}],\"dbName\":null},\"GamePlayer\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"gameId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"position\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"cards\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isKnockedOut\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"calledUno\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"game\",\"kind\":\"object\",\"type\":\"Game\",\"relationName\":\"GameToGamePlayer\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"GamePlayerToUser\"}],\"dbName\":null},\"GameAction\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"gameId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"playerId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"ActionType\"},{\"name\":\"cardPlayed\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"cardsDrawn\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"targetId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"color\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"game\",\"kind\":\"object\",\"type\":\"Game\",\"relationName\":\"GameToGameAction\"}],\"dbName\":null},\"Lobby\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdBy\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"GameStatus\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"players\",\"kind\":\"object\",\"type\":\"LobbyPlayer\",\"relationName\":\"LobbyToLobbyPlayer\"}],\"dbName\":null},\"LobbyPlayer\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lobbyId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"position\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"lobby\",\"kind\":\"object\",\"type\":\"Lobby\",\"relationName\":\"LobbyToLobbyPlayer\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isGuest\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"games\",\"kind\":\"object\",\"type\":\"GamePlayer\",\"relationName\":\"GamePlayerToUser\"},{\"name\":\"stats\",\"kind\":\"object\",\"type\":\"UserStat\",\"relationName\":\"UserToUserStat\"}],\"dbName\":null},\"UserStat\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"UserToUserStat\"},{\"name\":\"gamesPlayed\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"gamesWon\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"totalKnockouts\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Game\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"GameStatus\"},{\"name\":\"maxPlayers\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"startedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"endedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"deck\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"discardPile\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"currentPlayerIndex\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"direction\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"drawPenalty\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"currentColor\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastPlayedCard\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"winner\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"players\",\"kind\":\"object\",\"type\":\"GamePlayer\",\"relationName\":\"GameToGamePlayer\"},{\"name\":\"actions\",\"kind\":\"object\",\"type\":\"GameAction\",\"relationName\":\"GameToGameAction\"}],\"dbName\":null},\"GamePlayer\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"gameId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"position\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"cards\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isKnockedOut\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"calledUno\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"game\",\"kind\":\"object\",\"type\":\"Game\",\"relationName\":\"GameToGamePlayer\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"GamePlayerToUser\"}],\"dbName\":null},\"GameAction\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"gameId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"playerId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"ActionType\"},{\"name\":\"cardPlayed\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"cardsDrawn\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"targetId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"color\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"game\",\"kind\":\"object\",\"type\":\"Game\",\"relationName\":\"GameToGameAction\"}],\"dbName\":null},\"Lobby\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdBy\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"GameStatus\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"players\",\"kind\":\"object\",\"type\":\"LobbyPlayer\",\"relationName\":\"LobbyToLobbyPlayer\"}],\"dbName\":null},\"LobbyPlayer\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lobbyId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"position\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"lobby\",\"kind\":\"object\",\"type\":\"Lobby\",\"relationName\":\"LobbyToLobbyPlayer\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),

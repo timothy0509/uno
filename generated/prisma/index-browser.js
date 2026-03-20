@@ -115,6 +115,9 @@ Prisma.NullTypes = {
  */
 
 exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
+  ReadUncommitted: 'ReadUncommitted',
+  ReadCommitted: 'ReadCommitted',
+  RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
 });
 
@@ -140,18 +143,28 @@ exports.Prisma.UserStatScalarFieldEnum = {
 
 exports.Prisma.GameScalarFieldEnum = {
   id: 'id',
+  code: 'code',
   status: 'status',
   maxPlayers: 'maxPlayers',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   startedAt: 'startedAt',
-  endedAt: 'endedAt'
+  endedAt: 'endedAt',
+  deck: 'deck',
+  discardPile: 'discardPile',
+  currentPlayerIndex: 'currentPlayerIndex',
+  direction: 'direction',
+  drawPenalty: 'drawPenalty',
+  currentColor: 'currentColor',
+  lastPlayedCard: 'lastPlayedCard',
+  winner: 'winner'
 };
 
 exports.Prisma.GamePlayerScalarFieldEnum = {
   id: 'id',
   gameId: 'gameId',
   userId: 'userId',
+  name: 'name',
   position: 'position',
   cards: 'cards',
   isKnockedOut: 'isKnockedOut',
@@ -195,6 +208,56 @@ exports.Prisma.SortOrder = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.UserOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  password: 'password'
+};
+
+exports.Prisma.UserStatOrderByRelevanceFieldEnum = {
+  userId: 'userId'
+};
+
+exports.Prisma.GameOrderByRelevanceFieldEnum = {
+  id: 'id',
+  code: 'code',
+  deck: 'deck',
+  discardPile: 'discardPile',
+  currentColor: 'currentColor',
+  lastPlayedCard: 'lastPlayedCard',
+  winner: 'winner'
+};
+
+exports.Prisma.GamePlayerOrderByRelevanceFieldEnum = {
+  id: 'id',
+  gameId: 'gameId',
+  userId: 'userId',
+  name: 'name',
+  cards: 'cards'
+};
+
+exports.Prisma.GameActionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  gameId: 'gameId',
+  playerId: 'playerId',
+  cardPlayed: 'cardPlayed',
+  targetId: 'targetId',
+  color: 'color'
+};
+
+exports.Prisma.LobbyOrderByRelevanceFieldEnum = {
+  id: 'id',
+  code: 'code',
+  createdBy: 'createdBy'
+};
+
+exports.Prisma.LobbyPlayerOrderByRelevanceFieldEnum = {
+  id: 'id',
+  lobbyId: 'lobbyId',
+  userId: 'userId'
 };
 exports.GameStatus = exports.$Enums.GameStatus = {
   WAITING: 'WAITING',
