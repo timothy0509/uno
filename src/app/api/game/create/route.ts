@@ -1,14 +1,13 @@
 import { NextResponse } from "next/server";
-import { createGame, generateGameCode } from "~/lib/game/store";
+import { createGame, getGameById } from "~/lib/game/db";
 
 export async function POST() {
   try {
-    const gameState = createGame();
-    const code = generateGameCode();
+    const gameState = await createGame();
 
     return NextResponse.json({
       game: gameState,
-      code,
+      code: gameState.id.slice(0, 6).toUpperCase(),
     });
   } catch {
     return NextResponse.json(
@@ -16,4 +15,19 @@ export async function POST() {
       { status: 500 },
     );
   }
+}
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const code = searchParams.get("code");
+
+  if (code) {
+    const game = await getGameById(code);
+    if (!game) {
+      return NextResponse.json({ error: "Game not found" }, { status: 404 });
+    }
+    return NextResponse.json({ game });
+  }
+
+  return NextResponse.json({ error: "Game code required" }, { status: 400 });
 }

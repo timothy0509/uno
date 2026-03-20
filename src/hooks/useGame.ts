@@ -1,12 +1,18 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import type { GameState, Color } from "~/types/game";
 
 interface ApiResponse {
   game?: GameState;
   error?: string;
   code?: string;
+}
+
+interface SSEEvent {
+  type: string;
+  game?: GameState;
+  message?: string;
 }
 
 async function fetchGame(gameId: string): Promise<GameState | null> {
@@ -20,10 +26,15 @@ async function fetchGame(gameId: string): Promise<GameState | null> {
   }
 }
 
-export function useGame(gameId: string | null) {
+export function useGame(gameId: string | null, playerId?: string | null) {
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const playerIdRef = useRef(playerId ?? "current");
+
+  useEffect(() => {
+    playerIdRef.current = playerId ?? "current";
+  }, [playerId]);
 
   const refresh = useCallback(async () => {
     if (!gameId) return;
@@ -45,11 +56,28 @@ export function useGame(gameId: string | null) {
 
   useEffect(() => {
     if (!gameId || gameState?.status === "FINISHED") return;
-    const interval = setInterval(() => {
-      void refresh();
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [gameId, gameState?.status, refresh]);
+
+    const eventSource = new EventSource(`/api/game/${gameId}/subscribe`);
+
+    eventSource.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data as string) as SSEEvent;
+        if (data.type === "game-state-update" && data.game) {
+          setGameState(data.game);
+        }
+      } catch {
+        // Ignore parse errors
+      }
+    };
+
+    eventSource.onerror = () => {
+      eventSource.close();
+    };
+
+    return () => {
+      eventSource.close();
+    };
+  }, [gameId, gameState?.status]);
 
   const createGame = useCallback(async (): Promise<{
     gameId: string;
@@ -151,7 +179,7 @@ export function useGame(gameId: string | null) {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            playerId: "current",
+            playerId: playerIdRef.current,
             cardId,
             selectedColor,
             targetPlayerId,
@@ -185,7 +213,7 @@ export function useGame(gameId: string | null) {
       const res = await fetch(`/api/game/${gameId}/draw`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ playerId: "current" }),
+        body: JSON.stringify({ playerId: playerIdRef.current }),
       });
       const data = (await res.json()) as ApiResponse;
       if (!res.ok) {
@@ -213,7 +241,7 @@ export function useGame(gameId: string | null) {
       const res = await fetch(`/api/game/${gameId}/uno`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ playerId: "current" }),
+        body: JSON.stringify({ playerId: playerIdRef.current }),
       });
       const data = (await res.json()) as ApiResponse;
       if (!res.ok) {

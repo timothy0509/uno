@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { playCardAction } from "~/lib/game/store";
+import { playCardAction } from "~/lib/game/db";
 
 interface PlayRequestBody {
   playerId: string;
@@ -17,7 +17,7 @@ export async function POST(
   const body = (await request.json()) as PlayRequestBody;
   const { playerId, cardId, selectedColor, targetPlayerId } = body;
 
-  const result = playCardAction(
+  const result = await playCardAction(
     id,
     playerId,
     cardId,
@@ -29,5 +29,5 @@ export async function POST(
     return NextResponse.json({ error: result.error }, { status: 400 });
   }
 
-  return NextResponse.json({ game: result });
+  return NextResponse.json({ game: result.game });
 }

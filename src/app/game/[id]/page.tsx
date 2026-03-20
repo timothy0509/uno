@@ -160,6 +160,14 @@ export default function GamePage() {
   const rawId = params.id;
   const gameId =
     typeof rawId === "string" ? rawId : Array.isArray(rawId) ? rawId[0] : null;
+
+  const [playerId, setPlayerId] = useState<string | null>(null);
+  const [playerName, setPlayerName] = useState<string>("");
+  const [hasJoined, setHasJoined] = useState(false);
+  const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [pendingCardId, setPendingCardId] = useState<string | null>(null);
+
   const {
     gameState,
     isLoading,
@@ -170,14 +178,7 @@ export default function GamePage() {
     drawCards,
     callUno,
     refresh,
-  } = useGame(gameId ?? null);
-
-  const [playerId, setPlayerId] = useState<string | null>(null);
-  const [playerName, setPlayerName] = useState<string>("");
-  const [hasJoined, setHasJoined] = useState(false);
-  const [selectedCard, setSelectedCard] = useState<Card | null>(null);
-  const [showColorPicker, setShowColorPicker] = useState(false);
-  const [pendingCardId, setPendingCardId] = useState<string | null>(null);
+  } = useGame(gameId ?? null, playerId);
 
   useEffect(() => {
     const id = localStorage.getItem("uno-player-id");
