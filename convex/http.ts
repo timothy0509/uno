@@ -32,6 +32,12 @@ function createAuth(ctx: object) {
 
   return betterAuth({
     basePath: "/api/auth",
+    trustedOrigins: [
+      "https://uno.hkjc.uk",
+      "https://*.vercel.app",
+      "http://localhost:3000",
+      "http://127.0.0.1:3000",
+    ],
     emailAndPassword: {
       enabled: true,
       minPasswordLength: 6,
