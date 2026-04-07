@@ -1,25 +1,23 @@
 import { convexBetterAuthNextJs } from "@convex-dev/better-auth/nextjs";
 
-function getHandler() {
-  const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL;
-  const convexSiteUrl = process.env.NEXT_PUBLIC_CONVEX_SITE_URL;
+const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL;
+const convexSiteUrl = process.env.NEXT_PUBLIC_CONVEX_SITE_URL;
 
-  if (!convexUrl || !convexSiteUrl) {
-    throw new Error(
-      "Missing NEXT_PUBLIC_CONVEX_URL or NEXT_PUBLIC_CONVEX_SITE_URL",
-    );
-  }
-
-  return convexBetterAuthNextJs({
-    convexUrl,
-    convexSiteUrl,
-  }).handler;
+if (!convexUrl || !convexSiteUrl) {
+  throw new Error(
+    "Missing NEXT_PUBLIC_CONVEX_URL or NEXT_PUBLIC_CONVEX_SITE_URL",
+  );
 }
 
+const { handler } = convexBetterAuthNextJs({
+  convexUrl,
+  convexSiteUrl,
+});
+
 export async function GET(request: Request) {
-  return await getHandler().GET(request);
+  return handler.GET(request);
 }
 
 export async function POST(request: Request) {
-  return await getHandler().POST(request);
+  return handler.POST(request);
 }

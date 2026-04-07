@@ -2,11 +2,10 @@
 
 import { createAuthClient } from "better-auth/react";
 import { anonymousClient } from "better-auth/client/plugins";
-import { convexClient } from "@convex-dev/better-auth/client/plugins";
 
 const rawAuthClient: unknown = createAuthClient({
   basePath: "/api/auth",
-  plugins: [anonymousClient(), convexClient()],
+  plugins: [anonymousClient()],
 });
 
 type SessionSnapshot = {
