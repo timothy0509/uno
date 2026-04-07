@@ -3,13 +3,18 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useGame } from "~/hooks/useGame";
+import { useAuthSession } from "~/lib/auth-client";
 
 export default function LobbyPage() {
   const router = useRouter();
+  const session = useAuthSession();
   const { createGame, joinGame, error, setError } = useGame(null);
   const [playerName, setPlayerName] = useState("");
   const [gameCode, setGameCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const isAuthenticating = session.isPending;
+  const isAuthenticated = !!session.data?.user?.id;
 
   useEffect(() => {
     const savedName = localStorage.getItem("uno-player-name");
@@ -21,6 +26,11 @@ export default function LobbyPage() {
   const handleCreateGame = async () => {
     if (!playerName.trim()) {
       setError("Please enter your name");
+      return;
+    }
+
+    if (!isAuthenticated) {
+      setError("Please wait, connecting to server...");
       return;
     }
 
@@ -42,6 +52,11 @@ export default function LobbyPage() {
     }
     if (!gameCode.trim()) {
       setError("Please enter a game code");
+      return;
+    }
+
+    if (!isAuthenticated) {
+      setError("Please wait, connecting to server...");
       return;
     }
 
@@ -92,10 +107,14 @@ export default function LobbyPage() {
           <div className="border-t border-white/10 pt-6">
             <button
               onClick={handleCreateGame}
-              disabled={isLoading}
+              disabled={isLoading || isAuthenticating || !isAuthenticated}
               className="button-y2k w-full py-3 text-lg font-bold disabled:opacity-50"
             >
-              {isLoading ? "Creating..." : "Create New Game"}
+              {isAuthenticating
+                ? "Connecting..."
+                : isLoading
+                  ? "Creating..."
+                  : "Create New Game"}
             </button>
           </div>
 
@@ -128,10 +147,19 @@ export default function LobbyPage() {
 
           <button
             onClick={handleJoinGame}
-            disabled={isLoading || gameCode.length !== 6}
+            disabled={
+              isLoading ||
+              isAuthenticating ||
+              !isAuthenticated ||
+              gameCode.length !== 6
+            }
             className="button-secondary w-full py-3 text-lg font-medium disabled:opacity-50"
           >
-            {isLoading ? "Joining..." : "Join Game"}
+            {isAuthenticating
+              ? "Connecting..."
+              : isLoading
+                ? "Joining..."
+                : "Join Game"}
           </button>
 
           {error && (
