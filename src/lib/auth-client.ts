@@ -1,14 +1,16 @@
 "use client";
 
+import { convexClient } from "@convex-dev/better-auth/client/plugins";
+import type { AuthClient } from "@convex-dev/better-auth/react";
 import { createAuthClient } from "better-auth/react";
 import { anonymousClient } from "better-auth/client/plugins";
 
 const rawAuthClient: unknown = createAuthClient({
   basePath: "/api/auth",
-  plugins: [anonymousClient()],
+  plugins: [convexClient(), anonymousClient()],
 });
 
-type SessionSnapshot = {
+export type SessionSnapshot = {
   data: {
     session?: unknown;
     user?: { id?: string | null } | null;
@@ -18,15 +20,15 @@ type SessionSnapshot = {
 
 type AuthClientContract = {
   useSession: () => SessionSnapshot;
-  signIn?: {
-    anonymous?: () => Promise<unknown>;
-    email?: (credentials: {
+  signIn: {
+    anonymous: () => Promise<unknown>;
+    email: (credentials: {
       email: string;
       password: string;
     }) => Promise<{ error?: { message: string } | null }>;
   };
-  signUp?: {
-    email?: (credentials: {
+  signUp: {
+    email: (credentials: {
       email: string;
       password: string;
       name: string;
@@ -37,15 +39,17 @@ type AuthClientContract = {
   };
 };
 
-export const authClient = rawAuthClient as AuthClientContract;
+const appAuthClient = rawAuthClient as AuthClientContract;
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+export const authClient = rawAuthClient as AuthClient;
 
 export function useAuthSession() {
-  return authClient.useSession();
+  return appAuthClient.useSession();
 }
 
 export async function signInAnonymous(): Promise<{ error?: string | null }> {
   try {
-    await authClient.signIn?.anonymous?.();
+    await appAuthClient.signIn.anonymous();
     return { error: null };
   } catch (e) {
     return {
@@ -58,8 +62,8 @@ export async function signInWithEmail(
   email: string,
   password: string,
 ): Promise<{ error?: string | null }> {
-  const result = await authClient.signIn?.email?.({ email, password });
-  if (result?.error) {
+  const result = await appAuthClient.signIn.email({ email, password });
+  if (result.error) {
     return { error: result.error.message };
   }
   return { error: null };
@@ -70,9 +74,9 @@ export async function signUpWithEmail(
   password: string,
   name: string,
 ): Promise<{ error?: string | null; userId?: string | null }> {
-  const result = await authClient.signUp?.email?.({ email, password, name });
-  if (result?.error) {
+  const result = await appAuthClient.signUp.email({ email, password, name });
+  if (result.error) {
     return { error: result.error.message };
   }
-  return { error: null, userId: result?.data?.user?.id ?? null };
+  return { error: null, userId: result.data?.user?.id ?? null };
 }
