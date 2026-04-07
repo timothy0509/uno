@@ -48,6 +48,11 @@ const callUnoRef = makeFunctionReference<
   { gameId: string },
   GameState
 >("games:callUno");
+const chooseRouletteRef = makeFunctionReference<
+  "mutation",
+  { gameId: string; selectedColor: Color },
+  GameState
+>("games:chooseRoulette");
 
 export function useGame(
   gameId: string | null,
@@ -67,6 +72,7 @@ export function useGame(
   const playCardMutation = useMutation(playCardRef);
   const drawMutation = useMutation(drawRef);
   const callUnoMutation = useMutation(callUnoRef);
+  const chooseRouletteMutation = useMutation(chooseRouletteRef);
 
   const attemptAnonymousAuth = useCallback(async () => {
     if (isAnonymousSignInInFlight.current) {
@@ -183,6 +189,18 @@ export function useGame(
     return await withLoading(async () => await callUnoMutation({ gameId }));
   }, [callUnoMutation, gameId, withLoading]);
 
+  const chooseRoulette = useCallback(
+    async (selectedColor: Color): Promise<GameState | null> => {
+      if (!gameId) {
+        return null;
+      }
+      return await withLoading(
+        async () => await chooseRouletteMutation({ gameId, selectedColor }),
+      );
+    },
+    [chooseRouletteMutation, gameId, withLoading],
+  );
+
   const refresh = useCallback(async () => {
     return;
   }, []);
@@ -200,6 +218,7 @@ export function useGame(
       playCard,
       drawCards,
       callUno,
+      chooseRoulette,
       setError,
       setAuthError,
       retryAnonymousAuth,
@@ -207,6 +226,7 @@ export function useGame(
     }),
     [
       callUno,
+      chooseRoulette,
       createGame,
       drawCards,
       error,
