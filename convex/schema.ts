@@ -10,10 +10,15 @@ export default defineSchema({
       v.literal("FINISHED"),
     ),
     deck: v.array(v.any()),
+    knockedOutCards: v.array(v.any()),
     discardPile: v.array(v.any()),
     currentPlayerIndex: v.number(),
     direction: v.union(v.literal(1), v.literal(-1)),
     drawPenalty: v.number(),
+    pendingRoulette: v.union(
+      v.object({ chooserPlayerId: v.string() }),
+      v.null(),
+    ),
     currentColor: v.union(
       v.literal("red"),
       v.literal("blue"),

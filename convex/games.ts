@@ -3,6 +3,7 @@ import { ConvexError, v } from "convex/values";
 import type { Color, GameState } from "../src/types/game";
 import {
   callUno as callUnoEngine,
+  chooseRouletteColor,
   drawCardsFromDeck,
   initializeGame,
   playCard as playCardEngine,
@@ -51,6 +52,7 @@ function toGameState(game: any, players: any[]): GameState {
     id: game.code,
     status: game.status,
     deck: game.deck,
+    knockedOutCards: game.knockedOutCards ?? [],
     discardPile: game.discardPile,
     currentPlayerIndex: game.currentPlayerIndex,
     direction: game.direction,
@@ -64,6 +66,7 @@ function toGameState(game: any, players: any[]): GameState {
       calledUno: p.calledUno,
     })),
     drawPenalty: game.drawPenalty,
+    pendingRoulette: game.pendingRoulette ?? null,
     currentColor: game.currentColor,
     lastPlayedCard: game.lastPlayedCard,
     winner: game.winner,
@@ -102,10 +105,12 @@ export const create = mutationGeneric({
       code,
       status: "WAITING",
       deck: [],
+      knockedOutCards: [],
       discardPile: [],
       currentPlayerIndex: 0,
       direction: 1,
       drawPenalty: 0,
+      pendingRoulette: null,
       currentColor: null,
       lastPlayedCard: null,
       winner: null,
@@ -180,10 +185,12 @@ export const start = mutationGeneric({
     await ctx.db.patch(game._id, {
       status: "PLAYING",
       deck: initialized.deck,
+      knockedOutCards: initialized.knockedOutCards,
       discardPile: initialized.discardPile,
       currentPlayerIndex: initialized.currentPlayerIndex,
       direction: initialized.direction,
       drawPenalty: initialized.drawPenalty,
+      pendingRoulette: initialized.pendingRoulette,
       currentColor: initialized.currentColor,
       lastPlayedCard: initialized.lastPlayedCard,
       winner: initialized.winner,
@@ -248,10 +255,12 @@ export const playCard = mutationGeneric({
     await ctx.db.patch(game._id, {
       status: result.gameState.status,
       deck: result.gameState.deck,
+      knockedOutCards: result.gameState.knockedOutCards,
       discardPile: result.gameState.discardPile,
       currentPlayerIndex: result.gameState.currentPlayerIndex,
       direction: result.gameState.direction,
       drawPenalty: result.gameState.drawPenalty,
+      pendingRoulette: result.gameState.pendingRoulette,
       currentColor: result.gameState.currentColor,
       lastPlayedCard: result.gameState.lastPlayedCard,
       winner: result.gameState.winner,
@@ -297,10 +306,12 @@ export const draw = mutationGeneric({
     await ctx.db.patch(game._id, {
       status: result.gameState.status,
       deck: result.gameState.deck,
+      knockedOutCards: result.gameState.knockedOutCards,
       discardPile: result.gameState.discardPile,
       currentPlayerIndex: result.gameState.currentPlayerIndex,
       direction: result.gameState.direction,
       drawPenalty: result.gameState.drawPenalty,
+      pendingRoulette: result.gameState.pendingRoulette,
       currentColor: result.gameState.currentColor,
       lastPlayedCard: result.gameState.lastPlayedCard,
       winner: result.gameState.winner,
@@ -340,9 +351,15 @@ export const callUno = mutationGeneric({
     const state = toGameState(game, players);
     const updatedState = callUnoEngine(state, userId);
 
-    const dbPlayer = players.find((p: any) => p.userId === userId);
-    if (dbPlayer) {
-      await ctx.db.patch(dbPlayer._id, { calledUno: true });
+    for (const player of updatedState.players) {
+      const dbPlayer = players.find((p: any) => p.userId === player.id);
+      if (dbPlayer) {
+        await ctx.db.patch(dbPlayer._id, {
+          cards: player.cards,
+          isKnockedOut: player.isKnockedOut,
+          calledUno: player.calledUno,
+        });
+      }
     }
 
     await ctx.db.patch(game._id, { updatedAt: now() });
@@ -353,9 +370,65 @@ export const callUno = mutationGeneric({
       throw new ConvexError("Failed to update game");
     }
 
-    return {
-      ...toGameState(updatedGame, updatedPlayers),
-      currentPlayerIndex: updatedState.currentPlayerIndex,
-    };
+    return toGameState(updatedGame, updatedPlayers);
+  },
+});
+
+export const chooseRoulette = mutationGeneric({
+  args: {
+    gameId: v.string(),
+    selectedColor: v.union(
+      v.literal("red"),
+      v.literal("blue"),
+      v.literal("green"),
+      v.literal("yellow"),
+    ),
+  },
+  handler: async (ctx, args) => {
+    const userId = await requireUserId(ctx);
+    const game = await getGameByIdentifier(ctx, args.gameId);
+    if (!game) {
+      throw new ConvexError("Game not found");
+    }
+
+    const players = await loadPlayers(ctx, game._id);
+    const state = toGameState(game, players);
+    const result = chooseRouletteColor(state, userId, args.selectedColor);
+    if ("error" in result) {
+      throw new ConvexError(result.error);
+    }
+
+    await ctx.db.patch(game._id, {
+      status: result.gameState.status,
+      deck: result.gameState.deck,
+      knockedOutCards: result.gameState.knockedOutCards,
+      discardPile: result.gameState.discardPile,
+      currentPlayerIndex: result.gameState.currentPlayerIndex,
+      direction: result.gameState.direction,
+      drawPenalty: result.gameState.drawPenalty,
+      pendingRoulette: result.gameState.pendingRoulette,
+      currentColor: result.gameState.currentColor,
+      lastPlayedCard: result.gameState.lastPlayedCard,
+      winner: result.gameState.winner,
+      updatedAt: now(),
+    });
+
+    for (const player of result.gameState.players) {
+      const dbPlayer = players.find((p: any) => p.userId === player.id);
+      if (dbPlayer) {
+        await ctx.db.patch(dbPlayer._id, {
+          cards: player.cards,
+          isKnockedOut: player.isKnockedOut,
+          calledUno: player.calledUno,
+        });
+      }
+    }
+
+    const updatedGame = await ctx.db.get(game._id);
+    const updatedPlayers = await loadPlayers(ctx, game._id);
+    if (!updatedGame) {
+      throw new ConvexError("Failed to update game");
+    }
+    return toGameState(updatedGame, updatedPlayers);
   },
 });

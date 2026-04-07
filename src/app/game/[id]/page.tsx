@@ -385,6 +385,33 @@ function ColorPicker({ onSelect }: { onSelect: (color: Color) => void }) {
   );
 }
 
+function TargetPicker({
+  players,
+  onSelect,
+}: {
+  players: Array<{ id: string; name: string }>;
+  onSelect: (playerId: string) => void;
+}) {
+  return (
+    <div className="animate-fade-in-scale glass-shimmer glass card-shadow p-6">
+      <h3 className="font-display mb-4 text-center text-lg font-bold text-white">
+        Choose player to swap with
+      </h3>
+      <div className="flex flex-col gap-2">
+        {players.map((player) => (
+          <button
+            key={player.id}
+            onClick={() => onSelect(player.id)}
+            className="button-secondary px-4 py-2 text-left"
+          >
+            {player.name}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function ColorIndicator({ color }: { color: Color | null }) {
   if (!color) return null;
 
@@ -443,7 +470,13 @@ export default function GamePage() {
   const [hasJoined, setHasJoined] = useState(false);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const [showColorPicker, setShowColorPicker] = useState(false);
+  const [colorPickerMode, setColorPickerMode] = useState<
+    "playWild" | "roulette"
+  >("playWild");
   const [pendingCardId, setPendingCardId] = useState<string | null>(null);
+  const [pendingTargetCardId, setPendingTargetCardId] = useState<string | null>(
+    null,
+  );
 
   const {
     gameState,
@@ -454,6 +487,7 @@ export default function GamePage() {
     playCard,
     drawCards,
     callUno,
+    chooseRoulette,
     refresh,
     currentUserId,
   } = useGame(gameId ?? null);
@@ -474,13 +508,36 @@ export default function GamePage() {
   const isMyTurn =
     gameState?.players[gameState.currentPlayerIndex]?.id === currentUserId;
   const topCard = gameState?.discardPile[gameState.discardPile.length - 1];
+  const isRouletteChooser =
+    gameState?.pendingRoulette?.chooserPlayerId === currentUserId;
+
+  useEffect(() => {
+    if (isRouletteChooser) {
+      setColorPickerMode("roulette");
+      setShowColorPicker(true);
+      setSelectedCard(null);
+      setPendingCardId(null);
+      setPendingTargetCardId(null);
+    }
+  }, [isRouletteChooser]);
 
   const handleCardClick = (card: Card) => {
     if (!isMyTurn || !gameState) return;
 
     setSelectedCard(card);
 
+    if (card.type === "numbered" && card.value === "7") {
+      setPendingTargetCardId(card.id);
+      return;
+    }
+
     if (card.type === "wild") {
+      if (card.value === "WildColorRoulette") {
+        void playCard(card.id);
+        setSelectedCard(null);
+        return;
+      }
+      setColorPickerMode("playWild");
       setPendingCardId(card.id);
       setShowColorPicker(true);
     } else {
@@ -490,11 +547,23 @@ export default function GamePage() {
   };
 
   const handleColorSelect = async (color: Color) => {
-    if (pendingCardId) {
+    if (colorPickerMode === "roulette") {
+      await chooseRoulette(color);
+    } else if (pendingCardId) {
       await playCard(pendingCardId, color);
     }
     setShowColorPicker(false);
+    setColorPickerMode("playWild");
     setPendingCardId(null);
+    setSelectedCard(null);
+  };
+
+  const handleTargetSelect = async (targetPlayerId: string) => {
+    if (!pendingTargetCardId) {
+      return;
+    }
+    await playCard(pendingTargetCardId, undefined, targetPlayerId);
+    setPendingTargetCardId(null);
     setSelectedCard(null);
   };
 
@@ -676,7 +745,9 @@ export default function GamePage() {
         {/* Draw pile */}
         <button
           onClick={handleDraw}
-          disabled={!isMyTurn || isLoading}
+          disabled={
+            !isMyTurn || isLoading || Boolean(gameState.pendingRoulette)
+          }
           className="animate-fade-in-scale button-secondary px-6 py-2 disabled:opacity-50"
           style={{ animationDelay: "160ms" }}
         >
@@ -717,7 +788,9 @@ export default function GamePage() {
               key={card.id}
               card={card}
               onClick={() => handleCardClick(card)}
-              disabled={!isMyTurn || isLoading}
+              disabled={
+                !isMyTurn || isLoading || Boolean(gameState.pendingRoulette)
+              }
               isSelected={selectedCard?.id === card.id}
               dealIndex={index}
             />
@@ -732,6 +805,18 @@ export default function GamePage() {
       {showColorPicker && (
         <div className="animate-fade-in-scale fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <ColorPicker onSelect={handleColorSelect} />
+        </div>
+      )}
+
+      {/* 7 target picker modal */}
+      {pendingTargetCardId && (
+        <div className="animate-fade-in-scale fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <TargetPicker
+            players={gameState.players
+              .filter((p) => p.id !== currentUserId && !p.isKnockedOut)
+              .map((p) => ({ id: p.id, name: p.name }))}
+            onSelect={handleTargetSelect}
+          />
         </div>
       )}
 

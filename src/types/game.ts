@@ -63,11 +63,13 @@ export interface GameState {
   id: string;
   status: "WAITING" | "PLAYING" | "FINISHED";
   deck: Card[];
+  knockedOutCards: Card[];
   discardPile: Card[];
   currentPlayerIndex: number;
   direction: 1 | -1;
   players: PlayerState[];
   drawPenalty: number;
+  pendingRoulette: { chooserPlayerId: string } | null;
   currentColor: Color | null;
   lastPlayedCard: Card | null;
   winner: string | null;
