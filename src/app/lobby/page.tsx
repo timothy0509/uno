@@ -29,9 +29,7 @@ export default function LobbyPage() {
 
     const result = await createGame();
     if (result) {
-      const playerId = crypto.randomUUID();
-      localStorage.setItem("uno-player-id", playerId);
-      await joinGame(result.gameId, playerId, playerName);
+      await joinGame(result.gameId, playerName);
       router.push(`/game/${result.gameId}`);
     }
     setIsLoading(false);
@@ -50,11 +48,7 @@ export default function LobbyPage() {
     setIsLoading(true);
     localStorage.setItem("uno-player-name", playerName);
 
-    const playerId =
-      localStorage.getItem("uno-player-id") ?? crypto.randomUUID();
-    localStorage.setItem("uno-player-id", playerId);
-
-    const result = await joinGame(gameCode.toUpperCase(), playerId, playerName);
+    const result = await joinGame(gameCode.toUpperCase(), playerName);
     if (result) {
       router.push(`/game/${gameCode.toUpperCase()}`);
     }

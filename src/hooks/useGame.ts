@@ -1,136 +1,90 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
-import type { GameState, Color } from "~/types/game";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMutation, useQuery } from "convex/react";
+import { makeFunctionReference } from "convex/server";
 
-interface ApiResponse {
-  game?: GameState;
-  error?: string;
-  code?: string;
-}
+import { signInAnonymous, useAuthSession } from "~/lib/auth-client";
+import type { Color, GameState } from "~/types/game";
 
-interface SSEEvent {
-  type: string;
-  game?: GameState;
-  message?: string;
-}
+const getGameRef = makeFunctionReference<
+  "query",
+  { gameId: string },
+  GameState | null
+>("games:get");
+const createGameRef = makeFunctionReference<
+  "mutation",
+  Record<string, never>,
+  { gameId: string; gameState: GameState }
+>("games:create");
+const joinGameRef = makeFunctionReference<
+  "mutation",
+  { gameId: string; playerName: string },
+  GameState
+>("games:join");
+const startGameRef = makeFunctionReference<
+  "mutation",
+  { gameId: string },
+  GameState
+>("games:start");
+const playCardRef = makeFunctionReference<
+  "mutation",
+  {
+    gameId: string;
+    cardId: string;
+    selectedColor?: Color;
+    targetPlayerId?: string;
+  },
+  GameState
+>("games:playCard");
+const drawRef = makeFunctionReference<
+  "mutation",
+  { gameId: string },
+  GameState
+>("games:draw");
+const callUnoRef = makeFunctionReference<
+  "mutation",
+  { gameId: string },
+  GameState
+>("games:callUno");
 
-async function fetchGame(gameId: string): Promise<GameState | null> {
-  try {
-    const res = await fetch(`/api/game/${gameId}`);
-    if (!res.ok) return null;
-    const data = (await res.json()) as ApiResponse;
-    return data.game ?? null;
-  } catch {
-    return null;
-  }
-}
-
-export function useGame(gameId: string | null, playerId?: string | null) {
-  const [gameState, setGameState] = useState<GameState | null>(null);
+export function useGame(
+  gameId: string | null,
+  _legacyPlayerId?: string | null,
+) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const playerIdRef = useRef(playerId ?? "current");
+
+  const session = useAuthSession();
+  const gameState = useQuery(getGameRef, gameId ? { gameId } : "skip") ?? null;
+
+  const createGameMutation = useMutation(createGameRef);
+  const joinGameMutation = useMutation(joinGameRef);
+  const startGameMutation = useMutation(startGameRef);
+  const playCardMutation = useMutation(playCardRef);
+  const drawMutation = useMutation(drawRef);
+  const callUnoMutation = useMutation(callUnoRef);
 
   useEffect(() => {
-    playerIdRef.current = playerId ?? "current";
-  }, [playerId]);
-
-  const refresh = useCallback(async () => {
-    if (!gameId) return;
-    setIsLoading(true);
-    setError(null);
-    try {
-      const state = await fetchGame(gameId);
-      setGameState(state);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to fetch game");
-    } finally {
-      setIsLoading(false);
+    if (session.isPending || session.data?.session) {
+      return;
     }
-  }, [gameId]);
 
-  useEffect(() => {
-    void refresh();
-  }, [refresh]);
-
-  useEffect(() => {
-    if (!gameId || gameState?.status === "FINISHED") return;
-
-    const eventSource = new EventSource(`/api/game/${gameId}/subscribe`);
-
-    eventSource.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data as string) as SSEEvent;
-        if (data.type === "game-state-update" && data.game) {
-          setGameState(data.game);
-        }
-      } catch {
-        // Ignore parse errors
-      }
+    const signIn = async () => {
+      await signInAnonymous();
     };
 
-    eventSource.onerror = () => {
-      eventSource.close();
-    };
+    void signIn();
+  }, [session.data?.session, session.isPending]);
 
-    return () => {
-      eventSource.close();
-    };
-  }, [gameId, gameState?.status]);
-
-  const createGame = useCallback(async (): Promise<{
-    gameId: string;
-    gameState: GameState;
-  } | null> => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/game/create", { method: "POST" });
-      const data = (await res.json()) as ApiResponse;
-      if (!res.ok) {
-        setError(data.error ?? "Failed to create game");
-        return null;
-      }
-      if (data.game) {
-        setGameState(data.game);
-        return { gameId: data.game.id, gameState: data.game };
-      }
-      return null;
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to create game");
-      return null;
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  const joinGame = useCallback(
-    async (
-      gId: string,
-      playerId: string,
-      playerName: string,
-    ): Promise<GameState | null> => {
+  const withLoading = useCallback(
+    async <T>(fn: () => Promise<T>): Promise<T | null> => {
       setIsLoading(true);
       setError(null);
       try {
-        const res = await fetch(`/api/game/${gId}/join`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ playerId, playerName }),
-        });
-        const data = (await res.json()) as ApiResponse;
-        if (!res.ok) {
-          setError(data.error ?? "Failed to join game");
-          return null;
-        }
-        if (data.game) {
-          setGameState(data.game);
-          return data.game;
-        }
-        return null;
+        return await fn();
       } catch (e) {
-        setError(e instanceof Error ? e.message : "Failed to join game");
+        setError(e instanceof Error ? e.message : "Request failed");
         return null;
       } finally {
         setIsLoading(false);
@@ -139,30 +93,38 @@ export function useGame(gameId: string | null, playerId?: string | null) {
     [],
   );
 
+  const createGame = useCallback(async (): Promise<{
+    gameId: string;
+    gameState: GameState;
+  } | null> => {
+    return await withLoading(async () => await createGameMutation({}));
+  }, [createGameMutation, withLoading]);
+
+  const joinGame = useCallback(
+    async (
+      gId: string,
+      playerNameOrLegacyPlayerId: string,
+      maybePlayerName?: string,
+    ): Promise<GameState | null> => {
+      const playerName = maybePlayerName ?? playerNameOrLegacyPlayerId;
+      return await withLoading(
+        async () =>
+          await joinGameMutation({
+            gameId: gId,
+            playerName,
+          }),
+      );
+    },
+    [joinGameMutation, withLoading],
+  );
+
   const startGame = useCallback(
     async (gId: string): Promise<GameState | null> => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const res = await fetch(`/api/game/${gId}/start`, { method: "POST" });
-        const data = (await res.json()) as ApiResponse;
-        if (!res.ok) {
-          setError(data.error ?? "Failed to start game");
-          return null;
-        }
-        if (data.game) {
-          setGameState(data.game);
-          return data.game;
-        }
-        return null;
-      } catch (e) {
-        setError(e instanceof Error ? e.message : "Failed to start game");
-        return null;
-      } finally {
-        setIsLoading(false);
-      }
+      return await withLoading(
+        async () => await startGameMutation({ gameId: gId }),
+      );
     },
-    [],
+    [startGameMutation, withLoading],
   );
 
   const playCard = useCallback(
@@ -171,107 +133,67 @@ export function useGame(gameId: string | null, playerId?: string | null) {
       selectedColor?: Color,
       targetPlayerId?: string,
     ): Promise<GameState | null> => {
-      if (!gameId) return null;
-      setIsLoading(true);
-      setError(null);
-      try {
-        const res = await fetch(`/api/game/${gameId}/play`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            playerId: playerIdRef.current,
+      if (!gameId) {
+        return null;
+      }
+      return await withLoading(
+        async () =>
+          await playCardMutation({
+            gameId,
             cardId,
             selectedColor,
             targetPlayerId,
           }),
-        });
-        const data = (await res.json()) as ApiResponse;
-        if (!res.ok) {
-          setError(data.error ?? "Cannot play this card");
-          return null;
-        }
-        if (data.game) {
-          setGameState(data.game);
-          return data.game;
-        }
-        return null;
-      } catch (e) {
-        setError(e instanceof Error ? e.message : "Failed to play card");
-        return null;
-      } finally {
-        setIsLoading(false);
-      }
+      );
     },
-    [gameId],
+    [gameId, playCardMutation, withLoading],
   );
 
   const drawCards = useCallback(async (): Promise<GameState | null> => {
-    if (!gameId) return null;
-    setIsLoading(true);
-    setError(null);
-    try {
-      const res = await fetch(`/api/game/${gameId}/draw`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ playerId: playerIdRef.current }),
-      });
-      const data = (await res.json()) as ApiResponse;
-      if (!res.ok) {
-        setError(data.error ?? "Failed to draw cards");
-        return null;
-      }
-      if (data.game) {
-        setGameState(data.game);
-        return data.game;
-      }
+    if (!gameId) {
       return null;
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to draw cards");
-      return null;
-    } finally {
-      setIsLoading(false);
     }
-  }, [gameId]);
+    return await withLoading(async () => await drawMutation({ gameId }));
+  }, [drawMutation, gameId, withLoading]);
 
   const callUno = useCallback(async (): Promise<GameState | null> => {
-    if (!gameId) return null;
-    setIsLoading(true);
-    setError(null);
-    try {
-      const res = await fetch(`/api/game/${gameId}/uno`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ playerId: playerIdRef.current }),
-      });
-      const data = (await res.json()) as ApiResponse;
-      if (!res.ok) {
-        setError(data.error ?? "Failed to call UNO");
-        return null;
-      }
-      if (data.game) {
-        setGameState(data.game);
-        return data.game;
-      }
+    if (!gameId) {
       return null;
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to call UNO");
-      return null;
-    } finally {
-      setIsLoading(false);
     }
-  }, [gameId]);
+    return await withLoading(async () => await callUnoMutation({ gameId }));
+  }, [callUnoMutation, gameId, withLoading]);
 
-  return {
-    gameState,
-    isLoading,
-    error,
-    refresh,
-    createGame,
-    joinGame,
-    startGame,
-    playCard,
-    drawCards,
-    callUno,
-    setError,
-  };
+  const refresh = useCallback(async () => {
+    return;
+  }, []);
+
+  return useMemo(
+    () => ({
+      gameState,
+      isLoading,
+      error,
+      refresh,
+      createGame,
+      joinGame,
+      startGame,
+      playCard,
+      drawCards,
+      callUno,
+      setError,
+      currentUserId: session.data?.user?.id ?? null,
+    }),
+    [
+      callUno,
+      createGame,
+      drawCards,
+      error,
+      gameState,
+      isLoading,
+      joinGame,
+      playCard,
+      refresh,
+      session.data?.user?.id,
+      startGame,
+    ],
+  );
 }

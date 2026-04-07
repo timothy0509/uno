@@ -161,7 +161,6 @@ export default function GamePage() {
   const gameId =
     typeof rawId === "string" ? rawId : Array.isArray(rawId) ? rawId[0] : null;
 
-  const [playerId, setPlayerId] = useState<string | null>(null);
   const [playerName, setPlayerName] = useState<string>("");
   const [hasJoined, setHasJoined] = useState(false);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
@@ -178,25 +177,24 @@ export default function GamePage() {
     drawCards,
     callUno,
     refresh,
-  } = useGame(gameId ?? null, playerId);
+    currentUserId,
+  } = useGame(gameId ?? null);
 
   useEffect(() => {
-    const id = localStorage.getItem("uno-player-id");
     const name = localStorage.getItem("uno-player-name");
-    if (id) setPlayerId(id);
     if (name) setPlayerName(name);
   }, []);
 
   useEffect(() => {
-    if (gameId && playerId && playerName && !hasJoined) {
-      void joinGame(gameId, playerId, playerName);
+    if (gameId && currentUserId && playerName && !hasJoined) {
+      void joinGame(gameId, playerName);
       setHasJoined(true);
     }
-  }, [gameId, playerId, playerName, hasJoined, joinGame]);
+  }, [currentUserId, gameId, hasJoined, joinGame, playerName]);
 
-  const currentPlayer = gameState?.players.find((p) => p.id === playerId);
+  const currentPlayer = gameState?.players.find((p) => p.id === currentUserId);
   const isMyTurn =
-    gameState?.players[gameState.currentPlayerIndex]?.id === playerId;
+    gameState?.players[gameState.currentPlayerIndex]?.id === currentUserId;
   const topCard = gameState?.discardPile[gameState.discardPile.length - 1];
 
   const handleCardClick = (card: Card) => {
@@ -261,7 +259,7 @@ export default function GamePage() {
           <div className="mb-4">
             <p className="mb-2 text-white/70">Game Code:</p>
             <p className="text-center font-mono text-3xl font-bold text-white">
-              {gameId?.slice(0, 6).toUpperCase()}
+              {gameState.id}
             </p>
           </div>
           <div className="mb-6">
@@ -275,7 +273,8 @@ export default function GamePage() {
                   className="animate-fade-in-up text-white"
                   style={{ animationDelay: `${index * 80}ms` }}
                 >
-                  {index + 1}. {player.name} {player.id === playerId && "(You)"}
+                  {index + 1}. {player.name}{" "}
+                  {player.id === currentUserId && "(You)"}
                 </li>
               ))}
             </ul>
@@ -304,9 +303,11 @@ export default function GamePage() {
       <main className="gradient-bg flex min-h-screen flex-col items-center justify-center p-8">
         <div className="animate-fade-in-scale glass-premium w-full max-w-md p-8 text-center">
           <h2 className="animate-winner font-display mb-4 text-3xl font-bold text-white">
-            {gameState.winner === playerId ? "🎉 You Win! 🎉" : "Game Over"}
+            {gameState.winner === currentUserId
+              ? "🎉 You Win! 🎉"
+              : "Game Over"}
           </h2>
-          {gameState.winner && gameState.winner !== playerId && (
+          {gameState.winner && gameState.winner !== currentUserId && (
             <p className="mb-6 text-white/70">
               Winner:{" "}
               {gameState.players.find((p) => p.id === gameState.winner)?.name}
@@ -323,7 +324,7 @@ export default function GamePage() {
     );
   }
 
-  const opponents = gameState.players.filter((p) => p.id !== playerId);
+  const opponents = gameState.players.filter((p) => p.id !== currentUserId);
 
   return (
     <main className="gradient-bg flex min-h-screen flex-col p-4">

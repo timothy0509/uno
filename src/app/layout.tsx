@@ -4,6 +4,8 @@ import { type Metadata } from "next";
 import { Geist } from "next/font/google";
 import { Fredoka, Nunito } from "next/font/google";
 
+import { AppProviders } from "./providers";
+
 export const metadata: Metadata = {
   title: "UNO No Mercy",
   description: "Play UNO No Mercy online - the brutal variant of UNO",
@@ -35,7 +37,9 @@ export default function RootLayout({
       lang="en"
       className={`${geist.variable} ${fredoka.variable} ${nunito.variable}`}
     >
-      <body className="gradient-bg font-body min-h-screen">{children}</body>
+      <body className="gradient-bg font-body min-h-screen">
+        <AppProviders>{children}</AppProviders>
+      </body>
     </html>
   );
 }
