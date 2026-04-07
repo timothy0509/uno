@@ -5,13 +5,7 @@ import type {
   Color,
   PlayCardResult,
 } from "../../types/game";
-import {
-  createDeck,
-  dealCards,
-  drawCards,
-  getDrawAmount,
-  canPlayCard,
-} from "./deck";
+import { createDeck, dealCards, getDrawAmount, canPlayCard } from "./deck";
 
 export function initializeGame(
   playerIds: string[],
@@ -52,11 +46,13 @@ export function initializeGame(
     id: crypto.randomUUID(),
     status: "PLAYING",
     deck: startDeck,
+    knockedOutCards: [],
     discardPile,
     currentPlayerIndex: 0,
     direction: 1,
     players,
     drawPenalty: 0,
+    pendingRoulette: null,
     currentColor,
     lastPlayedCard: null,
     winner: null,
@@ -79,6 +75,9 @@ export function playCard(
   }
   if (playerIndex !== gameState.currentPlayerIndex) {
     return { success: false, error: "Not your turn" };
+  }
+  if (gameState.pendingRoulette) {
+    return { success: false, error: "Waiting for roulette color selection" };
   }
   const player = gameState.players[playerIndex];
   if (!player) {
@@ -107,14 +106,27 @@ export function playCard(
   ) {
     return { success: false, error: "Cannot play this card" };
   }
-  if (card.type === "wild" && !selectedColor) {
-    return { success: false, requiresColorSelect: true };
+  if (
+    card.type === "wild" &&
+    card.value !== "WildColorRoulette" &&
+    !selectedColor
+  ) {
+    return {
+      success: false,
+      error: "Color selection required",
+      requiresColorSelect: true,
+    };
   }
   if (card.type === "numbered" && card.value === "7" && !targetPlayerId) {
     const validTargets = gameState.players
       .filter((p) => p.id !== playerId && !p.isKnockedOut)
       .map((p) => p.id);
-    return { success: false, requiresTargetSelect: true, validTargets };
+    return {
+      success: false,
+      error: "Target player required for 7 card",
+      requiresTargetSelect: true,
+      validTargets,
+    };
   }
   const newState = { ...gameState };
   newState.players = gameState.players.map((p) => ({
@@ -122,6 +134,7 @@ export function playCard(
     cards: [...p.cards],
   }));
   newState.deck = [...gameState.deck];
+  newState.knockedOutCards = [...gameState.knockedOutCards];
   newState.discardPile = [...gameState.discardPile];
   const currentPlayer = newState.players[playerIndex];
   if (!currentPlayer) {
@@ -141,11 +154,7 @@ export function playCard(
   }
   if (gameState.drawPenalty > 0) {
     const cardDraw = getDrawAmount(card);
-    if (cardDraw >= gameState.drawPenalty) {
-      newState.drawPenalty = cardDraw;
-    } else {
-      newState.drawPenalty = gameState.drawPenalty + cardDraw;
-    }
+    newState.drawPenalty = gameState.drawPenalty + cardDraw;
   } else {
     newState.drawPenalty = getDrawAmount(card);
   }
@@ -154,8 +163,7 @@ export function playCard(
     newState.winner = playerId;
     return { success: true, gameState: newState };
   }
-  if (currentPlayer.cards.length === 1 && !currentPlayer.calledUno) {
-  }
+  normalizeUnoFlags(newState);
   const skipNextPlayer = applyCardEffect(newState, playerIndex, targetPlayerId);
   if (!skipNextPlayer) {
     advanceTurn(newState);
@@ -198,7 +206,11 @@ function applyCardEffect(
           currentPlayer.cards = currentPlayer.cards.filter(
             (c) => c.type === "wild" || c.color !== discardColor,
           );
+          const discardAllCard = state.discardPile.pop();
           state.discardPile.push(...cardsToDiscard);
+          if (discardAllCard) {
+            state.discardPile.push(discardAllCard);
+          }
         }
         return false;
     }
@@ -210,8 +222,16 @@ function applyCardEffect(
         return false;
       case "WildReverseDraw4":
         state.direction = state.direction === 1 ? -1 : 1;
+        if (activePlayerCount(state) === 2) {
+          return true;
+        }
         return false;
       case "WildColorRoulette":
+        const nextPlayerIndex = getNextPlayerIndex(state);
+        const nextPlayer = state.players[nextPlayerIndex];
+        if (nextPlayer) {
+          state.pendingRoulette = { chooserPlayerId: nextPlayer.id };
+        }
         return false;
     }
   }
@@ -289,48 +309,129 @@ export function drawCardsFromDeck(
     cards: [...p.cards],
   }));
   newState.deck = [...gameState.deck];
+  newState.knockedOutCards = [...gameState.knockedOutCards];
   newState.discardPile = [...gameState.discardPile];
-  if (newState.deck.length === 0) {
-    const top = newState.discardPile.pop();
-    newState.deck = shuffleDeck(newState.discardPile);
-    newState.discardPile = top ? [top] : [];
+  if (gameState.pendingRoulette) {
+    return { error: "Waiting for roulette color selection" };
   }
   let drawCount = count ?? 1;
   if (gameState.drawPenalty > 0) {
     drawCount = gameState.drawPenalty;
     newState.drawPenalty = 0;
   }
-  const { drawn, remainingDeck } = drawCards(newState.deck, drawCount);
-  newState.deck = remainingDeck;
+  const drawn: Card[] = [];
+  let drewPlayableCard = false;
+  if (gameState.drawPenalty > 0) {
+    for (let i = 0; i < drawCount; i++) {
+      const nextCard = drawOneCard(newState);
+      if (!nextCard) break;
+      drawn.push(nextCard);
+    }
+  } else {
+    while (true) {
+      const nextCard = drawOneCard(newState);
+      if (!nextCard) break;
+      drawn.push(nextCard);
+      const topCard = newState.discardPile[newState.discardPile.length - 1];
+      if (
+        topCard &&
+        canPlayCard(nextCard, topCard, newState.currentColor, 0, [
+          ...(player.cards ?? []),
+          ...drawn,
+        ])
+      ) {
+        drewPlayableCard = true;
+        break;
+      }
+    }
+  }
   const currentPlayer = newState.players[playerIndex];
   if (currentPlayer) {
     currentPlayer.cards.push(...drawn);
   }
-  if (gameState.drawPenalty === 0) {
-    let playableCard: Card | undefined;
-    for (const card of drawn) {
-      const topCard = newState.discardPile[newState.discardPile.length - 1];
-      if (
-        topCard &&
-        canPlayCard(
-          card,
-          topCard,
-          newState.currentColor,
-          0,
-          currentPlayer?.cards ?? [],
-        )
-      ) {
-        playableCard = card;
-        break;
-      }
-    }
-    if (!playableCard) {
-      advanceTurn(newState);
-    }
+  if (gameState.drawPenalty > 0) {
+    advanceTurn(newState);
+  } else if (!drewPlayableCard) {
+    advanceTurn(newState);
   }
+  normalizeUnoFlags(newState);
   checkMercyRule(newState);
   newState.updatedAt = new Date();
   return { gameState: newState, drawnCards: drawn };
+}
+
+export function chooseRouletteColor(
+  gameState: GameState,
+  playerId: string,
+  selectedColor: Color,
+): { gameState: GameState; drawnCards: Card[] } | { error: string } {
+  const pending = gameState.pendingRoulette;
+  if (!pending) {
+    return { error: "No roulette selection pending" };
+  }
+  if (pending.chooserPlayerId !== playerId) {
+    return { error: "Only the chosen player can select roulette color" };
+  }
+  const playerIndex = gameState.players.findIndex((p) => p.id === playerId);
+  if (playerIndex === -1) {
+    return { error: "Player not found" };
+  }
+  if (playerIndex !== gameState.currentPlayerIndex) {
+    return { error: "Not your turn" };
+  }
+
+  const newState = { ...gameState };
+  newState.players = gameState.players.map((p) => ({
+    ...p,
+    cards: [...p.cards],
+  }));
+  newState.deck = [...gameState.deck];
+  newState.knockedOutCards = [...gameState.knockedOutCards];
+  newState.discardPile = [...gameState.discardPile];
+  newState.pendingRoulette = null;
+  newState.currentColor = selectedColor;
+
+  const currentPlayer = newState.players[playerIndex];
+  if (!currentPlayer) {
+    return { error: "Player not found" };
+  }
+
+  const drawnCards: Card[] = [];
+  while (true) {
+    const card = drawOneCard(newState);
+    if (!card) break;
+    drawnCards.push(card);
+    if (card.type !== "wild" && card.color === selectedColor) {
+      break;
+    }
+  }
+
+  currentPlayer.cards.push(...drawnCards);
+  normalizeUnoFlags(newState);
+  checkMercyRule(newState);
+  advanceTurn(newState);
+  newState.updatedAt = new Date();
+
+  return { gameState: newState, drawnCards };
+}
+
+function drawOneCard(state: GameState): Card | null {
+  if (state.deck.length === 0) {
+    refillDeckFromDiscard(state);
+  }
+  if (state.deck.length === 0) {
+    return null;
+  }
+  const card = state.deck.shift();
+  return card ?? null;
+}
+
+function refillDeckFromDiscard(state: GameState): void {
+  const top = state.discardPile.pop();
+  const refillPool = [...state.discardPile, ...state.knockedOutCards];
+  state.knockedOutCards = [];
+  state.deck = shuffleDeck(refillPool);
+  state.discardPile = top ? [top] : [];
 }
 
 function shuffleDeck(deck: Card[]): Card[] {
@@ -350,6 +451,9 @@ function checkMercyRule(state: GameState): void {
   for (const player of state.players) {
     if (player.cards.length >= 25 && !player.isKnockedOut) {
       player.isKnockedOut = true;
+      state.knockedOutCards.push(...player.cards);
+      player.cards = [];
+      player.calledUno = false;
     }
   }
   const activePlayers = state.players.filter((p) => !p.isKnockedOut);
@@ -365,10 +469,23 @@ export function callUno(gameState: GameState, playerId: string): GameState {
   const newState = { ...gameState };
   newState.players = gameState.players.map((p) => ({ ...p }));
   const player = newState.players[playerIndex];
-  if (player) {
+  if (player?.cards.length === 1) {
     player.calledUno = true;
   }
+  normalizeUnoFlags(newState);
   return newState;
+}
+
+function normalizeUnoFlags(state: GameState): void {
+  for (const player of state.players) {
+    if (player.cards.length !== 1) {
+      player.calledUno = false;
+    }
+  }
+}
+
+function activePlayerCount(state: GameState): number {
+  return state.players.filter((p) => !p.isKnockedOut).length;
 }
 
 export function getNextPlayerIndex(state: GameState): number {
