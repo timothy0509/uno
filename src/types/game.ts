@@ -64,11 +64,16 @@ export interface GameState {
   status: "WAITING" | "PLAYING" | "FINISHED";
   deck: Card[];
   discardPile: Card[];
+  setAsidePile: Card[];
   currentPlayerIndex: number;
   direction: 1 | -1;
   players: PlayerState[];
   drawPenalty: number;
   currentColor: Color | null;
+  pendingColorRoulette: {
+    chooserPlayerId: string;
+    sourcePlayerId: string;
+  } | null;
   lastPlayedCard: Card | null;
   winner: string | null;
   createdAt: Date;

@@ -6,6 +6,7 @@ import {
   drawCardsFromDeck,
   initializeGame,
   playCard as playCardEngine,
+  resolveColorRouletteChoice,
 } from "../src/lib/game/engine";
 import { requireUserId } from "./lib/auth";
 
@@ -64,7 +65,9 @@ function toGameState(game: any, players: any[]): GameState {
       calledUno: p.calledUno,
     })),
     drawPenalty: game.drawPenalty,
+    setAsidePile: game.setAsidePile ?? [],
     currentColor: game.currentColor,
+    pendingColorRoulette: game.pendingColorRoulette ?? null,
     lastPlayedCard: game.lastPlayedCard,
     winner: game.winner,
     createdAt: game.createdAt,
@@ -106,7 +109,9 @@ export const create = mutationGeneric({
       currentPlayerIndex: 0,
       direction: 1,
       drawPenalty: 0,
+      setAsidePile: [],
       currentColor: null,
+      pendingColorRoulette: null,
       lastPlayedCard: null,
       winner: null,
       createdAt: timestamp,
@@ -184,7 +189,9 @@ export const start = mutationGeneric({
       currentPlayerIndex: initialized.currentPlayerIndex,
       direction: initialized.direction,
       drawPenalty: initialized.drawPenalty,
+      setAsidePile: initialized.setAsidePile,
       currentColor: initialized.currentColor,
+      pendingColorRoulette: initialized.pendingColorRoulette,
       lastPlayedCard: initialized.lastPlayedCard,
       winner: initialized.winner,
       updatedAt: timestamp,
@@ -242,6 +249,12 @@ export const playCard = mutationGeneric({
     );
 
     if (!result.success || !result.gameState) {
+      if (result.requiresColorSelect) {
+        throw new ConvexError("Color selection required");
+      }
+      if (result.requiresTargetSelect) {
+        throw new ConvexError("Target player selection required");
+      }
       throw new ConvexError(result.error ?? "Cannot play this card");
     }
 
@@ -252,7 +265,9 @@ export const playCard = mutationGeneric({
       currentPlayerIndex: result.gameState.currentPlayerIndex,
       direction: result.gameState.direction,
       drawPenalty: result.gameState.drawPenalty,
+      setAsidePile: result.gameState.setAsidePile,
       currentColor: result.gameState.currentColor,
+      pendingColorRoulette: result.gameState.pendingColorRoulette,
       lastPlayedCard: result.gameState.lastPlayedCard,
       winner: result.gameState.winner,
       updatedAt: now(),
@@ -301,7 +316,9 @@ export const draw = mutationGeneric({
       currentPlayerIndex: result.gameState.currentPlayerIndex,
       direction: result.gameState.direction,
       drawPenalty: result.gameState.drawPenalty,
+      setAsidePile: result.gameState.setAsidePile,
       currentColor: result.gameState.currentColor,
+      pendingColorRoulette: result.gameState.pendingColorRoulette,
       lastPlayedCard: result.gameState.lastPlayedCard,
       winner: result.gameState.winner,
       updatedAt: now(),
@@ -357,5 +374,68 @@ export const callUno = mutationGeneric({
       ...toGameState(updatedGame, updatedPlayers),
       currentPlayerIndex: updatedState.currentPlayerIndex,
     };
+  },
+});
+
+export const chooseColorRoulette = mutationGeneric({
+  args: {
+    gameId: v.string(),
+    color: v.union(
+      v.literal("red"),
+      v.literal("blue"),
+      v.literal("green"),
+      v.literal("yellow"),
+    ),
+  },
+  handler: async (ctx, args) => {
+    const userId = await requireUserId(ctx);
+    const game = await getGameByIdentifier(ctx, args.gameId);
+    if (!game) {
+      throw new ConvexError("Game not found");
+    }
+
+    const players = await loadPlayers(ctx, game._id);
+    const state = toGameState(game, players);
+    const result = resolveColorRouletteChoice(
+      state,
+      userId,
+      args.color as Color,
+    );
+    if ("error" in result) {
+      throw new ConvexError(result.error);
+    }
+
+    await ctx.db.patch(game._id, {
+      status: result.gameState.status,
+      deck: result.gameState.deck,
+      discardPile: result.gameState.discardPile,
+      currentPlayerIndex: result.gameState.currentPlayerIndex,
+      direction: result.gameState.direction,
+      drawPenalty: result.gameState.drawPenalty,
+      setAsidePile: result.gameState.setAsidePile,
+      currentColor: result.gameState.currentColor,
+      pendingColorRoulette: result.gameState.pendingColorRoulette,
+      lastPlayedCard: result.gameState.lastPlayedCard,
+      winner: result.gameState.winner,
+      updatedAt: now(),
+    });
+
+    for (const player of result.gameState.players) {
+      const dbPlayer = players.find((p: any) => p.userId === player.id);
+      if (dbPlayer) {
+        await ctx.db.patch(dbPlayer._id, {
+          cards: player.cards,
+          isKnockedOut: player.isKnockedOut,
+          calledUno: player.calledUno,
+        });
+      }
+    }
+
+    const updatedGame = await ctx.db.get(game._id);
+    const updatedPlayers = await loadPlayers(ctx, game._id);
+    if (!updatedGame) {
+      throw new ConvexError("Failed to update game");
+    }
+    return toGameState(updatedGame, updatedPlayers);
   },
 });

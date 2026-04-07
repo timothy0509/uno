@@ -14,12 +14,22 @@ export default defineSchema({
     currentPlayerIndex: v.number(),
     direction: v.union(v.literal(1), v.literal(-1)),
     drawPenalty: v.number(),
+    setAsidePile: v.optional(v.array(v.any())),
     currentColor: v.union(
       v.literal("red"),
       v.literal("blue"),
       v.literal("green"),
       v.literal("yellow"),
       v.null(),
+    ),
+    pendingColorRoulette: v.optional(
+      v.union(
+        v.object({
+          chooserPlayerId: v.string(),
+          sourcePlayerId: v.string(),
+        }),
+        v.null(),
+      ),
     ),
     lastPlayedCard: v.union(v.any(), v.null()),
     winner: v.union(v.string(), v.null()),
