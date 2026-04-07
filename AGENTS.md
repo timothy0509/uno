@@ -2,12 +2,13 @@
 
 ## Project Overview
 
-UNO No Mercy multiplayer web game. Next.js 15 App Router + Prisma (MySQL) + Tailwind CSS 4 + TypeScript. Real-time updates via SSE (Server-Sent Events), not WebSockets (despite `socket.io` being a dependency).
+UNO No Mercy multiplayer web game. Next.js 15 App Router + Convex (real-time backend) + Tailwind CSS 4 + TypeScript. Auth via better-auth with anonymous sign-in.
 
 ## Developer Commands
 
 ```bash
 npm run dev          # Next.js dev server with --turbo
+npm run convex:dev   # Convex dev server (run alongside npm run dev)
 npm run build        # Production build
 npm run start        # Start production server
 npm run check        # next lint && tsc --noEmit (run this before committing)
@@ -16,10 +17,6 @@ npm run lint:fix     # Auto-fix lint issues
 npm run typecheck    # tsc --noEmit
 npm run format:check # Prettier dry-run
 npm run format:write # Prettier fix
-npm run db:generate  # prisma migrate dev (dev migrations + generate client)
-npm run db:migrate   # prisma migrate deploy (prod migrations)
-npm run db:push      # prisma db push (schema sync without migrations)
-npm run db:studio    # prisma studio (DB GUI)
 ```
 
 **No test framework is configured.** There are no tests in this repo.
@@ -27,74 +24,74 @@ npm run db:studio    # prisma studio (DB GUI)
 ## Architecture
 
 ```
-src/
-├── app/              # Next.js App Router
-│   ├── api/
-│   │   ├── game/     # Game REST endpoints + SSE subscribe
-│   │   └── lobby/    # Lobby REST endpoints
-│   ├── game/[id]/    # Game page
-│   ├── lobby/        # Lobby page
-│   └── page.tsx      # Landing page
+src/                          # Next.js frontend
+├── app/                      # Next.js App Router
+│   ├── api/auth/[...all]/    # Better-auth HTTP handler
+│   ├── game/[id]/            # Game page
+│   ├── lobby/                # Lobby page
+│   └── page.tsx              # Landing page
 ├── hooks/
-│   └── useGame.ts    # Client hook: fetch + SSE subscriptions + API calls
+│   └── useGame.ts            # Client hook: Convex queries/mutations + auth
 ├── lib/game/
-│   ├── engine.ts     # Pure game logic (initializeGame, playCard, drawCardsFromDeck, callUno)
-│   ├── store.ts      # In-memory Map-backed game store (NOT used by API routes)
-│   ├── db.ts         # Prisma-backed game store (used by API routes)
-│   └── deck.ts       # Card deck utilities (createDeck, dealCards, canPlayCard, etc.)
-├── server/
-│   └── db.ts         # Prisma client singleton (globalThis dedup)
-├── styles/
-│   └── globals.css
-└── types/
-    └── game.ts       # TypeScript types (GameState, Card, Color, etc.)
+│   ├── engine.ts             # Pure game logic (initializeGame, playCard, drawCardsFromDeck, callUno)
+│   ├── store.ts              # In-memory Map-backed store (LEGACY, not used)
+│   └── deck.ts               # Card deck utilities
+├── lib/auth-client.ts        # Better-auth client (anonymous + Convex)
+└── env.js                    # Env validation (requires Convex URLs)
+
+convex/                       # Convex backend
+├── games.ts                  # Game queries/mutations (get, create, join, start, playCard, draw, callUno)
+├── lobbies.ts                # Lobby queries/mutations
+├── users.ts                  # User queries
+├── stats.ts                  # Stats tracking
+├── schema.ts                 # Convex schema (games, gamePlayers, gameActions, lobbies, lobbyPlayers, userStats)
+├── http.ts                   # HTTP router for better-auth
+├── auth.config.ts            # Convex auth config
+├── convex.config.ts          # Convex app config (better-auth plugin)
+└── lib/auth.ts               # requireUserId helper
 ```
 
 ### Key Architecture Facts
 
-- **Game state is persisted in MySQL via Prisma.** Cards and deck are stored as JSON strings.
-- **`lib/game/db.ts` is the authoritative store** used by API routes. `lib/game/store.ts` is an in-memory alternative that is NOT wired into the API layer.
-- **Real-time updates use SSE** (`EventSource` in `useGame.ts`), subscribing to `/api/game/[id]/subscribe`.
+- **Convex is the backend.** All game state lives in Convex tables, not MySQL. Real-time updates happen automatically via Convex React hooks (`useQuery`, `useMutation`).
+- **`convex/games.ts` is the authoritative game API.** It uses `*Generic` function types (`queryGeneric`, `mutationGeneric`) and calls into `src/lib/game/engine.ts` for pure logic.
+- **Game state stored in Convex tables** (`games`, `gamePlayers`, `gameActions`), not JSON strings in a single row.
+- **Auth**: better-auth with `@convex-dev/better-auth` plugin. Anonymous sign-in via `signInAnonymous()`. User identity derived from `ctx.auth.getUserIdentity()` in Convex functions.
 - **Path alias**: `~/*` → `./src/*`
-- **Prisma client output**: `generated/prisma/` (not in `node_modules`)
+- **`src/lib/game/store.ts` is legacy** — the in-memory store from the old architecture. It is NOT wired into anything.
+- **`src/lib/game/db.ts` does not exist** — it was removed during the Convex migration.
 
-## Prisma
+## Convex
 
-- **Database**: MySQL (configured in `prisma/schema.prisma`)
-- **Models**: `User`, `UserStat`, `Game`, `GamePlayer`, `GameAction`, `Lobby`, `LobbyPlayer`
-- **Game/cards stored as JSON strings** in the database — parsed/serialized in `lib/game/db.ts`
-- **Postinstall hook** auto-runs `prisma generate` with a fallback `DATABASE_URL`
+- **Schema**: `convex/schema.ts` — tables: `games`, `gamePlayers`, `gameActions`, `lobbies`, `lobbyPlayers`, `userStats`
+- **Function types**: Uses `queryGeneric`/`mutationGeneric` (not the standard `query`/`mutation`) to allow importing from `~/types/game`
+- **Auth**: `requireUserId()` in `convex/lib/auth.ts` validates identity via `ctx.auth.getUserIdentity()`
+- **HTTP routes**: `convex/http.ts` mounts better-auth at `/api/auth`
+- **Read `convex/_generated/ai/guidelines.md` first** when writing Convex code — it contains important API patterns
 
 ## Environment
 
 - Env validation via `@t3-oss/env-nextjs` in `src/env.js`
-- Required: `DATABASE_URL` (optional — falls back to SQLite for local dev)
+- **Required**: `NEXT_PUBLIC_CONVEX_URL` and `NEXT_PUBLIC_CONVEX_SITE_URL`
 - Skip validation: `SKIP_ENV_VALIDATION=1` (useful for Docker builds)
 - `next.config.js` imports `src/env.js` at the top — env errors surface on `dev`/`build`
+- **No DATABASE_URL needed** — Convex manages its own database
 
 ## Code Conventions
 
-- **TypeScript strict mode** with `noUncheckedIndexedAccess`
-- **ESLint**: flat config, `next/core-web-vitals`, typescript-eslint recommended + stylistic
+- **TypeScript strict mode** with `noUncheckedIndexedAccess` + `verbatimModuleSyntax`
+- **ESLint**: flat config, `next/core-web-vitals`, typescript-eslint recommended + stylistic type-checked
 - **Prettier**: with `prettier-plugin-tailwindcss` for class sorting
 - **ESM**: `"type": "module"` in package.json
-- **Import order**: prefer type imports (`import type { ... }`)
-- **Unused vars**: prefix with `_` to suppress
+- **Import order**: prefer type imports (`import type { ... }`), enforced by `@typescript-eslint/consistent-type-imports`
+- **Unused vars**: prefix with `_` to suppress (`argsIgnorePattern: "^_"`)
 
 ## Game Rules
 
-See `rules.md` for the full UNO No Mercy ruleset. Key mechanics implemented in `lib/game/engine.ts`:
+See `rules.md` for the full UNO No Mercy ruleset. Key mechanics in `src/lib/game/engine.ts`:
 
 - Stacking (+2/+4/+6/+10)
 - Mercy rule (25+ cards = knockout)
 - 7 rule (swap hands)
 - 0 rule (rotate hands)
 - Wild cards: Draw 6, Draw 10, Reverse Draw 4, Color Roulette
-
-<!-- convex-ai-start -->
-This project uses [Convex](https://convex.dev) as its backend.
-
-When working on Convex code, **always read `convex/_generated/ai/guidelines.md` first** for important guidelines on how to correctly use Convex APIs and patterns. The file contains rules that override what you may have learned about Convex from training data.
-
-Convex agent skills for common tasks can be installed by running `npx convex ai-files install`.
-<!-- convex-ai-end -->
