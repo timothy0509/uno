@@ -9,7 +9,26 @@ const components = componentsGeneric();
 const http = httpRouter();
 const authClient = createClient(components.betterAuth as never);
 
+function assertAuthSecretsConfigured() {
+  if (process.env.NODE_ENV !== "production") {
+    return;
+  }
+
+  const hasSecret =
+    Boolean(process.env.BETTER_AUTH_SECRET) ||
+    Boolean(process.env.AUTH_SECRET) ||
+    Boolean(process.env.BETTER_AUTH_SECRETS);
+
+  if (!hasSecret) {
+    throw new Error(
+      "Missing BETTER_AUTH_SECRET (or AUTH_SECRET/BETTER_AUTH_SECRETS) in production Convex environment.",
+    );
+  }
+}
+
 function createAuth(ctx: object) {
+  assertAuthSecretsConfigured();
+
   return betterAuth({
     basePath: "/api/auth",
     emailAndPassword: {

@@ -47,6 +47,26 @@ export function useAuthSession() {
   return appAuthClient.useSession();
 }
 
+function extractAuthErrorMessage(value: unknown, fallback: string): string {
+  if (value instanceof Error) {
+    return value.message;
+  }
+
+  if (
+    typeof value === "object" &&
+    value !== null &&
+    "error" in value &&
+    typeof value.error === "object" &&
+    value.error !== null &&
+    "message" in value.error &&
+    typeof value.error.message === "string"
+  ) {
+    return value.error.message;
+  }
+
+  return fallback;
+}
+
 export async function signInAnonymous(): Promise<{ error?: string | null }> {
   try {
     await appAuthClient.signIn.anonymous();
@@ -62,11 +82,17 @@ export async function signInWithEmail(
   email: string,
   password: string,
 ): Promise<{ error?: string | null }> {
-  const result = await appAuthClient.signIn.email({ email, password });
-  if (result.error) {
-    return { error: result.error.message };
+  try {
+    const result = await appAuthClient.signIn.email({ email, password });
+    if (result.error) {
+      return { error: result.error.message };
+    }
+    return { error: null };
+  } catch (e) {
+    return {
+      error: extractAuthErrorMessage(e, "Email sign-in failed"),
+    };
   }
-  return { error: null };
 }
 
 export async function signUpWithEmail(
@@ -74,9 +100,16 @@ export async function signUpWithEmail(
   password: string,
   name: string,
 ): Promise<{ error?: string | null; userId?: string | null }> {
-  const result = await appAuthClient.signUp.email({ email, password, name });
-  if (result.error) {
-    return { error: result.error.message };
+  try {
+    const result = await appAuthClient.signUp.email({ email, password, name });
+    if (result.error) {
+      return { error: result.error.message };
+    }
+    return { error: null, userId: result.data?.user?.id ?? null };
+  } catch (e) {
+    return {
+      error: extractAuthErrorMessage(e, "Email sign-up failed"),
+      userId: null,
+    };
   }
-  return { error: null, userId: result.data?.user?.id ?? null };
 }

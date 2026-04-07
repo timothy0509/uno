@@ -30,6 +30,7 @@ export default function LobbyPage() {
   );
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isAuthSubmitting, setIsAuthSubmitting] = useState(false);
   const [authFormError, setAuthFormError] = useState<string | null>(null);
 
   const isAuthenticating = session.isPending;
@@ -93,20 +94,37 @@ export default function LobbyPage() {
     e.preventDefault();
     setAuthFormError(null);
 
+    if (isAuthSubmitting) {
+      return;
+    }
+
     if (!email.trim() || !password.trim()) {
       setAuthFormError("Please enter email and password");
       return;
     }
 
-    const result = await signInWithEmail(email, password);
-    if (result.error) {
-      setAuthFormError(result.error);
+    setIsAuthSubmitting(true);
+    try {
+      const result = await signInWithEmail(email, password);
+      if (result.error) {
+        setAuthFormError(result.error);
+      }
+    } catch (e) {
+      setAuthFormError(
+        e instanceof Error ? e.message : "Unable to sign in right now",
+      );
+    } finally {
+      setIsAuthSubmitting(false);
     }
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthFormError(null);
+
+    if (isAuthSubmitting) {
+      return;
+    }
 
     if (!email.trim() || !password.trim()) {
       setAuthFormError("Please enter email and password");
@@ -118,13 +136,35 @@ export default function LobbyPage() {
       return;
     }
 
-    const result = await signUpWithEmail(
-      email,
-      password,
-      playerName.trim() || "Player",
-    );
-    if (result.error) {
-      setAuthFormError(result.error);
+    setIsAuthSubmitting(true);
+    try {
+      const result = await signUpWithEmail(
+        email,
+        password,
+        playerName.trim() || "Player",
+      );
+      if (result.error) {
+        setAuthFormError(result.error);
+      }
+    } catch (e) {
+      setAuthFormError(
+        e instanceof Error ? e.message : "Unable to create account right now",
+      );
+    } finally {
+      setIsAuthSubmitting(false);
+    }
+  };
+
+  const handleGuestSignIn = async () => {
+    if (isAuthSubmitting) {
+      return;
+    }
+
+    setIsAuthSubmitting(true);
+    try {
+      await retryAnonymousAuth();
+    } finally {
+      setIsAuthSubmitting(false);
     }
   };
 
@@ -175,10 +215,11 @@ export default function LobbyPage() {
             {authMode === "none" && (
               <div className="space-y-4">
                 <button
-                  onClick={retryAnonymousAuth}
-                  className="button-y2k w-full py-3 text-lg font-bold"
+                  onClick={handleGuestSignIn}
+                  disabled={isAuthSubmitting}
+                  className="button-y2k w-full py-3 text-lg font-bold disabled:opacity-50"
                 >
-                  Continue as Guest
+                  {isAuthSubmitting ? "Connecting..." : "Continue as Guest"}
                 </button>
 
                 <div className="relative">
@@ -281,10 +322,10 @@ export default function LobbyPage() {
 
                 <button
                   type="submit"
-                  disabled={isLoading}
+                  disabled={isAuthSubmitting}
                   className="button-y2k w-full py-3 text-lg font-bold disabled:opacity-50"
                 >
-                  {isLoading
+                  {isAuthSubmitting
                     ? "Please wait..."
                     : authMode === "signin"
                       ? "Sign In"
