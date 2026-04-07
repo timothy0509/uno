@@ -141,7 +141,7 @@ export default function LobbyPage() {
       const result = await signUpWithEmail(
         email,
         password,
-        playerName.trim() || "Player",
+        playerName.trim() ?? "Player",
       );
       if (result.error) {
         setAuthFormError(result.error);
@@ -178,8 +178,18 @@ export default function LobbyPage() {
           </h1>
           <div className="animate-fade-in-scale glass-shimmer glass card-shadow p-8">
             <div className="flex flex-col items-center gap-4">
-              <div className="h-8 w-8 animate-spin rounded-full border-4 border-white/20 border-t-red-500"></div>
-              <p className="text-white/70">Connecting...</p>
+              <div className="relative h-12 w-12">
+                <svg
+                  viewBox="0 0 24 24"
+                  className="absolute inset-0 h-full w-full animate-pulse text-red-500"
+                  fill="currentColor"
+                >
+                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z" />
+                  <path d="M7 7h10v2H7zm0 4h10v2H7zm0 4h7v2H7z" />
+                </svg>
+                <div className="absolute inset-0 h-full w-full animate-spin rounded-full border-4 border-white/10 border-t-red-500"></div>
+              </div>
+              <p className="text-white/70">Shuffling cards...</p>
             </div>
           </div>
         </div>
@@ -205,45 +215,90 @@ export default function LobbyPage() {
           </div>
 
           <div className="animate-fade-in-scale glass-shimmer glass card-shadow space-y-6 p-8">
-            {authError && (
-              <div className="rounded-lg border border-yellow-500/50 bg-yellow-500/20 px-4 py-3 text-sm text-yellow-200">
-                <p className="font-medium">Connection issue detected</p>
-                <p className="mt-1 text-xs opacity-80">{authError}</p>
+            {/* Error Display at Top */}
+            {(authError ?? authFormError) && (
+              <div className="rounded-lg border-l-4 border-red-500 bg-red-500/10 px-4 py-3">
+                <div className="flex items-start gap-2">
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="h-5 w-5 flex-shrink-0 text-red-400"
+                    fill="currentColor"
+                  >
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                  </svg>
+                  <div>
+                    {authError && (
+                      <>
+                        <p className="font-medium text-red-200">
+                          Connection issue detected
+                        </p>
+                        <p className="mt-1 text-xs text-red-200/70">
+                          {authError}
+                        </p>
+                      </>
+                    )}
+                    {authFormError && (
+                      <p className="text-sm text-red-200">{authFormError}</p>
+                    )}
+                  </div>
+                </div>
               </div>
             )}
 
+            {/* Tab Navigation */}
+            <div className="flex border-b border-white/10">
+              <button
+                onClick={() => {
+                  setAuthMode("none");
+                  setAuthFormError(null);
+                }}
+                className={`tab-underline flex-1 pb-3 text-center text-sm font-medium transition-colors ${
+                  authMode === "none"
+                    ? "active text-white"
+                    : "text-white/50 hover:text-white/70"
+                }`}
+              >
+                Guest
+              </button>
+              <button
+                onClick={() => {
+                  setAuthMode("signin");
+                  setAuthFormError(null);
+                }}
+                className={`tab-underline flex-1 pb-3 text-center text-sm font-medium transition-colors ${
+                  authMode === "signin"
+                    ? "active text-white"
+                    : "text-white/50 hover:text-white/70"
+                }`}
+              >
+                Sign In
+              </button>
+              <button
+                onClick={() => {
+                  setAuthMode("signup");
+                  setAuthFormError(null);
+                }}
+                className={`tab-underline flex-1 pb-3 text-center text-sm font-medium transition-colors ${
+                  authMode === "signup"
+                    ? "active text-white"
+                    : "text-white/50 hover:text-white/70"
+                }`}
+              >
+                Sign Up
+              </button>
+            </div>
+
             {authMode === "none" && (
               <div className="space-y-4">
+                <p className="text-center text-sm text-white/60">
+                  Play instantly without creating an account
+                </p>
                 <button
                   onClick={handleGuestSignIn}
                   disabled={isAuthSubmitting}
                   className="button-y2k w-full py-3 text-lg font-bold disabled:opacity-50"
                 >
                   {isAuthSubmitting ? "Connecting..." : "Continue as Guest"}
-                </button>
-
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-white/10"></div>
-                  </div>
-                  <div className="relative flex justify-center text-sm">
-                    <span className="bg-transparent px-4 text-white/50">
-                      or
-                    </span>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => setAuthMode("signin")}
-                  className="button-secondary w-full py-3 text-lg font-medium"
-                >
-                  Sign In with Email
-                </button>
-                <button
-                  onClick={() => setAuthMode("signup")}
-                  className="text-sm text-white/60 underline hover:text-white"
-                >
-                  Create an account
                 </button>
               </div>
             )}
@@ -256,7 +311,7 @@ export default function LobbyPage() {
                 <div>
                   <label
                     htmlFor="email"
-                    className="mb-2 block text-sm font-medium text-white/80"
+                    className="mb-1.5 block text-sm font-medium text-white/80"
                   >
                     Email
                   </label>
@@ -265,7 +320,7 @@ export default function LobbyPage() {
                     id="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="input-glow w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                    className="input-glow w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none"
                     placeholder="your@email.com"
                     required
                   />
@@ -274,7 +329,7 @@ export default function LobbyPage() {
                 <div>
                   <label
                     htmlFor="password"
-                    className="mb-2 block text-sm font-medium text-white/80"
+                    className="mb-1.5 block text-sm font-medium text-white/80"
                   >
                     Password
                   </label>
@@ -283,7 +338,7 @@ export default function LobbyPage() {
                     id="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="input-glow w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                    className="input-glow w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none"
                     placeholder={
                       authMode === "signup"
                         ? "Min 6 characters"
@@ -298,25 +353,20 @@ export default function LobbyPage() {
                   <div>
                     <label
                       htmlFor="playerName"
-                      className="mb-2 block text-sm font-medium text-white/80"
+                      className="mb-1.5 block text-sm font-medium text-white/80"
                     >
-                      Your Name (optional)
+                      Your Name{" "}
+                      <span className="text-white/40">(optional)</span>
                     </label>
                     <input
                       type="text"
                       id="playerName"
                       value={playerName}
                       onChange={(e) => setPlayerName(e.target.value)}
-                      className="input-glow w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                      className="input-glow w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none"
                       placeholder="Enter your name"
                       maxLength={20}
                     />
-                  </div>
-                )}
-
-                {authFormError && (
-                  <div className="rounded-lg border border-red-500/50 bg-red-500/20 px-4 py-3 text-sm text-red-200">
-                    {authFormError}
                   </div>
                 )}
 
@@ -330,17 +380,6 @@ export default function LobbyPage() {
                     : authMode === "signin"
                       ? "Sign In"
                       : "Create Account"}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAuthMode("none");
-                    setAuthFormError(null);
-                  }}
-                  className="w-full text-sm text-white/60 hover:text-white"
-                >
-                  ← Back
                 </button>
               </form>
             )}
@@ -407,7 +446,7 @@ export default function LobbyPage() {
           <div>
             <label
               htmlFor="gameCode"
-              className="mb-2 block text-sm font-medium text-white/80"
+              className="mb-1.5 block text-sm font-medium text-white/80"
             >
               Game Code
             </label>
@@ -416,8 +455,8 @@ export default function LobbyPage() {
               id="gameCode"
               value={gameCode}
               onChange={(e) => setGameCode(e.target.value.toUpperCase())}
-              className="input-glow w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-mono text-white placeholder-white/40 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-              placeholder="Enter 6-character code"
+              className="input-glow w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-center font-mono text-lg font-bold tracking-widest text-white placeholder-white/30 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none"
+              placeholder="XXXXXX"
               maxLength={6}
             />
           </div>
@@ -431,8 +470,17 @@ export default function LobbyPage() {
           </button>
 
           {error && (
-            <div className="animate-fade-in-scale rounded-lg border border-red-500/50 bg-red-500/20 px-4 py-3 text-sm text-red-200">
-              {error}
+            <div className="animate-fade-in-scale rounded-lg border-l-4 border-red-500 bg-red-500/10 px-4 py-3">
+              <div className="flex items-start gap-2">
+                <svg
+                  viewBox="0 0 24 24"
+                  className="h-5 w-5 flex-shrink-0 text-red-400"
+                  fill="currentColor"
+                >
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                </svg>
+                <p className="text-sm text-red-200">{error}</p>
+              </div>
             </div>
           )}
         </div>

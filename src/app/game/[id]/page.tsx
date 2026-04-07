@@ -5,6 +5,218 @@ import { useParams, useRouter } from "next/navigation";
 import { useGame } from "~/hooks/useGame";
 import type { Card, Color } from "~/types/game";
 
+// SVG Icon Components
+function CardIcon({ type, value }: { type: string; value: string }) {
+  if (type === "action") {
+    switch (value) {
+      case "Draw2":
+        return (
+          <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
+            <path d="M12 2L2 22h20L12 2zm0 4l6 12H6l6-12z" />
+            <text
+              x="12"
+              y="17"
+              textAnchor="middle"
+              fontSize="8"
+              fill="currentColor"
+            >
+              +2
+            </text>
+          </svg>
+        );
+      case "Draw4":
+        return (
+          <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
+            <path d="M12 2L2 22h20L12 2zm0 4l6 12H6l6-12z" />
+            <text
+              x="12"
+              y="17"
+              textAnchor="middle"
+              fontSize="7"
+              fill="currentColor"
+            >
+              +4
+            </text>
+          </svg>
+        );
+      case "Skip":
+        return (
+          <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
+            <circle
+              cx="12"
+              cy="12"
+              r="9"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            />
+            <line
+              x1="6"
+              y1="6"
+              x2="18"
+              y2="18"
+              stroke="currentColor"
+              strokeWidth="2"
+            />
+          </svg>
+        );
+      case "SkipEveryone":
+        return (
+          <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
+            <circle
+              cx="8"
+              cy="12"
+              r="5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            />
+            <circle
+              cx="16"
+              cy="12"
+              r="5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            />
+            <line
+              x1="4"
+              y1="8"
+              x2="20"
+              y2="16"
+              stroke="currentColor"
+              strokeWidth="2"
+            />
+          </svg>
+        );
+      case "Reverse":
+        return (
+          <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
+            <path d="M12 4l-8 8h5v8h6v-8h5l-8-8z" />
+          </svg>
+        );
+      case "DiscardAll":
+        return (
+          <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
+            <rect
+              x="3"
+              y="5"
+              width="6"
+              height="8"
+              rx="1"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            />
+            <rect
+              x="8"
+              y="8"
+              width="6"
+              height="8"
+              rx="1"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            />
+            <rect
+              x="13"
+              y="11"
+              width="6"
+              height="8"
+              rx="1"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            />
+          </svg>
+        );
+      default:
+        return <span>{value}</span>;
+    }
+  }
+  if (type === "wild") {
+    switch (value) {
+      case "WildDraw6":
+        return (
+          <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
+            <path d="M12 2L2 22h20L12 2zm0 4l6 12H6l6-12z" />
+            <text
+              x="12"
+              y="17"
+              textAnchor="middle"
+              fontSize="7"
+              fill="currentColor"
+            >
+              +6
+            </text>
+          </svg>
+        );
+      case "WildDraw10":
+        return (
+          <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
+            <path d="M12 2L2 22h20L12 2zm0 4l6 12H6l6-12z" />
+            <text
+              x="12"
+              y="17"
+              textAnchor="middle"
+              fontSize="6"
+              fill="currentColor"
+            >
+              +10
+            </text>
+          </svg>
+        );
+      case "WildReverseDraw4":
+        return (
+          <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
+            <path d="M12 4l-8 8h5v8h6v-8h5l-8-8z" />
+            <text
+              x="12"
+              y="16"
+              textAnchor="middle"
+              fontSize="6"
+              fill="currentColor"
+            >
+              +4
+            </text>
+          </svg>
+        );
+      case "WildColorRoulette":
+        return (
+          <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
+            <circle
+              cx="12"
+              cy="12"
+              r="9"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            />
+            <text
+              x="12"
+              y="16"
+              textAnchor="middle"
+              fontSize="10"
+              fill="currentColor"
+            >
+              ?
+            </text>
+          </svg>
+        );
+      default:
+        return (
+          <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
+            <circle cx="6" cy="12" r="3" fill="#c41e3a" />
+            <circle cx="12" cy="6" r="3" fill="#0066b2" />
+            <circle cx="18" cy="12" r="3" fill="#00a651" />
+            <circle cx="12" cy="18" r="3" fill="#ffd700" />
+          </svg>
+        );
+    }
+  }
+  return <span>{value}</span>;
+}
+
 function CardComponent({
   card,
   onClick,
@@ -41,6 +253,19 @@ function CardComponent({
       return card.value;
     }
     if (card.type === "action") {
+      return card.value;
+    }
+    if (card.type === "wild") {
+      return card.value;
+    }
+    return "?";
+  };
+
+  const getCornerValue = () => {
+    if (card.type === "numbered") {
+      return card.value;
+    }
+    if (card.type === "action") {
       const v = card.value;
       switch (v) {
         case "Draw2":
@@ -52,11 +277,11 @@ function CardComponent({
         case "SkipEveryone":
           return "⊘⊘";
         case "Reverse":
-          return "⟲";
+          return "R";
         case "DiscardAll":
-          return "DISC";
+          return "D";
         default:
-          return String(v);
+          return "?";
       }
     }
     if (card.type === "wild") {
@@ -67,7 +292,7 @@ function CardComponent({
         case "WildDraw10":
           return "+10";
         case "WildReverseDraw4":
-          return "⟲+4";
+          return "R+4";
         case "WildColorRoulette":
           return "?";
         default:
@@ -78,17 +303,37 @@ function CardComponent({
   };
 
   const staggerClass = `card-stagger-${Math.min(dealIndex + 1, 7)}`;
+  const isDarkCard =
+    card.type === "wild" || card.color === "blue" || card.color === "green";
 
   return (
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`animate-card-deal ${staggerClass} card-interactive relative h-24 w-16 rounded-lg sm:h-28 sm:w-20 ${getCardColor()} flex items-center justify-center text-2xl font-bold text-white shadow-lg disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 ${isSelected ? "scale-105 ring-4 ring-white" : ""} `}
+      className={`animate-card-deal ${staggerClass} card-interactive relative h-24 w-16 rounded-xl sm:h-28 sm:w-20 ${getCardColor()} flex items-center justify-center disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:transform-none ${isSelected ? "card-selected" : ""} transition-all duration-200 ease-out hover:-translate-y-1 hover:scale-[1.02]`}
     >
-      <span className="absolute top-1 left-1 text-xs">
-        {card.type === "wild" ? "W" : card.color?.[0]?.toUpperCase()}
+      {/* Corner indices */}
+      <span
+        className={`absolute top-1.5 left-1.5 text-[10px] font-bold ${isDarkCard ? "text-white/90" : "text-black/70"}`}
+      >
+        {getCornerValue()}
       </span>
-      <span>{getCardValue()}</span>
+      <span
+        className={`absolute right-1.5 bottom-1.5 rotate-180 text-[10px] font-bold ${isDarkCard ? "text-white/90" : "text-black/70"}`}
+      >
+        {getCornerValue()}
+      </span>
+
+      {/* Center value */}
+      <div
+        className={`flex items-center justify-center ${card.type === "numbered" ? "text-2xl font-bold" : ""} ${isDarkCard ? "text-white" : "text-black"}`}
+      >
+        {card.type === "numbered" ? (
+          <span>{getCardValue()}</span>
+        ) : (
+          <CardIcon type={card.type} value={getCardValue()} />
+        )}
+      </div>
     </button>
   );
 }
@@ -96,9 +341,16 @@ function CardComponent({
 function CardBack({ index = 0 }: { index?: number }) {
   return (
     <div
-      className={`animate-card-deal card-stagger-${Math.min(index + 1, 7)} flex h-24 w-16 items-center justify-center rounded-lg border-2 border-gray-700 bg-gradient-to-br from-gray-800 to-gray-900 sm:h-28 sm:w-20`}
+      className={`animate-card-deal card-stagger-${Math.min(index + 1, 7)} card-back-enhanced flex h-20 w-14 items-center justify-center rounded-lg shadow-lg sm:h-24 sm:w-16`}
     >
-      <span className="text-2xl">🎴</span>
+      <svg
+        viewBox="0 0 24 24"
+        className="h-8 w-8 text-white/30"
+        fill="currentColor"
+      >
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z" />
+        <path d="M7 7h10v2H7zm0 4h10v2H7zm0 4h7v2H7z" />
+      </svg>
     </div>
   );
 }
@@ -136,20 +388,46 @@ function ColorPicker({ onSelect }: { onSelect: (color: Color) => void }) {
 function ColorIndicator({ color }: { color: Color | null }) {
   if (!color) return null;
 
+  const getColorClass = () => {
+    switch (color) {
+      case "red":
+        return "bg-gradient-to-br from-red-500 to-red-600";
+      case "blue":
+        return "bg-gradient-to-br from-blue-500 to-blue-600";
+      case "green":
+        return "bg-gradient-to-br from-green-500 to-green-600";
+      case "yellow":
+        return "bg-gradient-to-br from-yellow-400 to-yellow-500";
+      default:
+        return "bg-gradient-to-br from-gray-500 to-gray-600";
+    }
+  };
+
+  const getColorName = () => {
+    return color.charAt(0).toUpperCase() + color.slice(1);
+  };
+
   return (
-    <div className="flex items-center gap-2">
-      <span className="text-sm text-white/70">Current Color:</span>
+    <div className="flex items-center gap-3 rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm">
+      <span className="text-sm font-medium tracking-wider text-white/70 uppercase">
+        Current
+      </span>
       <div
-        className={`h-6 w-6 rounded-full ${
-          color === "red"
-            ? "bg-red-500"
-            : color === "blue"
-              ? "bg-blue-500"
-              : color === "green"
-                ? "bg-green-500"
-                : "bg-yellow-400"
-        }`}
+        className={`animate-color-pulse h-8 w-8 rounded-full ${getColorClass()} ring-4 ring-white/20`}
       />
+      <span
+        className={`text-sm font-bold ${
+          color === "red"
+            ? "text-red-400"
+            : color === "blue"
+              ? "text-blue-400"
+              : color === "green"
+                ? "text-green-400"
+                : "text-yellow-400"
+        }`}
+      >
+        {getColorName()}
+      </span>
     </div>
   );
 }
@@ -329,41 +607,52 @@ export default function GamePage() {
   return (
     <main className="gradient-bg flex min-h-screen flex-col p-4">
       {/* Game info */}
-      <div className="animate-fade-in-up glass-premium mb-4 flex items-center justify-between p-4">
-        <div>
-          <span className="text-sm text-white/70">Game:</span>
-          <span className="ml-2 font-mono text-white">
-            {gameId?.slice(0, 6).toUpperCase()}
-          </span>
+      <div className="animate-fade-in-up glass-premium mb-4 flex flex-wrap items-center justify-between gap-4 p-4">
+        <div className="flex items-center gap-4">
+          <div>
+            <span className="text-sm text-white/70">Game:</span>
+            <span className="ml-2 font-mono text-lg font-bold text-white">
+              {gameId?.slice(0, 6).toUpperCase()}
+            </span>
+          </div>
+          <ColorIndicator color={gameState.currentColor} />
         </div>
-        <ColorIndicator color={gameState.currentColor} />
         {gameState.drawPenalty > 0 && (
-          <div className="font-bold text-red-400">
-            Draw Penalty: +{gameState.drawPenalty}
+          <div className="flex animate-pulse items-center gap-2 rounded-lg bg-red-500/20 px-4 py-2 font-bold text-red-400">
+            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+            </svg>
+            <span>Draw +{gameState.drawPenalty}</span>
           </div>
         )}
       </div>
 
       {/* Opponents */}
-      <div className="mb-4 flex flex-wrap justify-center gap-4">
+      <div className="mb-4 flex flex-wrap justify-center gap-3">
         {opponents.map((player, index) => (
           <div
             key={player.id}
-            className={`animate-fade-in-up glass card-shadow min-w-[100px] p-3 text-center ${
+            className={`animate-fade-in-up glass card-shadow max-w-[140px] min-w-[90px] p-2 text-center transition-all duration-300 ${
               gameState.players[gameState.currentPlayerIndex]?.id === player.id
-                ? "animate-turn-glow ring-2 ring-yellow-400"
-                : ""
-            } ${player.isKnockedOut ? "opacity-50" : ""}`}
-            style={{ animationDelay: `${index * 80}ms` }}
+                ? "animate-turn-glow scale-105 ring-2 ring-yellow-400"
+                : "opacity-80 hover:opacity-100"
+            } ${player.isKnockedOut ? "opacity-40 grayscale" : ""}`}
+            style={{ animationDelay: `${index * 60}ms` }}
           >
-            <p className="truncate font-medium text-white">{player.name}</p>
-            <p className="text-sm text-white/70">{player.cards.length} cards</p>
-            {player.isKnockedOut && <p className="text-xs text-red-400">OUT</p>}
+            <p className="truncate text-sm font-medium text-white/90">
+              {player.name}
+            </p>
+            <p className="text-xs text-white/50">{player.cards.length} cards</p>
+            {player.isKnockedOut && (
+              <p className="text-xs font-bold text-red-400">OUT</p>
+            )}
             {player.cards.length === 1 && !player.isKnockedOut && (
-              <p className="text-xs text-yellow-400">UNO!</p>
+              <p className="animate-pulse text-xs font-bold text-yellow-400">
+                UNO!
+              </p>
             )}
             <div className="mt-2 flex justify-center">
-              {Array.from({ length: Math.min(player.cards.length, 7) }).map(
+              {Array.from({ length: Math.min(player.cards.length, 5) }).map(
                 (_, i) => (
                   <CardBack key={i} index={i} />
                 ),
@@ -396,24 +685,33 @@ export default function GamePage() {
       </div>
 
       {/* Player&apos;s hand */}
-      <div className="animate-fade-in-up glass-premium p-4">
+      <div className="animate-fade-in-up glass-premium mb-4 p-4">
         <div className="mb-3 flex items-center justify-between">
-          <p className="font-medium text-white">
+          <p className="font-display text-lg font-medium text-white">
             Your Hand ({currentPlayer?.cards.length ?? 0} cards){" "}
             {!isMyTurn && (
-              <span className="text-white/50">- Not your turn</span>
+              <span className="text-sm text-white/50">- Not your turn</span>
             )}
           </p>
           {currentPlayer?.cards.length === 1 && !currentPlayer.calledUno && (
             <button
               onClick={handleCallUno}
-              className="button-primary px-4 py-1 text-sm"
+              className="animate-uno-flash button-primary rounded-full px-6 py-2 text-base font-bold"
             >
-              Call UNO!
+              <span className="flex items-center gap-2">
+                <svg
+                  viewBox="0 0 24 24"
+                  className="h-5 w-5"
+                  fill="currentColor"
+                >
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                </svg>
+                Call UNO!
+              </span>
             </button>
           )}
         </div>
-        <div className="flex flex-wrap justify-center gap-2">
+        <div className="scrollbar-hide flex gap-2 overflow-x-auto pb-2">
           {currentPlayer?.cards.map((card, index) => (
             <CardComponent
               key={card.id}
