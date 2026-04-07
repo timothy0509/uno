@@ -54,6 +54,7 @@ export function useGame(
 ) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   const session = useAuthSession();
   const gameState = useQuery(getGameRef, gameId ? { gameId } : "skip") ?? null;
@@ -65,13 +66,24 @@ export function useGame(
   const drawMutation = useMutation(drawRef);
   const callUnoMutation = useMutation(callUnoRef);
 
+  const retryAnonymousAuth = useCallback(async () => {
+    setAuthError(null);
+    const result = await signInAnonymous();
+    if (result.error) {
+      setAuthError(result.error);
+    }
+  }, []);
+
   useEffect(() => {
     if (session.isPending || session.data?.session) {
       return;
     }
 
     const signIn = async () => {
-      await signInAnonymous();
+      const result = await signInAnonymous();
+      if (result.error) {
+        setAuthError(result.error);
+      }
     };
 
     void signIn();
@@ -172,6 +184,7 @@ export function useGame(
       gameState,
       isLoading,
       error,
+      authError,
       refresh,
       createGame,
       joinGame,
@@ -180,6 +193,8 @@ export function useGame(
       drawCards,
       callUno,
       setError,
+      setAuthError,
+      retryAnonymousAuth,
       currentUserId: session.data?.user?.id ?? null,
     }),
     [
@@ -187,11 +202,13 @@ export function useGame(
       createGame,
       drawCards,
       error,
+      authError,
       gameState,
       isLoading,
       joinGame,
       playCard,
       refresh,
+      retryAnonymousAuth,
       session.data?.user?.id,
       startGame,
     ],

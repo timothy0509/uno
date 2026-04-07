@@ -13,7 +13,9 @@ function createAuth(ctx: object) {
   return betterAuth({
     basePath: "/api/auth",
     emailAndPassword: {
-      enabled: false,
+      enabled: true,
+      minPasswordLength: 6,
+      maxPasswordLength: 128,
     },
     plugins: [
       convexPlugin({
