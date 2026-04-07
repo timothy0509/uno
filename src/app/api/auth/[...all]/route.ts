@@ -29,9 +29,15 @@ if (!parsedSiteUrl.hostname.endsWith(".convex.site")) {
   );
 }
 
+if (parsedSiteUrl.pathname !== "/") {
+  throw new Error(
+    "NEXT_PUBLIC_CONVEX_SITE_URL must not include a path. Use format: https://<deployment>.convex.site",
+  );
+}
+
 const { handler } = convexBetterAuthNextJs({
   convexUrl,
-  convexSiteUrl: parsedSiteUrl.toString(),
+  convexSiteUrl: parsedSiteUrl.origin,
 });
 
 export async function GET(request: Request) {
