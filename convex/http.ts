@@ -2,6 +2,7 @@ import { componentsGeneric, httpRouter } from "convex/server";
 import { createClient } from "@convex-dev/better-auth";
 import { betterAuth } from "better-auth";
 import { convex as convexPlugin } from "@convex-dev/better-auth/plugins";
+import { anonymous } from "better-auth/plugins";
 
 import authConfig from "./auth.config";
 const components = componentsGeneric();
@@ -37,6 +38,7 @@ function createAuth(ctx: object) {
       maxPasswordLength: 128,
     },
     plugins: [
+      anonymous(),
       convexPlugin({
         authConfig,
       }),
