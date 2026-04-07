@@ -1,12 +1,12 @@
 import { queryGeneric, mutationGeneric } from "convex/server";
 import { ConvexError, v } from "convex/values";
-import type { Color, GameState } from "~/types/game";
+import type { Color, GameState } from "../src/types/game";
 import {
   callUno as callUnoEngine,
   drawCardsFromDeck,
   initializeGame,
   playCard as playCardEngine,
-} from "~/lib/game/engine";
+} from "../src/lib/game/engine";
 import { requireUserId } from "./lib/auth";
 
 function now() {

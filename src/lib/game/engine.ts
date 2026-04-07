@@ -4,7 +4,7 @@ import type {
   Card,
   Color,
   PlayCardResult,
-} from "~/types/game";
+} from "../../types/game";
 import {
   createDeck,
   dealCards,

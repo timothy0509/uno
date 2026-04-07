@@ -1,3 +1,3 @@
-import type { Card } from "~/types/game";
+import type { Card } from "../../src/types/game";
 
 export type ConvexCard = Card;

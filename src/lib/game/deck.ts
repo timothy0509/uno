@@ -6,8 +6,8 @@ import type {
   Color,
   NumberValue,
   ActionValue,
-} from "~/types/game";
-import { CARD_COLORS } from "~/types/game";
+} from "../../types/game";
+import { CARD_COLORS } from "../../types/game";
 
 function generateId(): string {
   return Math.random().toString(36).substring(2, 15);
