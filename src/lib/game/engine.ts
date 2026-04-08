@@ -55,6 +55,7 @@ export function initializeGame(
     pendingRoulette: null,
     currentColor,
     lastPlayedCard: null,
+    lastPlayedBy: null,
     winner: null,
     createdAt: new Date(),
     updatedAt: new Date(),

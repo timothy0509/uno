@@ -26,6 +26,7 @@ export default defineSchema({
       v.null(),
     ),
     lastPlayedCard: v.union(v.any(), v.null()),
+    lastPlayedBy: v.union(v.string(), v.null()),
     winner: v.union(v.string(), v.null()),
     createdAt: v.number(),
     updatedAt: v.number(),

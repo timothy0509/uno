@@ -69,6 +69,7 @@ function toGameState(game: any, players: any[]): GameState {
     pendingRoulette: game.pendingRoulette ?? null,
     currentColor: game.currentColor,
     lastPlayedCard: game.lastPlayedCard,
+    lastPlayedBy: game.lastPlayedBy ?? null,
     winner: game.winner,
     createdAt: game.createdAt,
     updatedAt: game.updatedAt,
@@ -113,6 +114,7 @@ export const create = mutationGeneric({
       pendingRoulette: null,
       currentColor: null,
       lastPlayedCard: null,
+      lastPlayedBy: null,
       winner: null,
       createdAt: timestamp,
       updatedAt: timestamp,
@@ -211,9 +213,25 @@ export const start = mutationGeneric({
     const updatedGame = await ctx.db.get(game._id);
     const updatedPlayers = await loadPlayers(ctx, game._id);
     if (!updatedGame) {
-      throw new ConvexError("Failed to start game");
+      throw new ConvexError("Failed to update game");
     }
     return toGameState(updatedGame, updatedPlayers);
+  },
+});
+
+export const getActions = queryGeneric({
+  args: { gameId: v.string(), limit: v.optional(v.number()) },
+  handler: async (ctx, args) => {
+    const game = await getGameByIdentifier(ctx, args.gameId);
+    if (!game) {
+      return [];
+    }
+    const actions = await ctx.db
+      .query("gameActions")
+      .withIndex("by_game", (q: any) => q.eq("gameId", game._id))
+      .order("desc")
+      .take(args.limit ?? 30);
+    return actions.reverse();
   },
 });
 
@@ -252,6 +270,18 @@ export const playCard = mutationGeneric({
       throw new ConvexError(result.error ?? "Cannot play this card");
     }
 
+    await ctx.db.insert("gameActions", {
+      gameId: game._id,
+      actorUserId: userId,
+      type: "play",
+      payload: {
+        cardId: args.cardId,
+        selectedColor: args.selectedColor,
+        targetPlayerId: args.targetPlayerId,
+      },
+      createdAt: now(),
+    });
+
     await ctx.db.patch(game._id, {
       status: result.gameState.status,
       deck: result.gameState.deck,
@@ -263,6 +293,7 @@ export const playCard = mutationGeneric({
       pendingRoulette: result.gameState.pendingRoulette,
       currentColor: result.gameState.currentColor,
       lastPlayedCard: result.gameState.lastPlayedCard,
+      lastPlayedBy: userId,
       winner: result.gameState.winner,
       updatedAt: now(),
     });
@@ -270,12 +301,32 @@ export const playCard = mutationGeneric({
     for (const player of result.gameState.players) {
       const dbPlayer = players.find((p: any) => p.userId === player.id);
       if (dbPlayer) {
+        const wasKnockedOut = dbPlayer.isKnockedOut;
         await ctx.db.patch(dbPlayer._id, {
           cards: player.cards,
           isKnockedOut: player.isKnockedOut,
           calledUno: player.calledUno,
         });
+        if (player.isKnockedOut && !wasKnockedOut) {
+          await ctx.db.insert("gameActions", {
+            gameId: game._id,
+            actorUserId: player.id,
+            type: "knockout",
+            payload: { cardCount: player.cards.length },
+            createdAt: now(),
+          });
+        }
       }
+    }
+
+    if (result.gameState.winner) {
+      await ctx.db.insert("gameActions", {
+        gameId: game._id,
+        actorUserId: result.gameState.winner,
+        type: "win",
+        payload: undefined,
+        createdAt: now(),
+      });
     }
 
     const updatedGame = await ctx.db.get(game._id);
@@ -303,6 +354,14 @@ export const draw = mutationGeneric({
       throw new ConvexError(result.error);
     }
 
+    await ctx.db.insert("gameActions", {
+      gameId: game._id,
+      actorUserId: userId,
+      type: "draw",
+      payload: { drawPenalty: state.drawPenalty },
+      createdAt: now(),
+    });
+
     await ctx.db.patch(game._id, {
       status: result.gameState.status,
       deck: result.gameState.deck,
@@ -314,6 +373,7 @@ export const draw = mutationGeneric({
       pendingRoulette: result.gameState.pendingRoulette,
       currentColor: result.gameState.currentColor,
       lastPlayedCard: result.gameState.lastPlayedCard,
+      lastPlayedBy: game.lastPlayedBy,
       winner: result.gameState.winner,
       updatedAt: now(),
     });
@@ -321,12 +381,32 @@ export const draw = mutationGeneric({
     for (const player of result.gameState.players) {
       const dbPlayer = players.find((p: any) => p.userId === player.id);
       if (dbPlayer) {
+        const wasKnockedOut = dbPlayer.isKnockedOut;
         await ctx.db.patch(dbPlayer._id, {
           cards: player.cards,
           isKnockedOut: player.isKnockedOut,
           calledUno: player.calledUno,
         });
+        if (player.isKnockedOut && !wasKnockedOut) {
+          await ctx.db.insert("gameActions", {
+            gameId: game._id,
+            actorUserId: player.id,
+            type: "knockout",
+            payload: { cardCount: player.cards.length },
+            createdAt: now(),
+          });
+        }
       }
+    }
+
+    if (result.gameState.winner) {
+      await ctx.db.insert("gameActions", {
+        gameId: game._id,
+        actorUserId: result.gameState.winner,
+        type: "win",
+        payload: undefined,
+        createdAt: now(),
+      });
     }
 
     const updatedGame = await ctx.db.get(game._id);
@@ -350,6 +430,14 @@ export const callUno = mutationGeneric({
     const players = await loadPlayers(ctx, game._id);
     const state = toGameState(game, players);
     const updatedState = callUnoEngine(state, userId);
+
+    await ctx.db.insert("gameActions", {
+      gameId: game._id,
+      actorUserId: userId,
+      type: "call_uno",
+      payload: undefined,
+      createdAt: now(),
+    });
 
     for (const player of updatedState.players) {
       const dbPlayer = players.find((p: any) => p.userId === player.id);
@@ -398,6 +486,14 @@ export const chooseRoulette = mutationGeneric({
       throw new ConvexError(result.error);
     }
 
+    await ctx.db.insert("gameActions", {
+      gameId: game._id,
+      actorUserId: userId,
+      type: "roulette",
+      payload: { selectedColor: args.selectedColor },
+      createdAt: now(),
+    });
+
     await ctx.db.patch(game._id, {
       status: result.gameState.status,
       deck: result.gameState.deck,
@@ -409,6 +505,7 @@ export const chooseRoulette = mutationGeneric({
       pendingRoulette: result.gameState.pendingRoulette,
       currentColor: result.gameState.currentColor,
       lastPlayedCard: result.gameState.lastPlayedCard,
+      lastPlayedBy: game.lastPlayedBy,
       winner: result.gameState.winner,
       updatedAt: now(),
     });
@@ -416,12 +513,32 @@ export const chooseRoulette = mutationGeneric({
     for (const player of result.gameState.players) {
       const dbPlayer = players.find((p: any) => p.userId === player.id);
       if (dbPlayer) {
+        const wasKnockedOut = dbPlayer.isKnockedOut;
         await ctx.db.patch(dbPlayer._id, {
           cards: player.cards,
           isKnockedOut: player.isKnockedOut,
           calledUno: player.calledUno,
         });
+        if (player.isKnockedOut && !wasKnockedOut) {
+          await ctx.db.insert("gameActions", {
+            gameId: game._id,
+            actorUserId: player.id,
+            type: "knockout",
+            payload: { cardCount: player.cards.length },
+            createdAt: now(),
+          });
+        }
       }
+    }
+
+    if (result.gameState.winner) {
+      await ctx.db.insert("gameActions", {
+        gameId: game._id,
+        actorUserId: result.gameState.winner,
+        type: "win",
+        payload: undefined,
+        createdAt: now(),
+      });
     }
 
     const updatedGame = await ctx.db.get(game._id);
