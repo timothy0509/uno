@@ -8,11 +8,26 @@ import { useAuthSession } from "~/lib/auth-client";
 import type { SessionSnapshot } from "~/lib/auth-client";
 import type { Color, GameState } from "~/types/game";
 
+interface GameAction {
+  _id: string;
+  _creationTime: number;
+  gameId: string;
+  actorUserId: string;
+  type: string;
+  payload?: unknown;
+  createdAt: number;
+}
+
 const getGameRef = makeFunctionReference<
   "query",
   { gameId: string },
   GameState | null
 >("games:get");
+const getActionsRef = makeFunctionReference<
+  "query",
+  { gameId: string; limit?: number },
+  GameAction[]
+>("games:getActions");
 const createGameRef = makeFunctionReference<
   "mutation",
   Record<string, never>,
@@ -63,6 +78,8 @@ export function useGame(
 
   const session: SessionSnapshot = useAuthSession();
   const gameState = useQuery(getGameRef, gameId ? { gameId } : "skip") ?? null;
+  const actionsRaw = useQuery(getActionsRef, gameId ? { gameId } : "skip");
+  const actions = useMemo(() => actionsRaw ?? [], [actionsRaw]);
 
   const createGameMutation = useMutation(createGameRef);
   const joinGameMutation = useMutation(joinGameRef);
@@ -177,6 +194,7 @@ export function useGame(
   return useMemo(
     () => ({
       gameState,
+      actions,
       isLoading,
       error,
       refresh,
@@ -191,6 +209,7 @@ export function useGame(
       currentUserId: session.data?.user?.id ?? null,
     }),
     [
+      actions,
       callUno,
       chooseRoulette,
       createGame,

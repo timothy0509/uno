@@ -34,6 +34,7 @@ export function createGame(): GameState {
     pendingRoulette: null,
     currentColor: null,
     lastPlayedCard: null,
+    lastPlayedBy: null,
     winner: null,
     createdAt: new Date(),
     updatedAt: new Date(),

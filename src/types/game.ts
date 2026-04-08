@@ -72,6 +72,7 @@ export interface GameState {
   pendingRoulette: { chooserPlayerId: string } | null;
   currentColor: Color | null;
   lastPlayedCard: Card | null;
+  lastPlayedBy: string | null;
   winner: string | null;
   createdAt: Date;
   updatedAt: Date;
