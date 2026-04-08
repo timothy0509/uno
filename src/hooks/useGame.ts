@@ -1,10 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { makeFunctionReference } from "convex/server";
 
-import { signInAnonymous, useAuthSession } from "~/lib/auth-client";
+import { useAuthSession } from "~/lib/auth-client";
 import type { SessionSnapshot } from "~/lib/auth-client";
 import type { Color, GameState } from "~/types/game";
 
@@ -60,8 +60,6 @@ export function useGame(
 ) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [authError, setAuthError] = useState<string | null>(null);
-  const isAnonymousSignInInFlight = useRef(false);
 
   const session: SessionSnapshot = useAuthSession();
   const gameState = useQuery(getGameRef, gameId ? { gameId } : "skip") ?? null;
@@ -73,35 +71,6 @@ export function useGame(
   const drawMutation = useMutation(drawRef);
   const callUnoMutation = useMutation(callUnoRef);
   const chooseRouletteMutation = useMutation(chooseRouletteRef);
-
-  const attemptAnonymousAuth = useCallback(async () => {
-    if (isAnonymousSignInInFlight.current) {
-      return;
-    }
-
-    isAnonymousSignInInFlight.current = true;
-    try {
-      const result = await signInAnonymous();
-      if (result.error) {
-        setAuthError(result.error);
-      }
-    } finally {
-      isAnonymousSignInInFlight.current = false;
-    }
-  }, []);
-
-  const retryAnonymousAuth = useCallback(async () => {
-    setAuthError(null);
-    await attemptAnonymousAuth();
-  }, [attemptAnonymousAuth]);
-
-  useEffect(() => {
-    if (session.isPending || session.data?.session) {
-      return;
-    }
-
-    void attemptAnonymousAuth();
-  }, [attemptAnonymousAuth, session.data?.session, session.isPending]);
 
   const withLoading = useCallback(
     async <T>(fn: () => Promise<T>): Promise<T | null> => {
@@ -210,7 +179,6 @@ export function useGame(
       gameState,
       isLoading,
       error,
-      authError,
       refresh,
       createGame,
       joinGame,
@@ -220,8 +188,6 @@ export function useGame(
       callUno,
       chooseRoulette,
       setError,
-      setAuthError,
-      retryAnonymousAuth,
       currentUserId: session.data?.user?.id ?? null,
     }),
     [
@@ -230,13 +196,11 @@ export function useGame(
       createGame,
       drawCards,
       error,
-      authError,
       gameState,
       isLoading,
       joinGame,
       playCard,
       refresh,
-      retryAnonymousAuth,
       session.data?.user?.id,
       startGame,
     ],

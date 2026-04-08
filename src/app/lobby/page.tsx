@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useGame } from "~/hooks/useGame";
 import {
   useAuthSession,
+  signInAnonymous,
   signInWithEmail,
   signUpWithEmail,
 } from "~/lib/auth-client";
@@ -12,14 +13,7 @@ import {
 export default function LobbyPage() {
   const router = useRouter();
   const session = useAuthSession();
-  const {
-    createGame,
-    joinGame,
-    error,
-    setError,
-    authError,
-    retryAnonymousAuth,
-  } = useGame(null);
+  const { createGame, joinGame, error, setError } = useGame(null);
   const [playerName, setPlayerName] = useState("");
   const [gameCode, setGameCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -32,6 +26,7 @@ export default function LobbyPage() {
   const [password, setPassword] = useState("");
   const [isAuthSubmitting, setIsAuthSubmitting] = useState(false);
   const [authFormError, setAuthFormError] = useState<string | null>(null);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   const isAuthenticating = session.isPending;
   const isAuthenticated = !!session.data?.user?.id;
@@ -160,9 +155,13 @@ export default function LobbyPage() {
       return;
     }
 
+    setAuthError(null);
     setIsAuthSubmitting(true);
     try {
-      await retryAnonymousAuth();
+      const result = await signInAnonymous();
+      if (result.error) {
+        setAuthError(result.error);
+      }
     } finally {
       setIsAuthSubmitting(false);
     }
