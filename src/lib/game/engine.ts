@@ -300,8 +300,7 @@ export function drawCardsFromDeck(
   if (playerIndex !== gameState.currentPlayerIndex) {
     return { error: "Not your turn" };
   }
-  const player = gameState.players[playerIndex];
-  if (!player) {
+  if (!gameState.players[playerIndex]) {
     return { error: "Player not found" };
   }
   const newState = { ...gameState };
@@ -321,7 +320,6 @@ export function drawCardsFromDeck(
     newState.drawPenalty = 0;
   }
   const drawn: Card[] = [];
-  let drewPlayableCard = false;
   if (gameState.drawPenalty > 0) {
     for (let i = 0; i < drawCount; i++) {
       const nextCard = drawOneCard(newState);
@@ -329,32 +327,16 @@ export function drawCardsFromDeck(
       drawn.push(nextCard);
     }
   } else {
-    while (true) {
-      const nextCard = drawOneCard(newState);
-      if (!nextCard) break;
+    const nextCard = drawOneCard(newState);
+    if (nextCard) {
       drawn.push(nextCard);
-      const topCard = newState.discardPile[newState.discardPile.length - 1];
-      if (
-        topCard &&
-        canPlayCard(nextCard, topCard, newState.currentColor, 0, [
-          ...(player.cards ?? []),
-          ...drawn,
-        ])
-      ) {
-        drewPlayableCard = true;
-        break;
-      }
     }
   }
   const currentPlayer = newState.players[playerIndex];
   if (currentPlayer) {
     currentPlayer.cards.push(...drawn);
   }
-  if (gameState.drawPenalty > 0) {
-    advanceTurn(newState);
-  } else if (!drewPlayableCard) {
-    advanceTurn(newState);
-  }
+  advanceTurn(newState);
   normalizeUnoFlags(newState);
   checkMercyRule(newState);
   newState.updatedAt = new Date();

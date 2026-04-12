@@ -50,6 +50,7 @@ async function loadPlayers(ctx: { db: any }, gameId: string) {
 function toGameState(game: any, players: any[]): GameState {
   return {
     id: game.code,
+    createdByUserId: game.createdByUserId ?? null,
     status: game.status,
     deck: game.deck,
     knockedOutCards: game.knockedOutCards ?? [],
@@ -91,6 +92,7 @@ export const get = queryGeneric({
 export const create = mutationGeneric({
   args: {},
   handler: async (ctx) => {
+    const userId = await requireUserId(ctx);
     let code = generateGameCode();
     while (
       await ctx.db
@@ -104,6 +106,7 @@ export const create = mutationGeneric({
     const timestamp = now();
     const gameId = await ctx.db.insert("games", {
       code,
+      createdByUserId: userId,
       status: "WAITING",
       deck: [],
       knockedOutCards: [],
@@ -169,12 +172,21 @@ export const join = mutationGeneric({
 export const start = mutationGeneric({
   args: { gameId: v.string() },
   handler: async (ctx, args) => {
+    const userId = await requireUserId(ctx);
     const game = await getGameByIdentifier(ctx, args.gameId);
     if (!game) {
       throw new ConvexError("Game not found");
     }
 
     const players = await loadPlayers(ctx, game._id);
+    const creatorId =
+      game.createdByUserId ??
+      players.find((player: any) => player.position === 0)?.userId ??
+      players[0]?.userId ??
+      null;
+    if (!creatorId || creatorId !== userId) {
+      throw new ConvexError("Only the room creator can start the game");
+    }
     if (players.length < 2) {
       throw new ConvexError("Need at least 2 players to start");
     }

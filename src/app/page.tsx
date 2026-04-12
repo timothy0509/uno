@@ -36,7 +36,7 @@ export default function HomePage() {
               😈 No Mercy Rules
             </h2>
             <ul className="space-y-2 text-white/70">
-              <li>• Draw cards until you can play</li>
+              <li>• Normal draw: take 1 card, then turn ends</li>
               <li>• Stack Draw 2/4/6/10 cards</li>
               <li>• 7 card = Swap hands with anyone</li>
               <li>• 0 card = Everyone passes hands</li>

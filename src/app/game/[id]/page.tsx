@@ -416,6 +416,13 @@ export default function GamePage() {
   }, [gameState, currentUserId, addToast]);
 
   const currentPlayer = gameState?.players.find((p) => p.id === currentUserId);
+  const creatorId = gameState
+    ? (gameState.createdByUserId ??
+      gameState.players.find((player) => player.position === 0)?.id ??
+      gameState.players[0]?.id ??
+      null)
+    : null;
+  const isRoomCreator = Boolean(currentUserId && creatorId === currentUserId);
   const isMyTurn =
     gameState?.players[gameState.currentPlayerIndex]?.id === currentUserId;
   const topCard = gameState?.discardPile[gameState.discardPile.length - 1];
@@ -539,17 +546,26 @@ export default function GamePage() {
                 >
                   {index + 1}. {player.name}{" "}
                   {player.id === currentUserId && "(You)"}
+                  {player.id === creatorId && " (Creator)"}
                 </li>
               ))}
             </ul>
           </div>
           {gameState.players.length >= 2 && (
-            <button
-              onClick={handleStartGame}
-              className="button-y2k w-full py-3 text-lg font-bold"
-            >
-              Start Game
-            </button>
+            <>
+              <button
+                onClick={handleStartGame}
+                disabled={!isRoomCreator}
+                className="button-y2k w-full py-3 text-lg font-bold disabled:opacity-50"
+              >
+                Start Game
+              </button>
+              {!isRoomCreator && (
+                <p className="mt-2 text-center text-sm text-white/70">
+                  Only the room creator can start the game.
+                </p>
+              )}
+            </>
           )}
           <button
             onClick={() => void refresh()}
@@ -873,7 +889,7 @@ export default function GamePage() {
             )}
             {isMyTurn && !canPlayAnyCard && gameState.drawPenalty === 0 && (
               <span className="text-yellow-400">
-                {" - No playable cards, draw!"}
+                {" - No playable cards, draw 1 and pass."}
               </span>
             )}
           </p>

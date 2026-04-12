@@ -61,6 +61,7 @@ export interface PlayerState {
 
 export interface GameState {
   id: string;
+  createdByUserId?: string | null;
   status: "WAITING" | "PLAYING" | "FINISHED";
   deck: Card[];
   knockedOutCards: Card[];

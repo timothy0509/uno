@@ -1,5 +1,11 @@
 Uno Show ‘Em No Mercy Rules
 
+Project rule override (implemented behavior in this repo):
+
+- Normal draw behavior is single-draw: if you cannot play, draw exactly 1 card and your turn ends immediately.
+- Stacking penalty draws (+2/+4/+6/+10) still force drawing the full accumulated penalty when you cannot continue stacking.
+- Wild Color Roulette still uses draw-until-chosen-color behavior.
+
 uno show 'em no mercy rulesUno Show ‘Em No Mercy is a relatively new variant of Uno which just came out in 2023 that conveys a brutal, no holds barred feel to our otherwise family friendly game. If you’re bored of the classic Uno, this version can spice things up with a variety of new rules and new cards.
 
 Altogether, there are 168 cards in a deck, and you win by getting rid of all your cards, OR knocking out everyone else. Just don’t forget to yell out “Uno” when down to your last card. Now let’s learn the Uno Show ‘Em No Mercy rules!
@@ -10,7 +16,7 @@ As usual, choose a dealer who will shuffle the cards and hand them out to the ot
 
 Gameplay
 
-The first player to put down cards is the one to the left of the dealer, as play initially moves in a clockwise direction. Everyone needs to match the card on the Discard pile with one of their own, through color, number, or symbol. If there are no suitable cards in hand, you must draw cards from the Draw pile UNTIL you get a playable card that you can play! This differs from other Uno variants.
+The first player to put down cards is the one to the left of the dealer, as play initially moves in a clockwise direction. Everyone needs to match the card on the Discard pile with one of their own, through color, number, or symbol. In this project, if there are no suitable cards in hand and there is no active draw penalty, you draw exactly one card and your turn ends immediately.
 
 Play continues until there is only one last player remaining. If the Draw pile is depleted before the game is over, simply reshuffle the Discard pile to form a new Draw pile and continue from there.
 

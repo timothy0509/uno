@@ -4,6 +4,7 @@ import { v } from "convex/values";
 export default defineSchema({
   games: defineTable({
     code: v.string(),
+    createdByUserId: v.optional(v.string()),
     status: v.union(
       v.literal("WAITING"),
       v.literal("PLAYING"),
