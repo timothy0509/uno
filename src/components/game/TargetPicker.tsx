@@ -1,9 +1,11 @@
 export function TargetPicker({
   players,
   onSelect,
+  onCancel,
 }: {
   players: Array<{ id: string; name: string; cardCount: number }>;
   onSelect: (playerId: string) => void;
+  onCancel?: () => void;
 }) {
   return (
     <div className="animate-fade-in-scale glass-shimmer glass card-shadow p-6">
@@ -22,6 +24,14 @@ export function TargetPicker({
           </button>
         ))}
       </div>
+      {onCancel && (
+        <button
+          onClick={onCancel}
+          className="button-secondary mt-4 w-full py-2 text-sm"
+        >
+          Cancel
+        </button>
+      )}
     </div>
   );
 }

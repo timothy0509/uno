@@ -181,6 +181,18 @@ export default function GamePage() {
     setSelectedCard(null);
   };
 
+  const handleCancelColorPicker = () => {
+    setShowColorPicker(false);
+    setColorPickerMode("playWild");
+    setPendingCardId(null);
+    setSelectedCard(null);
+  };
+
+  const handleCancelTargetPicker = () => {
+    setPendingTargetCardId(null);
+    setSelectedCard(null);
+  };
+
   const handleDraw = async () => {
     if (isMyTurn) {
       await drawCards();
@@ -411,7 +423,15 @@ export default function GamePage() {
 
       {showColorPicker && (
         <div className="animate-fade-in-scale fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <ColorPicker onSelect={handleColorSelect} />
+          <ColorPicker
+            onSelect={handleColorSelect}
+            onCancel={
+              colorPickerMode === "roulette"
+                ? undefined
+                : handleCancelColorPicker
+            }
+            showCancel={colorPickerMode !== "roulette"}
+          />
         </div>
       )}
 
@@ -426,6 +446,7 @@ export default function GamePage() {
                 cardCount: p.cards.length,
               }))}
             onSelect={handleTargetSelect}
+            onCancel={handleCancelTargetPicker}
           />
         </div>
       )}
