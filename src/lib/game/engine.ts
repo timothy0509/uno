@@ -52,6 +52,7 @@ export function initializeGame(
     direction: 1,
     players,
     drawPenalty: 0,
+    drawPenaltySetBy: null,
     pendingRoulette: null,
     currentColor,
     lastPlayedCard: null,
@@ -108,6 +109,16 @@ export function playCard(
     return { success: false, error: "Cannot play this card" };
   }
   if (
+    gameState.drawPenalty > 0 &&
+    gameState.drawPenaltySetBy === playerId &&
+    getDrawAmount(card) > 0
+  ) {
+    return {
+      success: false,
+      error: "Cannot stack on a penalty you created",
+    };
+  }
+  if (
     card.type === "wild" &&
     card.value !== "WildColorRoulette" &&
     !selectedColor
@@ -159,6 +170,7 @@ export function playCard(
   } else {
     newState.drawPenalty = getDrawAmount(card);
   }
+  newState.drawPenaltySetBy = playerId;
   if (currentPlayer.cards.length === 0) {
     newState.status = "FINISHED";
     newState.winner = playerId;
@@ -318,6 +330,7 @@ export function drawCardsFromDeck(
   if (gameState.drawPenalty > 0) {
     drawCount = gameState.drawPenalty;
     newState.drawPenalty = 0;
+    newState.drawPenaltySetBy = null;
   }
   const drawn: Card[] = [];
   if (gameState.drawPenalty > 0) {
