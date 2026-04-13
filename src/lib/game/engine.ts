@@ -235,9 +235,6 @@ function applyCardEffect(
         return false;
       case "WildReverseDraw4":
         state.direction = state.direction === 1 ? -1 : 1;
-        if (activePlayerCount(state) === 2) {
-          return true;
-        }
         return false;
       case "WildColorRoulette":
         const nextPlayerIndex = getNextPlayerIndex(state);
@@ -478,10 +475,6 @@ function normalizeUnoFlags(state: GameState): void {
       player.calledUno = false;
     }
   }
-}
-
-function activePlayerCount(state: GameState): number {
-  return state.players.filter((p) => !p.isKnockedOut).length;
 }
 
 export function getNextPlayerIndex(state: GameState): number {
