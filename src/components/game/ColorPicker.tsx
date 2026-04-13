@@ -3,8 +3,12 @@ import type { Color } from "~/types/game";
 
 export function ColorPicker({
   onSelect,
+  onCancel,
+  showCancel = true,
 }: {
   onSelect: (color: Color) => void;
+  onCancel?: () => void;
+  showCancel?: boolean;
 }) {
   const colorClasses: Record<Color, string> = {
     red: "bg-red-500 hover:bg-red-400",
@@ -29,6 +33,14 @@ export function ColorPicker({
           />
         ))}
       </div>
+      {showCancel && onCancel && (
+        <button
+          onClick={onCancel}
+          className="button-secondary mt-4 w-full py-2 text-sm"
+        >
+          Cancel
+        </button>
+      )}
     </div>
   );
 }
