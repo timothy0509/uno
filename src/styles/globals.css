@@ -420,13 +420,18 @@ body {
 
 .card-interactive {
   transition:
-    transform 0.2s ease-out,
-    box-shadow 0.2s ease-out;
+    transform 0.15s ease-out,
+    box-shadow 0.15s ease-out;
   cursor: pointer;
 }
 
 .card-interactive:hover:not(:disabled) {
   transform: translateY(-4px) scale(1.02);
+}
+
+.card-interactive:active:not(:disabled) {
+  transform: scale(0.97);
+  transition-duration: 0.08s;
 }
 
 @keyframes skeleton {
@@ -462,19 +467,110 @@ body {
 }
 
 .card-red {
-  background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+  background: linear-gradient(135deg, var(--color-uno-red) 0%, #8b0000 100%);
 }
 .card-blue {
-  background: linear-gradient(135deg, #0066b2 0%, #003366 100%);
+  background: linear-gradient(135deg, var(--color-uno-blue) 0%, #003366 100%);
 }
 .card-green {
-  background: linear-gradient(135deg, #00a651 0%, #006633 100%);
+  background: linear-gradient(135deg, var(--color-uno-green) 0%, #006633 100%);
 }
 .card-yellow {
-  background: linear-gradient(135deg, #ffd700 0%, #ffa500 100%);
+  background: linear-gradient(135deg, var(--color-uno-yellow) 0%, #ffa500 100%);
 }
 .card-wild {
-  background: linear-gradient(135deg, #1a1a2e 0%, #0a0a0f 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-uno-black) 0%,
+    var(--color-gradient-from) 100%
+  );
+}
+
+.card-base {
+  border-radius: 0.75rem;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  ring: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition:
+    transform 0.15s ease-out,
+    box-shadow 0.15s ease-out;
+}
+
+.card-selected {
+  transform: scale(1.05) translateY(-8px);
+  box-shadow:
+    0 8px 32px rgba(255, 255, 255, 0.15),
+    0 0 0 2px rgba(255, 255, 255, 0.8);
+  z-index: 10;
+}
+
+.card-wild-rainbow::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 0 0 0.75rem 0.75rem;
+  background: linear-gradient(
+    90deg,
+    var(--color-uno-red),
+    var(--color-uno-yellow),
+    var(--color-uno-green),
+    var(--color-uno-blue)
+  );
+}
+
+.card-back-pattern {
+  background: linear-gradient(135deg, #1e1e2e 0%, #0f0f1a 100%);
+  background-image:
+    linear-gradient(135deg, #1e1e2e 0%, #0f0f1a 100%),
+    linear-gradient(45deg, rgba(255, 255, 255, 0.03) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(255, 255, 255, 0.03) 25%, transparent 25%);
+  background-size:
+    100% 100%,
+    8px 8px,
+    8px 8px;
+}
+
+.hand-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+
+.hand-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.hand-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.hand-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+}
+
+.opponent-seat {
+  min-width: 100px;
+}
+
+.discard-card {
+  width: 76px;
+  height: 106px;
+}
+
+@media (min-width: 640px) {
+  .discard-card {
+    width: 88px;
+    height: 124px;
+  }
 }
 
 @keyframes toast-in {
@@ -540,14 +636,18 @@ body {
 }
 
 .card-unplayable {
-  opacity: 0.35;
-  filter: grayscale(60%);
+  opacity: 0.4;
+  filter: grayscale(50%);
   transform: scale(0.95);
 }
 
 .card-playable {
   opacity: 1;
   filter: none;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 0 1px rgba(74, 222, 128, 0.2);
 }
 
 .toast-container {
