@@ -70,6 +70,7 @@ export interface GameState {
   direction: 1 | -1;
   players: PlayerState[];
   drawPenalty: number;
+  drawPenaltySetBy: string | null;
   pendingRoulette: { chooserPlayerId: string } | null;
   currentColor: Color | null;
   lastPlayedCard: Card | null;

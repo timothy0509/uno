@@ -31,6 +31,7 @@ export function createGame(): GameState {
     direction: 1,
     players: [],
     drawPenalty: 0,
+    drawPenaltySetBy: null,
     pendingRoulette: null,
     currentColor: null,
     lastPlayedCard: null,

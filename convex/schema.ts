@@ -16,6 +16,7 @@ export default defineSchema({
     currentPlayerIndex: v.number(),
     direction: v.union(v.literal(1), v.literal(-1)),
     drawPenalty: v.number(),
+    drawPenaltySetBy: v.optional(v.union(v.string(), v.null())),
     pendingRoulette: v.optional(
       v.union(v.object({ chooserPlayerId: v.string() }), v.null()),
     ),
