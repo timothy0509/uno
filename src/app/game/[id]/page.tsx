@@ -37,9 +37,14 @@ export default function GamePage() {
   const [showHelp, setShowHelp] = useState(false);
   const [showActionFeed, setShowActionFeed] = useState(true);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const [rouletteAnimating, setRouletteAnimating] = useState(false);
+  const [rouletteVisibleCount, setRouletteVisibleCount] = useState(0);
+  const [rouletteDrawnCards, setRouletteDrawnCards] = useState<Card[]>([]);
   const toastIdRef = useRef(0);
   const prevTurnRef = useRef<number | null>(null);
   const prevUnoRef = useRef<Set<string>>(new Set());
+  const preRouletteHandSizeRef = useRef(0);
+  const rouletteTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const {
     gameState,
@@ -137,6 +142,58 @@ export default function GamePage() {
     }
   }, [isRouletteChooser]);
 
+  useEffect(() => {
+    if (!rouletteAnimating || !gameState || !currentUserId) return;
+
+    const myPlayer = gameState.players.find((p) => p.id === currentUserId);
+    if (!myPlayer) return;
+
+    if (
+      !gameState.pendingRoulette &&
+      myPlayer.cards.length > preRouletteHandSizeRef.current
+    ) {
+      setShowColorPicker(false);
+      setColorPickerMode("playWild");
+      setPendingCardId(null);
+      setSelectedCard(null);
+
+      const newCards = myPlayer.cards.slice(preRouletteHandSizeRef.current);
+      setRouletteDrawnCards(newCards);
+      setRouletteVisibleCount(0);
+
+      let count = 0;
+      rouletteTimerRef.current = setInterval(() => {
+        count++;
+        setRouletteVisibleCount(count);
+        if (count >= newCards.length) {
+          if (rouletteTimerRef.current) {
+            clearInterval(rouletteTimerRef.current);
+            rouletteTimerRef.current = null;
+          }
+          setTimeout(() => {
+            setRouletteAnimating(false);
+            setRouletteDrawnCards([]);
+            setRouletteVisibleCount(0);
+          }, 600);
+        }
+      }, 500);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    gameState?.pendingRoulette,
+    gameState?.players,
+    currentUserId,
+    rouletteAnimating,
+  ]);
+
+  useEffect(() => {
+    return () => {
+      if (rouletteTimerRef.current) {
+        clearInterval(rouletteTimerRef.current);
+      }
+    };
+  }, []);
+
   const handleCardClick = (card: Card) => {
     if (!isMyTurn || !gameState) return;
 
@@ -164,7 +221,11 @@ export default function GamePage() {
 
   const handleColorSelect = async (color: Color) => {
     if (colorPickerMode === "roulette") {
+      const myPlayer = gameState?.players.find((p) => p.id === currentUserId);
+      preRouletteHandSizeRef.current = myPlayer?.cards.length ?? 0;
+      setRouletteAnimating(true);
       await chooseRoulette(color);
+      return;
     } else if (pendingCardId) {
       await playCard(pendingCardId, color);
     }
@@ -454,6 +515,44 @@ export default function GamePage() {
       {error && (
         <div className="animate-fade-in-scale glass fixed bottom-4 left-1/2 -translate-x-1/2 border-red-500/50 bg-red-500/20 px-6 py-3 text-red-200">
           {error}
+        </div>
+      )}
+
+      {rouletteAnimating && rouletteDrawnCards.length > 0 && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-md">
+          <div className="glass card-shadow animate-fade-in-scale p-6 text-center">
+            <h3 className="font-display mb-2 text-lg font-bold text-white">
+              Color Roulette
+            </h3>
+            <p className="mb-4 text-sm text-white/60">
+              Drawing cards until matching color...
+            </p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {rouletteDrawnCards
+                .slice(0, rouletteVisibleCount)
+                .map((card, i) => (
+                  <div
+                    key={card.id}
+                    className="animate-fade-in-scale flex h-14 w-10 items-center justify-center rounded-lg border border-white/20 bg-white/10 text-xs font-bold text-white"
+                    style={{ animationDelay: `${i * 100}ms` }}
+                  >
+                    {card.type === "numbered"
+                      ? card.value
+                      : card.type === "action"
+                        ? card.value
+                        : "W"}
+                  </div>
+                ))}
+              {rouletteVisibleCount < rouletteDrawnCards.length && (
+                <div className="flex h-14 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/5">
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                </div>
+              )}
+            </div>
+            <p className="mt-3 text-xs text-white/40">
+              {rouletteVisibleCount} / {rouletteDrawnCards.length} cards drawn
+            </p>
+          </div>
         </div>
       )}
     </main>
