@@ -359,7 +359,8 @@ export const playCard = mutationGeneric({
     if (resultState.status === "PLAYING") {
       const nextPlayer = resultState.players[resultState.currentPlayerIndex];
       if (nextPlayer?.isBot && !nextPlayer.isKnockedOut) {
-        return await ctx.runMutation(processBotTurnsRef, { gameId: args.gameId });
+        const delayMs = Math.floor(Math.random() * 1500) + 1000;
+        ctx.scheduler.runAfter(delayMs, processBotTurnsRef, { gameId: args.gameId });
       }
     }
 
@@ -449,7 +450,8 @@ export const draw = mutationGeneric({
     if (resultState.status === "PLAYING") {
       const nextPlayer = resultState.players[resultState.currentPlayerIndex];
       if (nextPlayer?.isBot && !nextPlayer.isKnockedOut) {
-        return await ctx.runMutation(processBotTurnsRef, { gameId: args.gameId });
+        const delayMs = Math.floor(Math.random() * 1500) + 1000;
+        ctx.scheduler.runAfter(delayMs, processBotTurnsRef, { gameId: args.gameId });
       }
     }
 
@@ -591,7 +593,8 @@ export const chooseRoulette = mutationGeneric({
     if (resultState.status === "PLAYING") {
       const nextPlayer = resultState.players[resultState.currentPlayerIndex];
       if (nextPlayer?.isBot && !nextPlayer.isKnockedOut) {
-        return await ctx.runMutation(processBotTurnsRef, { gameId: args.gameId });
+        const delayMs = Math.floor(Math.random() * 1500) + 1000;
+        ctx.scheduler.runAfter(delayMs, processBotTurnsRef, { gameId: args.gameId });
       }
     }
 

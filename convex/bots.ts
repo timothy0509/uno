@@ -1,4 +1,4 @@
-import { mutationGeneric, internalMutationGeneric } from "convex/server";
+import { mutationGeneric, internalMutationGeneric, makeFunctionReference } from "convex/server";
 import { ConvexError, v } from "convex/values";
 import type { Color, GameState } from "../src/types/game";
 import {
@@ -218,6 +218,20 @@ export const removeBot = mutationGeneric({
   },
 });
 
+function getRandomBotDelay(): number {
+  return Math.floor(Math.random() * 1500) + 1000;
+}
+
+function shouldProcessNextBot(state: GameState): boolean {
+  const nextPlayer = state.players[state.currentPlayerIndex];
+  return (
+    state.status === "PLAYING" &&
+    !!nextPlayer &&
+    nextPlayer.isBot &&
+    !nextPlayer.isKnockedOut
+  );
+}
+
 export const processBotTurns = internalMutationGeneric({
   args: { gameId: v.string() },
   handler: async (ctx, args) => {
@@ -229,59 +243,49 @@ export const processBotTurns = internalMutationGeneric({
       return null;
     }
 
-    let maxIterations = 20;
-    while (maxIterations-- > 0) {
-      const players = await loadPlayers(ctx, game._id);
-      const state = toGameState(game, players);
+    const players = await loadPlayers(ctx, game._id);
+    const state = toGameState(game, players);
 
-      if (state.status !== "PLAYING") {
+    if (!shouldProcessNextBot(state)) {
+      return toGameState(game, players);
+    }
+
+    const currentPlayer = state.players[state.currentPlayerIndex];
+    if (!currentPlayer) {
+      return toGameState(game, players);
+    }
+
+    if (state.pendingRoulette && state.pendingRoulette.chooserPlayerId === currentPlayer.id) {
+      const colorCounts: Record<string, number> = { red: 0, blue: 0, green: 0, yellow: 0 };
+      for (const card of currentPlayer.cards) {
+        if (card.type !== "wild" && "color" in card) {
+          colorCounts[card.color as string] = (colorCounts[card.color as string] || 0) + 1;
+        }
+      }
+      let bestColor: Color = "red";
+      let maxCount = 0;
+      for (const [color, count] of Object.entries(colorCounts)) {
+        if (count > maxCount) {
+          maxCount = count;
+          bestColor = color as Color;
+        }
+      }
+
+      const rouletteResult = chooseRouletteColor(state, currentPlayer.id, bestColor);
+      if ("error" in rouletteResult) {
         return toGameState(game, players);
       }
 
-      const currentPlayer = state.players[state.currentPlayerIndex];
-      if (!currentPlayer || !currentPlayer.isBot || currentPlayer.isKnockedOut) {
-        return toGameState(game, players);
-      }
+      await ctx.db.insert("gameActions", {
+        gameId: game._id,
+        actorUserId: currentPlayer.id,
+        type: "roulette",
+        payload: { selectedColor: bestColor },
+        createdAt: now(),
+      });
 
-      if (state.pendingRoulette && state.pendingRoulette.chooserPlayerId === currentPlayer.id) {
-        const colorCounts: Record<string, number> = { red: 0, blue: 0, green: 0, yellow: 0 };
-        for (const card of currentPlayer.cards) {
-          if (card.type !== "wild" && "color" in card) {
-            colorCounts[card.color as string] = (colorCounts[card.color as string] || 0) + 1;
-          }
-        }
-        let bestColor: Color = "red";
-        let maxCount = 0;
-        for (const [color, count] of Object.entries(colorCounts)) {
-          if (count > maxCount) {
-            maxCount = count;
-            bestColor = color as Color;
-          }
-        }
-
-        const rouletteResult = chooseRouletteColor(state, currentPlayer.id, bestColor);
-        if ("error" in rouletteResult) {
-          return toGameState(game, players);
-        }
-
-        await ctx.db.insert("gameActions", {
-          gameId: game._id,
-          actorUserId: currentPlayer.id,
-          type: "roulette",
-          payload: { selectedColor: bestColor },
-          createdAt: now(),
-        });
-
-        await patchGameFromState(ctx, game, players, rouletteResult.gameState);
-
-        const updatedGame = await ctx.db.get(game._id);
-        if (!updatedGame) {
-          throw new ConvexError("Failed to update game");
-        }
-        Object.assign(game, updatedGame);
-        continue;
-      }
-
+      await patchGameFromState(ctx, game, players, rouletteResult.gameState);
+    } else {
       const move = chooseBotMove(state, currentPlayer.id);
 
       if (move) {
@@ -339,15 +343,21 @@ export const processBotTurns = internalMutationGeneric({
 
         await patchGameFromState(ctx, game, players, drawResult.gameState);
       }
-
-      const updatedGame = await ctx.db.get(game._id);
-      if (!updatedGame) {
-        throw new ConvexError("Failed to update game");
-      }
-      Object.assign(game, updatedGame);
     }
 
-    const finalPlayers = await loadPlayers(ctx, game._id);
-    return toGameState(game, finalPlayers);
+    const updatedGame = await ctx.db.get(game._id);
+    if (!updatedGame) {
+      throw new ConvexError("Failed to update game");
+    }
+    const updatedPlayers = await loadPlayers(ctx, game._id);
+    const finalState = toGameState(updatedGame, updatedPlayers);
+
+    if (shouldProcessNextBot(finalState)) {
+      const delayMs = getRandomBotDelay();
+      const processBotTurnsRef = makeFunctionReference<"mutation", { gameId: string }, GameState | null>("bots:processBotTurns");
+      ctx.scheduler.runAfter(delayMs, processBotTurnsRef, { gameId: args.gameId });
+    }
+
+    return finalState;
   },
 });
