@@ -1,4 +1,4 @@
-import { queryGeneric, mutationGeneric } from "convex/server";
+import { queryGeneric, mutationGeneric, internalMutationGeneric, makeFunctionReference } from "convex/server";
 import { ConvexError, v } from "convex/values";
 import type { Color, GameState } from "../src/types/game";
 import {
@@ -9,6 +9,8 @@ import {
   playCard as playCardEngine,
 } from "../src/lib/game/engine";
 import { requireUserId } from "./lib/auth";
+
+const processBotTurnsRef = makeFunctionReference<"mutation", { gameId: string }, GameState | null>("bots:processBotTurns");
 
 function now() {
   return Date.now();
@@ -57,7 +59,7 @@ function toGameState(game: any, players: any[]): GameState {
     discardPile: game.discardPile,
     currentPlayerIndex: game.currentPlayerIndex,
     direction: game.direction,
-    players: players.map((p) => ({
+    players: players.map((p: any) => ({
       id: p.userId,
       userId: p.userId,
       name: p.name,
@@ -65,6 +67,7 @@ function toGameState(game: any, players: any[]): GameState {
       cards: p.cards,
       isKnockedOut: p.isKnockedOut,
       calledUno: p.calledUno,
+      isBot: p.isBot ?? false,
     })),
     drawPenalty: game.drawPenalty,
     drawPenaltySetBy: game.drawPenaltySetBy ?? null,
@@ -163,6 +166,7 @@ export const join = mutationGeneric({
         cards: [],
         isKnockedOut: false,
         calledUno: false,
+        isBot: false,
       });
     }
 
@@ -350,7 +354,16 @@ export const playCard = mutationGeneric({
     if (!updatedGame) {
       throw new ConvexError("Failed to update game");
     }
-    return toGameState(updatedGame, updatedPlayers);
+    const resultState = toGameState(updatedGame, updatedPlayers);
+
+    if (resultState.status === "PLAYING") {
+      const nextPlayer = resultState.players[resultState.currentPlayerIndex];
+      if (nextPlayer?.isBot && !nextPlayer.isKnockedOut) {
+        return await ctx.runMutation(processBotTurnsRef, { gameId: args.gameId });
+      }
+    }
+
+    return resultState;
   },
 });
 
@@ -431,7 +444,16 @@ export const draw = mutationGeneric({
     if (!updatedGame) {
       throw new ConvexError("Failed to update game");
     }
-    return toGameState(updatedGame, updatedPlayers);
+    const resultState = toGameState(updatedGame, updatedPlayers);
+
+    if (resultState.status === "PLAYING") {
+      const nextPlayer = resultState.players[resultState.currentPlayerIndex];
+      if (nextPlayer?.isBot && !nextPlayer.isKnockedOut) {
+        return await ctx.runMutation(processBotTurnsRef, { gameId: args.gameId });
+      }
+    }
+
+    return resultState;
   },
 });
 
@@ -564,6 +586,15 @@ export const chooseRoulette = mutationGeneric({
     if (!updatedGame) {
       throw new ConvexError("Failed to update game");
     }
-    return toGameState(updatedGame, updatedPlayers);
+    const resultState = toGameState(updatedGame, updatedPlayers);
+
+    if (resultState.status === "PLAYING") {
+      const nextPlayer = resultState.players[resultState.currentPlayerIndex];
+      if (nextPlayer?.isBot && !nextPlayer.isKnockedOut) {
+        return await ctx.runMutation(processBotTurnsRef, { gameId: args.gameId });
+      }
+    }
+
+    return resultState;
   },
 });

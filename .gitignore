@@ -49,3 +49,5 @@ bun.lock
 
 # opencode
 .opencode/
+
+package-lock.json

@@ -57,6 +57,8 @@ export default function GamePage() {
     drawCards,
     callUno,
     chooseRoulette,
+    addBot,
+    removeBot,
     refresh,
     currentUserId,
   } = useGame(gameId ?? null);
@@ -270,6 +272,18 @@ export default function GamePage() {
     }
   };
 
+  const handleAddBot = async () => {
+    if (gameId) {
+      void addBot();
+    }
+  };
+
+  const handleRemoveBot = async (botUserId: string) => {
+    if (gameId) {
+      void removeBot(botUserId);
+    }
+  };
+
   if (!gameState) {
     return (
       <main className="gradient-bg flex min-h-screen items-center justify-center">
@@ -304,16 +318,35 @@ export default function GamePage() {
               {gameState.players.map((player, index) => (
                 <li
                   key={player.id}
-                  className="animate-fade-in-up text-white"
+                  className="animate-fade-in-up flex items-center justify-between text-white"
                   style={{ animationDelay: `${index * 80}ms` }}
                 >
-                  {index + 1}. {player.name}{" "}
-                  {player.id === currentUserId && "(You)"}
-                  {player.id === creatorId && " (Creator)"}
+                  <span>
+                    {index + 1}. {player.name}{" "}
+                    {player.id === currentUserId && "(You)"}
+                    {player.id === creatorId && " (Creator)"}
+                    {player.isBot && " (Bot)"}
+                  </span>
+                  {player.isBot && isRoomCreator && (
+                    <button
+                      onClick={() => handleRemoveBot(player.userId)}
+                      className="ml-2 rounded bg-red-500/20 px-2 py-0.5 text-xs text-red-400 hover:bg-red-500/30"
+                    >
+                      Remove
+                    </button>
+                  )}
                 </li>
               ))}
             </ul>
           </div>
+          {isRoomCreator && gameState.players.length < 6 && (
+            <button
+              onClick={handleAddBot}
+              className="button-secondary mb-3 w-full py-2"
+            >
+              Add Bot
+            </button>
+          )}
           {gameState.players.length >= 2 && (
             <>
               <button

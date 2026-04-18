@@ -35,6 +35,11 @@ export function OpponentSeat({
           +{drawPenalty}
         </span>
       )}
+      {player.isBot && !player.isKnockedOut && (
+        <span className="absolute -top-1.5 left-1/2 -translate-x-1/2 rounded-full bg-purple-500/60 px-1.5 py-0.5 text-[9px] font-bold text-white/80">
+          BOT
+        </span>
+      )}
       <p className="truncate text-xs font-medium text-white">{player.name}</p>
       <span className={`card-count-badge mt-1 ${badge.className}`}>
         {badge.text}

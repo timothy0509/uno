@@ -57,6 +57,7 @@ export interface PlayerState {
   cards: Card[];
   isKnockedOut: boolean;
   calledUno: boolean;
+  isBot: boolean;
 }
 
 export interface GameState {
