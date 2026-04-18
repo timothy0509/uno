@@ -42,7 +42,7 @@ export default defineSchema({
     cards: v.array(v.any()),
     isKnockedOut: v.boolean(),
     calledUno: v.boolean(),
-    isBot: v.boolean(),
+    isBot: v.optional(v.boolean()),
   })
     .index("by_game", ["gameId"])
     .index("by_game_user", ["gameId", "userId"]),

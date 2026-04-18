@@ -14,6 +14,7 @@ import type * as http from "../http.js";
 import type * as lib_auth from "../lib/auth.js";
 import type * as lib_cards from "../lib/cards.js";
 import type * as lobbies from "../lobbies.js";
+import type * as migrations from "../migrations.js";
 import type * as stats from "../stats.js";
 import type * as users from "../users.js";
 
@@ -30,6 +31,7 @@ declare const fullApi: ApiFromModules<{
   "lib/auth": typeof lib_auth;
   "lib/cards": typeof lib_cards;
   lobbies: typeof lobbies;
+  migrations: typeof migrations;
   stats: typeof stats;
   users: typeof users;
 }>;
