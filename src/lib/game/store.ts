@@ -79,6 +79,7 @@ export function joinGame(
     cards: [],
     isKnockedOut: false,
     calledUno: false,
+    isBot: false,
   });
   game.updatedAt = new Date();
   return game;

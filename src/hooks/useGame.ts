@@ -68,6 +68,16 @@ const chooseRouletteRef = makeFunctionReference<
   { gameId: string; selectedColor: Color },
   GameState
 >("games:chooseRoulette");
+const addBotRef = makeFunctionReference<
+  "mutation",
+  { gameId: string },
+  GameState
+>("bots:addBot");
+const removeBotRef = makeFunctionReference<
+  "mutation",
+  { gameId: string; botUserId: string },
+  GameState
+>("bots:removeBot");
 
 export function useGame(
   gameId: string | null,
@@ -88,6 +98,8 @@ export function useGame(
   const drawMutation = useMutation(drawRef);
   const callUnoMutation = useMutation(callUnoRef);
   const chooseRouletteMutation = useMutation(chooseRouletteRef);
+  const addBotMutation = useMutation(addBotRef);
+  const removeBotMutation = useMutation(removeBotRef);
 
   const withLoading = useCallback(
     async <T>(fn: () => Promise<T>): Promise<T | null> => {
@@ -187,6 +199,25 @@ export function useGame(
     [chooseRouletteMutation, gameId, withLoading],
   );
 
+  const addBot = useCallback(async (): Promise<GameState | null> => {
+    if (!gameId) {
+      return null;
+    }
+    return await withLoading(async () => await addBotMutation({ gameId }));
+  }, [addBotMutation, gameId, withLoading]);
+
+  const removeBot = useCallback(
+    async (botUserId: string): Promise<GameState | null> => {
+      if (!gameId) {
+        return null;
+      }
+      return await withLoading(
+        async () => await removeBotMutation({ gameId, botUserId }),
+      );
+    },
+    [removeBotMutation, gameId, withLoading],
+  );
+
   const refresh = useCallback(async () => {
     return;
   }, []);
@@ -205,6 +236,8 @@ export function useGame(
       drawCards,
       callUno,
       chooseRoulette,
+      addBot,
+      removeBot,
       setError,
       currentUserId: session.data?.user?.id ?? null,
     }),
@@ -222,6 +255,8 @@ export function useGame(
       refresh,
       session.data?.user?.id,
       startGame,
+      addBot,
+      removeBot,
     ],
   );
 }

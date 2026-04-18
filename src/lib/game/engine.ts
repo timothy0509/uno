@@ -21,6 +21,7 @@ export function initializeGame(
     cards: hands[index] ?? [],
     isKnockedOut: false,
     calledUno: false,
+    isBot: id.startsWith("bot:"),
   }));
   const discardPile: Card[] = [];
   const startDeck = remainingDeck;
